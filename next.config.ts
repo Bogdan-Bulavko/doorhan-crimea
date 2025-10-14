@@ -1,8 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Оптимизация изображений
+  // Настройки для GitHub Pages
   images: {
+    unoptimized: true, // Обязательно для GitHub Pages
     remotePatterns: [
       {
         protocol: 'https',
@@ -11,9 +12,6 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
   // Оптимизация производительности
@@ -23,8 +21,6 @@ const nextConfig: NextConfig = {
 
   // Сжатие
   compress: true,
-
-  // Оптимизация сборки (swcMinify включен по умолчанию в Next.js 15)
 
   // Безопасность
   poweredByHeader: false,
