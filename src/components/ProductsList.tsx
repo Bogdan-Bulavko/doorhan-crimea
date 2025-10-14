@@ -275,90 +275,92 @@ const ProductsList = () => {
               transition={{ delay: 0.1 * index }}
               className="group bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
-              {/* Изображение товара */}
-              <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 bg-[#F6A800] rounded-full flex items-center justify-center">
-                    <Zap className="w-10 h-10 text-white" />
-                  </div>
-                </div>
-
-                {/* Бейджи */}
-                <div className="absolute top-4 left-4 flex flex-col space-y-2">
-                  {product.isNew && (
-                    <span className="bg-[#F6A800] text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Новинка
-                    </span>
-                  )}
-                  {product.oldPrice && (
-                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Скидка
-                    </span>
-                  )}
-                </div>
-
-                {/* Действия */}
-                <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
-                    <Heart className="w-4 h-4 text-gray-600" />
-                  </button>
-                  <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
-                    <Eye className="w-4 h-4 text-gray-600" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Контент товара */}
-              <div className="p-6">
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-sm font-medium text-gray-700">
-                      {product.rating}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    ({product.reviews} отзывов)
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-bold text-[#00205B] font-montserrat mb-2 group-hover:text-[#F6A800] transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                  {product.description}
-                </p>
-
-                {/* Особенности */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {product.features.slice(0, 2).map((feature, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-xs"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Цена и кнопка */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-xl font-bold text-[#00205B]">
-                      {product.price}
+              <Link href={`/page-product`}>
+                {/* Изображение товара */}
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-[#F6A800] rounded-full flex items-center justify-center">
+                      <Zap className="w-10 h-10 text-white" />
                     </div>
+                  </div>
+
+                  {/* Бейджи */}
+                  <div className="absolute top-4 left-4 flex flex-col space-y-2">
+                    {product.isNew && (
+                      <span className="bg-[#F6A800] text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Новинка
+                      </span>
+                    )}
                     {product.oldPrice && (
-                      <div className="text-sm text-gray-500 line-through">
-                        {product.oldPrice}
-                      </div>
+                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Скидка
+                      </span>
                     )}
                   </div>
-                  <button className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105">
-                    <ShoppingCart className="w-4 h-4" />
-                    <span>В корзину</span>
-                  </button>
+
+                  {/* Действия */}
+                  <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
+                      <Heart className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
+                      <Eye className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+
+                {/* Контент товара */}
+                <div className="p-6">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                      <span className="text-sm font-medium text-gray-700">
+                        {product.rating}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      ({product.reviews} отзывов)
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-[#00205B] font-montserrat mb-2 group-hover:text-[#F6A800] transition-colors">
+                    {product.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                    {product.description}
+                  </p>
+
+                  {/* Особенности */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {product.features.slice(0, 2).map((feature, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-xs"
+                      >
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Цена и кнопка */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-xl font-bold text-[#00205B]">
+                        {product.price}
+                      </div>
+                      {product.oldPrice && (
+                        <div className="text-sm text-gray-500 line-through">
+                          {product.oldPrice}
+                        </div>
+                      )}
+                    </div>
+                    <button className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105">
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>В корзину</span>
+                    </button>
+                  </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
