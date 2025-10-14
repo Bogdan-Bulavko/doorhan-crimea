@@ -18,7 +18,8 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: 'DoorHan Крым | Ворота и автоматика',
-  description: 'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы. Качество и надежность с 1993 года.',
+  description:
+    'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы. Качество и надежность с 1993 года.',
   keywords: 'DoorHan, ворота, роллеты, автоматика, Крым',
   authors: [{ name: 'DoorHan Крым' }],
   creator: 'DoorHan Крым',
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'DoorHan Крым | Ворота и автоматика',
-    description: 'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
+    description:
+      'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
     url: 'https://bogdan-bulavko.github.io/doorhan-crimea',
     siteName: 'DoorHan Крым',
     images: [
@@ -51,7 +53,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DoorHan Крым | Ворота и автоматика',
-    description: 'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
+    description:
+      'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
     images: ['/doorhan-crimea/og-image.jpg'],
   },
   robots: {
@@ -76,7 +79,10 @@ export default function RootLayout({
     <html lang="ru" className="scroll-smooth">
       <head>
         <link rel="icon" href="/doorhan-crimea/favicon.ico" />
-        <link rel="apple-touch-icon" href="/doorhan-crimea/apple-touch-icon.png" />
+        <link
+          rel="apple-touch-icon"
+          href="/doorhan-crimea/apple-touch-icon.png"
+        />
         <meta name="theme-color" content="#00205B" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>

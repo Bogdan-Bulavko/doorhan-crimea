@@ -1,13 +1,10 @@
 'use client';
 
-interface HeroSectionProps {
-  region?: string;
-}
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Shield, Award, Users, Clock } from 'lucide-react';
 
-const HeroSection = ({ region }: HeroSectionProps) => {
+const HeroSection = () => {
   const features = [
     { icon: Shield, text: 'Гарантия качества' },
     { icon: Award, text: 'Сертификаты' },
@@ -98,7 +95,7 @@ const HeroSection = ({ region }: HeroSectionProps) => {
             <span className="block">Ворота и роллеты</span>
             <span className="block text-[#F6A800]">DoorHan</span>
             <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
-              в {titleCites[region as keyof typeof titleCites]}
+              в {titleCites.default}
             </span>
           </motion.h1>
 
