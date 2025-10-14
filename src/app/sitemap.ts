@@ -6,19 +6,19 @@ export const dynamic = 'force-static';
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://bogdan-bulavko.github.io/doorhan-crimea',
+      url: 'https://doorhan-crimea',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://bogdan-bulavko.github.io/doorhan-crimea/categories',
+      url: 'https://doorhan-crimea/categories',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://bogdan-bulavko.github.io/doorhan-crimea/products',
+      url: 'https://doorhan-crimea/products',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

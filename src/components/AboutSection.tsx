@@ -262,14 +262,14 @@ const AboutSection = () => {
 
                     {/* Заголовок */}
                     <h4 className="text-lg md:text-xl font-bold text-[#00205B] mb-3 font-montserrat leading-tight">
-                      {achievement.title}
-                    </h4>
+                        {achievement.title}
+                      </h4>
 
                     {/* Описание */}
                     <p className="text-gray-600 text-sm md:text-base leading-relaxed flex-grow">
-                      {achievement.description}
-                    </p>
-                  </div>
+                        {achievement.description}
+                      </p>
+                    </div>
 
                   {/* Номер этапа (опционально) */}
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-[#00205B] text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg">

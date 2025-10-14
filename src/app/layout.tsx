@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://bogdan-bulavko.github.io/doorhan-crimea'),
+  metadataBase: new URL('https://doorhan-crimea'),
   alternates: {
     canonical: '/',
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: 'DoorHan Крым | Ворота и автоматика',
     description:
       'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
-    url: 'https://bogdan-bulavko.github.io/doorhan-crimea',
+    url: 'https://doorhan-crimea',
     siteName: 'DoorHan Крым',
     images: [
       {
