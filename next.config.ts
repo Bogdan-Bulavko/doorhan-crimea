@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // КРИТИЧНО: Настройки для GitHub Pages в подпапке
+  basePath: '/doorhan-crimea',
+  assetPrefix: '/doorhan-crimea/',
+
   // Настройки для GitHub Pages
   images: {
     unoptimized: true, // Обязательно для GitHub Pages
@@ -25,12 +29,12 @@ const nextConfig: NextConfig = {
   // Безопасность
   poweredByHeader: false,
 
-  // Переадресации для SEO
+  // Переадресации для SEO (обновлены с учетом basePath)
   async redirects() {
     return [
       {
-        source: '/home',
-        destination: '/',
+        source: '/doorhan-crimea/home',
+        destination: '/doorhan-crimea',
         permanent: true,
       },
     ];

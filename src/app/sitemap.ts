@@ -1,24 +1,21 @@
 import type { MetadataRoute } from 'next';
 
-// Удалите эту строку:
-// export const dynamic = 'force-static'
-
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://crimea-doorhan.ru',
+      url: 'https://bogdan-bulavko.github.io/doorhan-crimea',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://crimea-doorhan.ru/categories',
+      url: 'https://bogdan-bulavko.github.io/doorhan-crimea/categories',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://crimea-doorhan.ru/products',
+      url: 'https://bogdan-bulavko.github.io/doorhan-crimea/products',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
