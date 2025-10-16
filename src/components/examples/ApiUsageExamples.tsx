@@ -6,7 +6,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+// import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
 import { 
   Category, 
@@ -31,7 +31,7 @@ export const CategoriesGridWithAPI = () => {
         setError(null);
         const data = await apiClient.getCategories();
         setCategories(data);
-      } catch (err) {
+      } catch (err: any) {
         setError('Ошибка загрузки категорий');
         console.error('Ошибка загрузки категорий:', err);
       } finally {
@@ -79,16 +79,39 @@ export const ProductsListWithReactQuery = () => {
     sortOrder: 'asc'
   });
 
-  const {
-    data: productsResponse,
-    isLoading,
-    error,
-    refetch
-  } = useQuery({
-    queryKey: ['products', filters],
-    queryFn: () => apiClient.getProducts(filters),
-    staleTime: 5 * 60 * 1000, // 5 минут
-  });
+  // Пример с React Query (закомментировано, так как пакет не установлен)
+  // const {
+  //   data: productsResponse,
+  //   isLoading,
+  //   error,
+  //   refetch
+  // } = useQuery({
+  //   queryKey: ['products', filters],
+  //   queryFn: () => apiClient.getProducts(filters),
+  //   staleTime: 5 * 60 * 1000, // 5 минут
+  // });
+
+  // Альтернативная реализация без React Query
+  const [productsResponse, setProductsResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  const fetchProducts = async (newFilters: ProductFilters) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await apiClient.getProducts(newFilters);
+      setProductsResponse(response);
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(filters);
+  }, [filters]);
 
   const handleFilterChange = (newFilters: Partial<ProductFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters, page: 1 }));
@@ -155,9 +178,9 @@ export const ProductsListWithReactQuery = () => {
 
       {/* Сетка товаров */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      {products.map((product: Product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
       </div>
 
       {/* Пагинация */}
@@ -178,31 +201,44 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  const addToCartMutation = useMutation({
-    mutationFn: (cartItem: AddToCartRequest) => apiClient.addToCart(cartItem),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-      // Показать уведомление об успешном добавлении
-    },
-    onError: (error) => {
-      console.error('Ошибка добавления в корзину:', error);
-      // Показать ошибку пользователю
-    }
-  });
+  // Пример с React Query (закомментировано)
+  // const addToCartMutation = useMutation({
+  //   mutationFn: (cartItem: AddToCartRequest) => apiClient.addToCart(cartItem),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['cart'] });
+  //     // Показать уведомление об успешном добавлении
+  //   },
+  //   onError: (error: any) => {
+  //     console.error('Ошибка добавления в корзину:', error);
+  //     // Показать ошибку пользователю
+  //   }
+  // });
 
-  const handleAddToCart = () => {
+  // Альтернативная реализация без React Query
+  const handleAddToCart = async () => {
     const cartItem: AddToCartRequest = {
       productId: product.id,
       quantity,
       selectedColor: selectedColor || undefined,
     };
 
-    addToCartMutation.mutate(cartItem);
+    try {
+      setIsAddingToCart(true);
+      await apiClient.addToCart(cartItem);
+      // Показать уведомление об успешном добавлении
+    } catch (error: any) {
+      console.error('Ошибка добавления в корзину:', error);
+      // Показать ошибку пользователю
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
+
 
   return (
     <div className="bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden">
@@ -312,10 +348,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </div>
           <button 
             onClick={handleAddToCart}
-            disabled={addToCartMutation.isPending || !product.inStock}
+            disabled={isAddingToCart || !product.inStock}
             className="bg-[#F6A800] hover:bg-[#ffb700] disabled:bg-gray-400 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 disabled:hover:scale-100"
           >
-            {addToCartMutation.isPending ? (
+            {isAddingToCart ? (
               <span>Добавление...</span>
             ) : (
               <>
@@ -332,37 +368,78 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
 // ===== ПРИМЕР 4: Корзина с API =====
 export const CartWithAPI = () => {
-  const {
-    data: cart,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['cart'],
-    queryFn: () => apiClient.getCart(),
-  });
+  // Пример с React Query (закомментировано)
+  // const {
+  //   data: cart,
+  //   isLoading,
+  //   error
+  // } = useQuery({
+  //   queryKey: ['cart'],
+  //   queryFn: () => apiClient.getCart(),
+  // });
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  const updateCartItemMutation = useMutation({
-    mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
-      apiClient.updateCartItem(itemId, quantity),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+  // const updateCartItemMutation = useMutation({
+  //   mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
+  //     apiClient.updateCartItem(itemId, quantity),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['cart'] });
+  //   }
+  // });
+
+  // const removeFromCartMutation = useMutation({
+  //   mutationFn: (itemId: number) => apiClient.removeFromCart(itemId),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['cart'] });
+  //   }
+  // });
+
+  // Альтернативная реализация без React Query
+  const [cart, setCart] = useState<Cart | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  const fetchCart = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const cartData = await apiClient.getCart();
+      setCart(cartData);
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
     }
-  });
+  };
 
-  const removeFromCartMutation = useMutation({
-    mutationFn: (itemId: number) => apiClient.removeFromCart(itemId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  const updateCartItem = async (itemId: number, quantity: number) => {
+    try {
+      await apiClient.updateCartItem(itemId, quantity);
+      fetchCart(); // Обновляем корзину
+    } catch (error: any) {
+      console.error('Ошибка обновления корзины:', error);
     }
-  });
+  };
+
+  const removeFromCart = async (itemId: number) => {
+    try {
+      await apiClient.removeFromCart(itemId);
+      fetchCart(); // Обновляем корзину
+    } catch (error: any) {
+      console.error('Ошибка удаления из корзины:', error);
+    }
+  };
 
   const handleUpdateQuantity = (itemId: number, newQuantity: number) => {
     if (newQuantity <= 0) {
-      removeFromCartMutation.mutate(itemId);
+      removeFromCart(itemId);
     } else {
-      updateCartItemMutation.mutate({ itemId, newQuantity });
+      updateCartItem(itemId, newQuantity);
     }
   };
 
@@ -431,7 +508,7 @@ export const CartWithAPI = () => {
                 </div>
 
                 <button
-                  onClick={() => removeFromCartMutation.mutate(item.id)}
+                  onClick={() => removeFromCart(item.id)}
                   className="text-red-500 hover:text-red-700 transition-colors"
                 >
                   🗑️
@@ -471,9 +548,35 @@ export const ContactFormWithAPI = () => {
     message: ''
   });
 
-  const submitFormMutation = useMutation({
-    mutationFn: (data: ContactFormData) => apiClient.submitContactForm(data),
-    onSuccess: () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Пример с React Query (закомментировано)
+  // const submitFormMutation = useMutation({
+  //   mutationFn: (data: ContactFormData) => apiClient.submitContactForm(data),
+  //   onSuccess: () => {
+  //     // Показать уведомление об успешной отправке
+  //     setFormData({
+  //       name: '',
+  //       email: '',
+  //       phone: '',
+  //       company: '',
+  //       subject: '',
+  //       message: ''
+  //     });
+  //   },
+  //   onError: (error: any) => {
+  //     console.error('Ошибка отправки формы:', error);
+  //     // Показать ошибку пользователю
+  //   }
+  // });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setIsSubmitting(true);
+      await apiClient.submitContactForm(formData);
+      
       // Показать уведомление об успешной отправке
       setFormData({
         name: '',
@@ -483,16 +586,12 @@ export const ContactFormWithAPI = () => {
         subject: '',
         message: ''
       });
-    },
-    onError: (error) => {
+    } catch (error: any) {
       console.error('Ошибка отправки формы:', error);
       // Показать ошибку пользователю
+    } finally {
+      setIsSubmitting(false);
     }
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    submitFormMutation.mutate(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -593,10 +692,10 @@ export const ContactFormWithAPI = () => {
 
       <button
         type="submit"
-        disabled={submitFormMutation.isPending}
+        disabled={isSubmitting}
         className="w-full bg-[#F6A800] hover:bg-[#ffb700] disabled:bg-gray-400 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 mt-8 hover:scale-105 disabled:hover:scale-100"
       >
-        {submitFormMutation.isPending ? 'Отправка...' : 'Отправить сообщение'}
+        {isSubmitting ? 'Отправка...' : 'Отправить сообщение'}
       </button>
     </form>
   );
