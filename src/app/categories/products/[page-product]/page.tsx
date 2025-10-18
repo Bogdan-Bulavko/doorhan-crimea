@@ -1,7 +1,8 @@
-import ProductPageClient from './ProductPageClient';
+import ProductPageClient from '@/components/ProductPageClient';
 
 // Обязательно для статического экспорта
 export const dynamic = 'force-static';
+console.log('PageProduct');
 
 // Генерируем статические параметры для всех возможных товаров
 export async function generateStaticParams() {

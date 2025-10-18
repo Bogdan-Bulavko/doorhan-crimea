@@ -23,7 +23,7 @@ const CategoriesGrid = () => {
       color: 'bg-blue-500',
       hoverColor: 'hover:bg-blue-600',
       productCount: 24,
-      href: '/products?category=home',
+      href: '/categories/products?category=home',
     },
     {
       id: 2,
@@ -34,7 +34,7 @@ const CategoriesGrid = () => {
       color: 'bg-green-500',
       hoverColor: 'hover:bg-green-600',
       productCount: 18,
-      href: '/products?category=garage',
+      href: '/categories/products?category=garage',
     },
     {
       id: 3,
@@ -45,7 +45,7 @@ const CategoriesGrid = () => {
       color: 'bg-purple-500',
       hoverColor: 'hover:bg-purple-600',
       productCount: 32,
-      href: '/products?category=industrial',
+      href: '/categories/products?category=industrial',
     },
     {
       id: 4,
@@ -56,7 +56,7 @@ const CategoriesGrid = () => {
       color: 'bg-orange-500',
       hoverColor: 'hover:bg-orange-600',
       productCount: 28,
-      href: '/products?category=rollers',
+      href: '/categories/products?category=rollers',
     },
     {
       id: 5,
@@ -67,7 +67,7 @@ const CategoriesGrid = () => {
       color: 'bg-red-500',
       hoverColor: 'hover:bg-red-600',
       productCount: 15,
-      href: '/products?category=automation',
+      href: '/categories/products?category=automation',
     },
     {
       id: 6,
@@ -78,7 +78,7 @@ const CategoriesGrid = () => {
       color: 'bg-indigo-500',
       hoverColor: 'hover:bg-indigo-600',
       productCount: 42,
-      href: '/products?category=locks',
+      href: '/categories/products?category=locks',
     },
   ];
 

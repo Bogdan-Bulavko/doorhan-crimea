@@ -34,15 +34,15 @@ const Header = () => {
   const menuItems = [
     { name: 'Главная', href: '/' },
     { name: 'Категории', href: '/categories' },
-    { name: 'Товары', href: '/products' },
-    { name: 'О компании', href: '#about' },
-    { name: 'Контакты', href: '#contacts' },
+    { name: 'Товары', href: '/categories/products' },
+    { name: 'О компании', href: '/#about' },
+    { name: 'Контакты', href: '/#contacts' },
   ];
 
   return (
     <>
       {/* Верхняя информационная полоса */}
-      <div className="hidden lg:block bg-gradient-to-r from-[#00205B] to-[#1a3a6b] text-white py-3 relative overflow-hidden">
+      <div className="hidden lg:block bg-gradient-to-r from-[#00153E] to-[#00205B] text-white py-3 relative overflow-hidden">
         {/* Декоративный фон */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
@@ -96,8 +96,8 @@ const Header = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className={`sticky top-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'bg-white shadow-2xl shadow-blue-900/10 border-b border-gray-100'
-            : 'bg-white/95 backdrop-blur-sm'
+            ? 'bg-gradient-to-r from-[#00205B] to-[#00153E] shadow-2xl shadow-[#00205B]/20 border-b border-[#F6A800]/20'
+            : 'bg-gradient-to-r from-[#00205B]/95 to-[#00153E]/95 backdrop-blur-sm'
         }`}
       >
         <div className="container mx-auto px-4 py-4 max-w-7xl">
@@ -116,10 +116,10 @@ const Header = () => {
                 />
               </motion.div>
               <div>
-                <h1 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
+                <h1 className="text-xl font-bold text-white font-montserrat group-hover:text-[#F6A800] transition-colors">
                   DoorHan Крым
                 </h1>
-                <p className="text-sm text-gray-600 font-medium">
+                <p className="text-sm text-gray-200 font-medium">
                   Ворота и автоматика
                 </p>
               </div>
@@ -131,10 +131,10 @@ const Header = () => {
                 <Link
                   key={index}
                   href={item.href}
-                  className="relative px-4 py-2 text-gray-700 hover:text-[#00205B] font-medium transition-all duration-300 rounded-lg group"
+                  className="relative px-4 py-2 text-white hover:text-[#F6A800] font-medium transition-all duration-300 rounded-lg group"
                 >
                   <span className="relative z-10">{item.name}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#F6A800]/10 to-[#F6A800]/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#F6A800]/20 to-[#F6A800]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
               ))}
             </nav>
@@ -143,7 +143,7 @@ const Header = () => {
             <div className="flex items-center space-x-2">
               {/* Поиск */}
               <motion.button
-                className="hidden md:flex items-center justify-center w-11 h-11 text-gray-600 hover:text-[#F6A800] hover:bg-gray-50 rounded-xl transition-all duration-300 border border-transparent hover:border-gray-200"
+                className="hidden md:flex items-center justify-center w-11 h-11 text-white hover:text-[#F6A800] hover:bg-white/10 rounded-xl transition-all duration-300 border border-transparent hover:border-[#F6A800]/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -152,7 +152,7 @@ const Header = () => {
 
               {/* Профиль */}
               <motion.button
-                className="hidden md:flex items-center justify-center w-11 h-11 text-gray-600 hover:text-[#F6A800] hover:bg-gray-50 rounded-xl transition-all duration-300 border border-transparent hover:border-gray-200"
+                className="hidden md:flex items-center justify-center w-11 h-11 text-white hover:text-[#F6A800] hover:bg-white/10 rounded-xl transition-all duration-300 border border-transparent hover:border-[#F6A800]/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -180,7 +180,7 @@ const Header = () => {
               {/* Мобильная кнопка меню */}
               <motion.button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="min-[1100px]:hidden p-2 text-gray-700 hover:text-[#00205B] hover:bg-gray-50 rounded-xl transition-all duration-300"
+                className="min-[1100px]:hidden p-2 text-white hover:text-[#F6A800] hover:bg-white/10 rounded-xl transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -198,7 +198,7 @@ const Header = () => {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="min-[1100px]:hidden bg-white border-t border-gray-200 shadow-lg"
+              className="min-[1100px]:hidden bg-gradient-to-b from-[#00205B] to-[#00153E] border-t border-[#F6A800]/20 shadow-lg"
             >
               <div className="container mx-auto px-4 py-6 max-w-7xl">
                 <nav className="flex flex-col space-y-2">
@@ -212,13 +212,13 @@ const Header = () => {
                       <Link
                         href={item.href}
                         onClick={() => setIsMenuOpen(false)}
-                        className="block px-4 py-3 text-gray-700 hover:text-[#00205B] hover:bg-gray-50 font-medium rounded-lg transition-all duration-300"
+                        className="block px-4 py-3 text-white hover:text-[#F6A800] hover:bg-white/10 font-medium rounded-lg transition-all duration-300"
                       >
                         {item.name}
                       </Link>
                     </motion.div>
                   ))}
-                  <div className="pt-4 mt-4 border-t border-gray-200">
+                  <div className="pt-4 mt-4 border-t border-[#F6A800]/20">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}

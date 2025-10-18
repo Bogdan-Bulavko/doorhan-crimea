@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Open_Sans, Montserrat } from 'next/font/google';
 import './globals.css';
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 const openSans = Open_Sans({
   variable: '--font-open-sans',
   subsets: ['latin', 'cyrillic'],
@@ -89,7 +91,9 @@ export default function RootLayout({
       <body
         className={`${openSans.variable} ${montserrat.variable} antialiased bg-white text-gray-900`}
       >
+        <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
