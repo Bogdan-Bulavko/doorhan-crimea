@@ -13,6 +13,8 @@ import {
   Zap,
 } from 'lucide-react';
 
+import BreadCrumbs from './BreadCrumbs';
+
 const ProductsList = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -164,25 +166,7 @@ const ProductsList = () => {
     <section className="pt-12 pb-8 md:pt-24 md:pb-20 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Хлебные крошки */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center space-x-2 text-sm text-gray-600 mb-8"
-        >
-          <Link href="/" className="hover:text-[#F6A800] transition-colors">
-            Главная
-          </Link>
-          <span>/</span>
-          <Link
-            href="/categories"
-            className="hover:text-[#F6A800] transition-colors"
-          >
-            Категории
-          </Link>
-          <span>/</span>
-          <span className="text-[#00205B] font-medium">Товары</span>
-        </motion.div>
-
+        <BreadCrumbs />
         {/* Заголовок */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -275,7 +259,7 @@ const ProductsList = () => {
               transition={{ delay: 0.1 * index }}
               className="group bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
-              <Link href={`/page-product`}>
+              <Link href={`/categories/products/${product.id}`}>
                 {/* Изображение товара */}
                 <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
                   <div className="absolute inset-0 flex items-center justify-center">

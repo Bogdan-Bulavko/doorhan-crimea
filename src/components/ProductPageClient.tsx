@@ -19,9 +19,10 @@ import {
   Wrench,
 } from 'lucide-react';
 
+import BreadCrumbs from './BreadCrumbs';
+
 export default function ProductPageClient() {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState('blue');
   const [quantity, setQuantity] = useState(1);
 
   // Пример данных товара (замените на реальные данные)
@@ -60,29 +61,9 @@ export default function ProductPageClient() {
       { name: 'Привод', value: 'Электрический' },
       { name: 'Гарантия', value: '5 лет' },
     ],
-    description: 'Секционные ворота DoorHan 4.0 — это современное решение для защиты и удобства. Высокое качество материалов и продуманная конструкция обеспечивают надежность и долговечность.',
+    description:
+      'Секционные ворота DoorHan 4.0 — это современное решение для защиты и удобства. Высокое качество материалов и продуманная конструкция обеспечивают надежность и долговечность.',
   };
-
-  const relatedProducts = [
-    {
-      id: 2,
-      name: 'Распашные ворота DoorHan Classic',
-      price: 98000,
-      image: '/images/related-1.jpg',
-    },
-    {
-      id: 3,
-      name: 'Откатные ворота DoorHan Pro',
-      price: 156000,
-      image: '/images/related-2.jpg',
-    },
-    {
-      id: 4,
-      name: 'Роллеты DoorHan Security',
-      price: 75000,
-      image: '/images/related-3.jpg',
-    },
-  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -102,30 +83,6 @@ export default function ProductPageClient() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Хлебные крошки */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white border-b border-gray-100 py-4"
-      >
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-[#F6A800] transition-colors">
-              Главная
-            </Link>
-            <span>/</span>
-            <Link href="/categories" className="hover:text-[#F6A800] transition-colors">
-              Категории
-            </Link>
-            <span>/</span>
-            <Link href="/products" className="hover:text-[#F6A800] transition-colors">
-              Ворота для дома
-            </Link>
-            <span>/</span>
-            <span className="text-[#00205B] font-medium">{product.name}</span>
-          </div>
-        </div>
-      </motion.div>
 
       <motion.div
         variants={containerVariants}
@@ -133,6 +90,8 @@ export default function ProductPageClient() {
         animate="visible"
         className="container mx-auto px-4 py-8 max-w-7xl"
       >
+        <BreadCrumbs productName={product.name} />
+
         {/* Основная информация о товаре */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Галерея изображений */}
@@ -153,7 +112,11 @@ export default function ProductPageClient() {
                 <ChevronLeft size={20} />
               </button>
               <button
-                onClick={() => setSelectedImage(Math.min(product.images.length - 1, selectedImage + 1))}
+                onClick={() =>
+                  setSelectedImage(
+                    Math.min(product.images.length - 1, selectedImage + 1)
+                  )
+                }
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
               >
                 <ChevronRight size={20} />
@@ -179,16 +142,11 @@ export default function ProductPageClient() {
                   key={index}
                   onClick={() => setSelectedImage(index)}
                   className={`aspect-square bg-white rounded-xl overflow-hidden border-2 transition-all ${
-                    index === selectedImage ? 'border-[#F6A800]' : 'border-gray-200'
+                    index === selectedImage
+                      ? 'border-[#F6A800]'
+                      : 'border-gray-200'
                   }`}
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </button>
+                ></button>
               ))}
             </div>
           </motion.div>
@@ -211,7 +169,11 @@ export default function ProductPageClient() {
                     <Star
                       key={i}
                       size={18}
-                      className={i < Math.floor(product.rating) ? 'text-[#F6A800] fill-current' : 'text-gray-300'}
+                      className={
+                        i < Math.floor(product.rating)
+                          ? 'text-[#F6A800] fill-current'
+                          : 'text-gray-300'
+                      }
                     />
                   ))}
                   <span className="text-sm text-gray-600 ml-2">
@@ -243,28 +205,12 @@ export default function ProductPageClient() {
               {product.description}
             </p>
 
-            {/* Цвета */}
-            <div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-3">Цвет:</h3>
-              <div className="flex space-x-3">
-                {product.colors.map((color) => (
-                  <button
-                    key={color.value}
-                    onClick={() => setSelectedColor(color.value)}
-                    className={`w-12 h-12 rounded-xl border-2 transition-all ${
-                      selectedColor === color.value ? 'border-[#F6A800] scale-110' : 'border-gray-200'
-                    }`}
-                    style={{ backgroundColor: color.hex }}
-                    title={color.name}
-                  />
-                ))}
-              </div>
-            </div>
-
             {/* Количество и кнопки */}
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
-                <span className="text-lg font-semibold text-[#00205B]">Количество:</span>
+                <span className="text-lg font-semibold text-[#00205B]">
+                  Количество:
+                </span>
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -272,7 +218,9 @@ export default function ProductPageClient() {
                   >
                     -
                   </button>
-                  <span className="w-12 text-center font-medium">{quantity}</span>
+                  <span className="w-12 text-center font-medium">
+                    {quantity}
+                  </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
@@ -327,9 +275,16 @@ export default function ProductPageClient() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {product.specifications.map((spec, index) => (
-                <div key={index} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
-                  <span className="text-gray-600 font-medium">{spec.name}:</span>
-                  <span className="text-[#00205B] font-semibold">{spec.value}</span>
+                <div
+                  key={index}
+                  className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
+                >
+                  <span className="text-gray-600 font-medium">
+                    {spec.name}:
+                  </span>
+                  <span className="text-[#00205B] font-semibold">
+                    {spec.value}
+                  </span>
                 </div>
               ))}
             </div>
@@ -343,7 +298,10 @@ export default function ProductPageClient() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {product.features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-2xl p-6 shadow-soft flex items-center space-x-4">
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-6 shadow-soft flex items-center space-x-4"
+              >
                 <div className="w-12 h-12 bg-gradient-to-br from-[#F6A800] to-[#E59400] rounded-xl flex items-center justify-center">
                   <CheckCircle className="w-6 h-6 text-white" />
                 </div>
@@ -363,59 +321,38 @@ export default function ProductPageClient() {
               <div className="w-16 h-16 bg-gradient-to-br from-[#00205B] to-[#1a3a6b] rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Wrench className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-2">Установка</h3>
-              <p className="text-gray-600 text-sm mb-4">Профессиональная установка нашими специалистами</p>
+              <h3 className="text-lg font-semibold text-[#00205B] mb-2">
+                Установка
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Профессиональная установка нашими специалистами
+              </p>
               <span className="text-[#F6A800] font-bold">от 15 000 ₽</span>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-soft text-center">
               <div className="w-16 h-16 bg-gradient-to-br from-[#00205B] to-[#1a3a6b] rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-2">Гарантия</h3>
-              <p className="text-gray-600 text-sm mb-4">Расширенная гарантия до 7 лет</p>
+              <h3 className="text-lg font-semibold text-[#00205B] mb-2">
+                Гарантия
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Расширенная гарантия до 7 лет
+              </p>
               <span className="text-[#F6A800] font-bold">от 5 000 ₽</span>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-soft text-center">
               <div className="w-16 h-16 bg-gradient-to-br from-[#00205B] to-[#1a3a6b] rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Package className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-2">Доставка</h3>
-              <p className="text-gray-600 text-sm mb-4">Быстрая доставка по всему Крыму</p>
+              <h3 className="text-lg font-semibold text-[#00205B] mb-2">
+                Доставка
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Быстрая доставка по всему Крыму
+              </p>
               <span className="text-[#F6A800] font-bold">от 3 000 ₽</span>
             </div>
-          </div>
-        </motion.div>
-
-        {/* Похожие товары */}
-        <motion.div variants={itemVariants} className="mb-16">
-          <h2 className="text-2xl font-bold text-[#00205B] font-montserrat mb-8 text-center">
-            Похожие товары
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {relatedProducts.map((relatedProduct) => (
-              <Link
-                key={relatedProduct.id}
-                href={`/product/${relatedProduct.id}`}
-                className="group bg-white rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
-              >
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                  <Image
-                    src={relatedProduct.image}
-                    alt={relatedProduct.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-[#00205B] mb-2 group-hover:text-[#F6A800] transition-colors">
-                    {relatedProduct.name}
-                  </h3>
-                  <span className="text-xl font-bold text-[#F6A800]">
-                    {relatedProduct.price.toLocaleString('ru-RU')} ₽
-                  </span>
-                </div>
-              </Link>
-            ))}
           </div>
         </motion.div>
 
@@ -426,7 +363,8 @@ export default function ProductPageClient() {
               Нужна консультация?
             </h3>
             <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-              Наши специалисты помогут подобрать оптимальное решение для вашего объекта
+              Наши специалисты помогут подобрать оптимальное решение для вашего
+              объекта
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
