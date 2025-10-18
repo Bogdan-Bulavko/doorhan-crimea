@@ -1,5 +1,6 @@
 'use client';
-
+import { useEffect, useState } from 'react';
+import { API_ENDPOINTS, Category } from '@/types';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
@@ -13,7 +14,25 @@ import {
 } from 'lucide-react';
 
 const CategoriesGrid = () => {
-  const categories = [
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true); // ✅ Добавить состояние загрузки
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fallbackOption: Category[] = [
     {
       id: 1,
       name: 'Ворота для дома',
@@ -82,23 +101,29 @@ const CategoriesGrid = () => {
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  useEffect(() => {
+    const getCatigories = async (): Promise<void> => {
+      try {
+        setLoading(true); // ✅ Начать загрузку
+        const response = await fetch(API_ENDPOINTS.CATEGORIES);
+        const result = await response.json();
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
-  };
+        if (result.success) {
+          setCategories(result.data);
+        }
+      } catch (error) {
+        setCategories(fallbackOption);
+        console.error('Error:', error);
+      } finally {
+        setLoading(false); // ✅ Завершить загрузку
+      }
+    };
+
+    getCatigories();
+  }, []);
 
   return (
-    <section className="pt-12 pb-8 md:pt-24 md:pb-20 bg-gradient-to-br from-gray-50 to-white">
+    <section className="pt-12 pb-8 md:pt-8 md:pb-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Заголовок секции */}
         <motion.div
@@ -116,65 +141,72 @@ const CategoriesGrid = () => {
           </p>
         </motion.div>
 
-        {/* Сетка категорий */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {categories.map((category) => (
-            <motion.div
-              key={category.id}
-              variants={itemVariants}
-              className="group"
-            >
-              <Link href={category.href}>
-                <div className="bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden group-hover:scale-105">
-                  {/* Изображение категории */}
-                  <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <category.icon className="w-16 h-16 text-gray-400" />
+        {/* ✅ Убрать Suspense и использовать loading состояние */}
+        {loading ? (
+          <div className="flex justify-center items-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800]"></div>
+            <span className="ml-4 text-gray-600">Загрузка категорий...</span>
+          </div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {categories.map((category) => (
+              <motion.div
+                key={category.id}
+                variants={itemVariants}
+                className="group"
+              >
+                <Link href={category.href}>
+                  <div className="bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden group-hover:scale-105">
+                    {/* Изображение категории */}
+                    <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <category.icon className="w-16 h-16 text-gray-400" />
+                      </div>
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-white/90 text-[#00205B] px-3 py-1 rounded-full text-sm font-medium">
+                          {category.productCount} товаров
+                        </span>
+                      </div>
                     </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-white/90 text-[#00205B] px-3 py-1 rounded-full text-sm font-medium">
-                        {category.productCount} товаров
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* Контент карточки */}
-                  <div className="p-8">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div
-                        className={`p-3 ${category.color} rounded-xl group-hover:scale-110 transition-transform duration-300`}
-                      >
-                        <category.icon className="w-6 h-6 text-white" />
+                    {/* Контент карточки */}
+                    <div className="p-8">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <div
+                          className={`p-3 ${category.color} rounded-xl group-hover:scale-110 transition-transform duration-300`}
+                        >
+                          <category.icon className="w-6 h-6 text-white" />
+                        </div>
+                        <h3 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
+                          {category.name}
+                        </h3>
                       </div>
-                      <h3 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
-                        {category.name}
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      {category.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">
-                        Посмотреть товары
-                      </span>
-                      <div
-                        className={`${category.color} ${category.hoverColor} text-white p-2 rounded-lg group-hover:scale-110 transition-all duration-300`}
-                      >
-                        <Zap className="w-4 h-4" />
+                      <p className="text-gray-600 mb-6 leading-relaxed">
+                        {category.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">
+                          Посмотреть товары
+                        </span>
+                        <div
+                          className={`${category.color} ${category.hoverColor} text-white p-2 rounded-lg group-hover:scale-110 transition-all duration-300`}
+                        >
+                          <Zap className="w-4 h-4" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         {/* CTA секция */}
         <motion.div
