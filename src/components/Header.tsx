@@ -52,13 +52,13 @@ const Header = () => {
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-8">
               <Link
-                href="tel:+79781234567"
+                href="tel:+7972944149"
                 className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
               >
                 <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
                   <Phone size={14} />
                 </div>
-                <span className="font-medium">+7 (978) 123-45-67</span>
+                <span className="font-medium">+7 (978) 294 41 49</span>
               </Link>
               <Link
                 href="#"

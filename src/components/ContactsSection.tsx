@@ -43,17 +43,17 @@ const ContactsSection = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: '+7 (978) 123-45-67',
+      content: '+7 (978) 294 41 49',
       description: 'Звонки принимаются ежедневно',
-      href: 'tel:+79781234567',
+      href: 'tel:+79782944149',
       color: 'bg-[#F6A800]',
     },
     {
       icon: Mail,
       title: 'Email',
-      content: 'info@crimea-doorhan.ru',
+      content: 'zakaz@doorhan-zavod.ru',
       description: 'Ответим в течение часа',
-      href: 'mailto:info@crimea-doorhan.ru',
+      href: 'mailto:zakaz@doorhan-zavod.ru',
       color: 'bg-[#00205B]',
     },
     {

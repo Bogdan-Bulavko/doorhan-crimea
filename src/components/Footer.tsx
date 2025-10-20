@@ -55,14 +55,14 @@ const Footer = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: '+7 (978) 123-45-67',
-      href: 'tel:+79781234567',
+      content: '+7 (978) 294 41 49',
+      href: 'tel:+79782944149',
     },
     {
       icon: Mail,
       title: 'Email',
-      content: 'info@crimea-doorhan.ru',
-      href: 'mailto:info@crimea-doorhan.ru',
+      content: 'zakaz@doorhan-zavod.ru',
+      href: 'mailto:zakaz@doorhan-zavod.ru',
     },
     {
       icon: MapPin,

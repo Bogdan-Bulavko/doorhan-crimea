@@ -13,12 +13,14 @@ const HeroSection = () => {
   ];
 
   const titleCites = {
-    default: 'Крыму',
+    localhost: 'Крыму',
     simferopol: 'Симферополе',
     sevastopol: 'Севастополе',
     alusta: 'Алуште',
     yalta: 'Ялте',
   };
+
+  const region = window.location.hostname.split('.')[0] || 'localhost';
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -95,7 +97,7 @@ const HeroSection = () => {
             <span className="block">Ворота и роллеты</span>
             <span className="block text-[#F6A800]">DoorHan</span>
             <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
-              в {titleCites.default}
+              в {titleCites[region as keyof typeof titleCites]}
             </span>
           </motion.h1>
 
