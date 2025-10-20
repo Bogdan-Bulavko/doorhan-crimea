@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import DeleteModal from '../../_components/DeleteModal';
+import DeleteModal from '../_components/DeleteModal';
 
 type Product = {
   id: number;

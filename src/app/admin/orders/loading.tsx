@@ -1,4 +1,4 @@
-import { Skeleton, TableSkeleton } from '../../_components/SkeletonLoader';
+import { Skeleton, TableSkeleton } from '../_components/SkeletonLoader';
 
 export default function OrdersLoading() {
   return (
