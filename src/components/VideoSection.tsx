@@ -55,7 +55,6 @@ const VideoSection = () => {
           <div className="relative aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl">
             <video
               className="w-full h-full object-cover"
-              poster="/video-poster.jpg"
               controls
               loop
               preload="metadata"

@@ -17,6 +17,11 @@ export async function generateStaticParams() {
   return products;
 }
 
-export default function PageProduct() {
-  return <ProductPageClient />;
+export default async function PageProduct({
+  params,
+}: {
+  params: Promise<{ 'page-product': string }>;
+}) {
+  const { 'page-product': productId } = await params;
+  return <ProductPageClient productId={productId} />;
 }

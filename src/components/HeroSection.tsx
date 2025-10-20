@@ -20,7 +20,10 @@ const HeroSection = () => {
     yalta: 'Ялте',
   };
 
-  const region = window.location.hostname.split('.')[0] || 'localhost';
+  const region =
+    typeof window !== 'undefined'
+      ? window.location.hostname.split('.')[0]
+      : 'default';
 
   const containerVariants = {
     hidden: { opacity: 0 },

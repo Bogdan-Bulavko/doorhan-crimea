@@ -19,69 +19,141 @@ import {
 import BreadCrumbs from './BreadCrumbs';
 import { Product } from '@/types';
 
-export default function ProductPageClient() {
+interface ProductPageClientProps {
+  productId?: string;
+}
+
+export default function ProductPageClient({
+  productId = '1',
+}: ProductPageClientProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const product: Product = {
-    id: 1,
-    name: 'Гаражные секционные ворота RSD02LUX',
-    title: 'Гаражные секционные ворота RSD02LUX',
-    description:
-      'Секционные ворота RSD02LUX представляют собой модификацию хорошо зарекомендовавших себя ворот RSD01LUX с одной отличительной особенностью — балансировочным механизмом и экономичным автоматическим приводом, размещенными внутри вала, что позволяет сэкономить пространство в гараже. Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью. Конструкция ворот термоэффективна, прочна и проста в монтаже.',
-    shortDescription:
-      'Секционные ворота с автоматическим приводом и балансировочным механизмом',
-    image: 'RSD02LUX.webp',
-    images: [
-      'RSD02LUX.webp',
-      'RSD02LUX.webp',
-      'RSD02LUX.webp',
-      'RSD02LUX.webp',
-    ],
-    features: [
-      'Автоматическое открытие/закрытие',
-      'Высокая коррозионная стойкость',
-      'Изоляция тепла',
-      'Лёгкость',
-      'Простая установка',
-      'Гарантия 10 лет',
-    ],
-    price: 125000,
-    oldPrice: 145000,
-    currency: 'RUB',
-    category: 'Ворота для дома',
-    categoryId: 1,
-    slug: 'garage-section-gates-rsd02lux',
-    sku: 'RSD02LUX-001',
-    inStock: true,
-    stockQuantity: 10,
-    isNew: false,
-    isPopular: true,
-    isFeatured: true,
-    rating: 4.8,
-    reviews: 127,
-    color: '#00205B',
-    hoverColor: '#F6A800',
-    specifications: [
-      { name: 'Ширина проёма, мм', value: '2 000–3 000' },
-      { name: 'Высота проема, мм', value: '1 800–3 000' },
-      { name: 'Материал', value: 'Алюминий' },
-      { name: 'Притолока, мм', value: 'От 180' },
-      { name: 'Пристенки, мм', value: 'От 100' },
-      { name: 'Гарантия', value: '10 лет' },
-    ],
-    colors: [
-      { name: 'Синий', value: 'blue', hex: '#00205B' },
-      { name: 'Белый', value: 'white', hex: '#FFFFFF' },
-      { name: 'Серый', value: 'gray', hex: '#6B7280' },
-    ],
-    relatedProducts: [2, 3, 4],
-    seoTitle: 'Гаражные секционные ворота RSD02LUX - DoorHan Крым',
-    seoDescription:
-      'Качественные секционные ворота RSD02LUX с автоматическим приводом. Установка и гарантия в Крыму.',
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z',
+  // Функция для получения данных товара по ID
+  const getProductById = (id: string): Product => {
+    const products: Record<string, Product> = {
+      '1': {
+        id: 1,
+        name: 'Гаражные секционные ворота RSD02LUX',
+        title: 'Гаражные секционные ворота RSD02LUX',
+        description:
+          'Секционные ворота RSD02LUX представляют собой модификацию хорошо зарекомендовавших себя ворот RSD01LUX с одной отличительной особенностью — балансировочным механизмом и экономичным автоматическим приводом, размещенными внутри вала, что позволяет сэкономить пространство в гараже. Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью. Конструкция ворот термоэффективна, прочна и проста в монтаже.',
+        shortDescription:
+          'Секционные ворота с автоматическим приводом и балансировочным механизмом',
+        image: '/images/RSD02LUX.webp',
+        images: [
+          '/images/RSD02LUX.webp',
+          '/images/RSD02LUX2padding.jpg',
+          '/images/RSD02LUXdrawing.jpg',
+          '/images/RSD02LUXscheme.png',
+        ],
+        features: [
+          'Автоматическое открытие/закрытие',
+          'Высокая коррозионная стойкость',
+          'Изоляция тепла',
+          'Лёгкость',
+          'Простая установка',
+          'Гарантия 10 лет',
+        ],
+        price: 125000,
+        oldPrice: 145000,
+        currency: 'RUB',
+        category: 'Ворота для дома',
+        categoryId: 1,
+        slug: 'garage-section-gates-rsd02lux',
+        sku: 'RSD02LUX-001',
+        inStock: true,
+        stockQuantity: 10,
+        isNew: false,
+        isPopular: true,
+        isFeatured: true,
+        rating: 4.8,
+        reviews: 127,
+        color: '#00205B',
+        hoverColor: '#F6A800',
+        specifications: [
+          { name: 'Ширина проёма, мм', value: '2 000–3 000' },
+          { name: 'Высота проема, мм', value: '1 800–3 000' },
+          { name: 'Материал', value: 'Алюминий' },
+          { name: 'Притолока, мм', value: 'От 180' },
+          { name: 'Пристенки, мм', value: 'От 100' },
+          { name: 'Гарантия', value: '10 лет' },
+        ],
+        colors: [
+          { name: 'Синий', value: 'blue', hex: '#00205B' },
+          { name: 'Белый', value: 'white', hex: '#FFFFFF' },
+          { name: 'Серый', value: 'gray', hex: '#6B7280' },
+        ],
+        relatedProducts: [2, 3, 4],
+        seoTitle: 'Гаражные секционные ворота RSD02LUX - DoorHan Крым',
+        seoDescription:
+          'Качественные секционные ворота RSD02LUX с автоматическим приводом. Установка и гарантия в Крыму.',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-15T10:00:00Z',
+      },
+      '2': {
+        id: 2,
+        name: 'Откатные уличные ворота SLG-A',
+        title: 'Откатные уличные ворота SLG-A',
+        description:
+          'Легкие и надежные ворота с уникальной конструкцией из алюминия и сэндвич-панелей. Устанавливаются на объекты частного или промышленного сектора: дачные участки, поселки, складские и производственные комплексы.',
+        shortDescription: 'Прочные откатные ворота для больших проемов',
+        image: '/images/SLG-A.png',
+        images: [
+          '/images/SLG-A.png',
+          '/images/SLG-A3dmodel.jpg',
+          '/images/SLG-Adrawing.jpg',
+          '/images/schemaSLG-A.jpg',
+        ],
+        features: [
+          'Прочность и надежность',
+          'Долговечность конструкции',
+          'Простота установки',
+          'Автоматическое управление',
+          'Защита от коррозии',
+          'Гарантия 5 лет',
+        ],
+        price: 95000,
+        oldPrice: 110000,
+        currency: 'RUB',
+        category: 'Ворота для дома',
+        categoryId: 1,
+        slug: 'sliding-gates-doorhan-50',
+        sku: 'DH-SG-50',
+        inStock: true,
+        stockQuantity: 8,
+        isNew: false,
+        isPopular: true,
+        isFeatured: false,
+        rating: 4.6,
+        reviews: 89,
+        color: '#F6A800',
+        hoverColor: '#00205B',
+        specifications: [
+          { name: 'Ширина проёма, мм', value: '2 000–7 500' },
+          { name: 'Высота проема, мм', value: '1 000–3 200' },
+          { name: 'Материал', value: 'Алюминий' },
+          { name: 'Просвет, мм', value: 'От 74' },
+          { name: 'Гарантия', value: '5 лет' },
+        ],
+        colors: [
+          { name: 'Белый', value: 'white', hex: '#FFFFFF' },
+          { name: 'Серый', value: 'gray', hex: '#6B7280' },
+          { name: 'Коричневый', value: 'brown', hex: '#8B4513' },
+        ],
+        relatedProducts: [1, 3, 4],
+        seoTitle: 'Откатные ворота DoorHan 50 - DoorHan Крым',
+        seoDescription:
+          'Качественные откатные ворота DoorHan 50 для больших проемов. Установка и гарантия в Крыму.',
+        createdAt: '2024-01-20T10:00:00Z',
+        updatedAt: '2024-01-20T10:00:00Z',
+      },
+    };
+
+    return products[id] || products['1'];
   };
+
+  const product: Product = getProductById(productId);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -165,7 +237,15 @@ export default function ProductPageClient() {
                       ? 'border-[#F6A800]'
                       : 'border-gray-200'
                   }`}
-                ></button>
+                >
+                  <Image
+                    src={image}
+                    alt={`${product.name} ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
               ))}
             </div>
           </motion.div>
