@@ -1,4 +1,4 @@
-import { StatsSkeleton, Skeleton } from '../../_components/SkeletonLoader';
+import { StatsSkeleton, Skeleton } from '../_components/SkeletonLoader';
 
 export default function StatsLoading() {
   return (

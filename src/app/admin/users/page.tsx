@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 import { db } from '@/lib/db';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { TableSkeleton } from '../../_components/SkeletonLoader';
+import { TableSkeleton } from '../_components/SkeletonLoader';
 
 async function UsersTable() {
   const users = await db.user.findMany({ orderBy: { createdAt: 'desc' } });
