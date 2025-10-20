@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://doorhan-crimea'),
+  metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
   alternates: {
     canonical: '/',
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: 'DoorHan Крым | Ворота и автоматика',
     description:
       'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
-    url: 'https://doorhan-crimea',
+    url: process.env.NEXTAUTH_URL || 'http://localhost:3000',
     siteName: 'DoorHan Крым',
     images: [
       {

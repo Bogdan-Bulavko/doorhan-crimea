@@ -162,7 +162,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
   price: number;
   totalPrice: number;
   addedAt: string;
@@ -182,13 +182,13 @@ export interface AddToCartRequest {
   productId: number;
   quantity: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
 }
 
 export interface UpdateCartItemRequest {
   quantity: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
 }
 
 // ===== ORDER TYPES =====
@@ -221,7 +221,7 @@ export interface OrderItem {
   price: number;
   totalPrice: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
 }
 
 export interface CustomerInfo {
@@ -396,7 +396,7 @@ export interface Service {
 export interface ApiError {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export interface ValidationError {
@@ -419,5 +419,5 @@ export interface PaginationOptions {
 }
 
 export interface FilterOptions {
-  [key: string]: any;
+  [key: string]: unknown;
 }

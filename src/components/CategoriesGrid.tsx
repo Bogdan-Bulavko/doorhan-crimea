@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { API_ENDPOINTS, Category } from '@/types';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -32,7 +32,7 @@ const CategoriesGrid = () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  const fallbackOption: Category[] = [
+  const fallbackOption: Category[] = useMemo(() => [
     {
       id: 1,
       name: 'Ворота для дома',
@@ -99,7 +99,7 @@ const CategoriesGrid = () => {
       productCount: 42,
       href: '/categories/products?category=locks',
     },
-  ];
+  ], []);
 
   useEffect(() => {
     const getCatigories = async (): Promise<void> => {
@@ -120,7 +120,7 @@ const CategoriesGrid = () => {
     };
 
     getCatigories();
-  }, []);
+  }, [fallbackOption]);
 
   return (
     <section className="pt-12 pb-8 md:pt-8 md:pb-20 bg-gradient-to-br from-gray-50 to-white">
@@ -183,7 +183,7 @@ const CategoriesGrid = () => {
                         >
                           <category.icon className="w-6 h-6 text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
+                        <h3 className="text-xl font-bold text-[#00205B] font-mонтserrat group-hover:text-[#F6A800] transition-colors">
                           {category.name}
                         </h3>
                       </div>

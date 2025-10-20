@@ -1,0 +1,13 @@
+import { Skeleton, TableSkeleton } from '../_components/SkeletonLoader';
+
+export default function OrdersLoading() {
+  return (
+    <div className="grid gap-6">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-8 w-24" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <TableSkeleton />
+    </div>
+  );
+}
