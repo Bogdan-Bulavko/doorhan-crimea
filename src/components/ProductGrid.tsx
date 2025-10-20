@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Shield,
   Settings,
-  Zap,
   Lock,
   Star,
   CheckCircle,
