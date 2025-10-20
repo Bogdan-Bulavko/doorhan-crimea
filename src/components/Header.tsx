@@ -103,10 +103,11 @@ const Header = () => {
         <div className="container mx-auto px-4 py-4 max-w-7xl">
           <div className="flex items-center justify-between">
             {/* Логотип */}
-            <Link href="/" className="flex items-center space-x-4 group">
+            <Link href="/" className="flex items-center group">
               <motion.div
-                className="relative w-12 h-12 group-hover:scale-110 transition-transform duration-300"
-                whileHover={{ rotate: 5 }}
+                className="relative w-32 h-4 group-hover:scale-105 transition-transform duration-300"
+                whileHover={{ rotate: 1 }}
+                style={{ aspectRatio: '150/19' }}
               >
                 <Image
                   src="https://crimea-doorhan.ru/local/templates/skd/images/logo.svg"
@@ -115,14 +116,6 @@ const Header = () => {
                   className="object-contain"
                 />
               </motion.div>
-              <div>
-                <h1 className="text-xl font-bold text-white font-montserrat group-hover:text-[#F6A800] transition-colors">
-                  DoorHan Крым
-                </h1>
-                <p className="text-sm text-gray-200 font-medium">
-                  Ворота и автоматика
-                </p>
-              </div>
             </Link>
 
             {/* Навигация */}

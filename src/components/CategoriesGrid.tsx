@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { API_ENDPOINTS, Category } from '@/types';
+import { useEffect, useMemo, useState } from 'react';
+import { Category } from '@/types';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
@@ -32,95 +32,84 @@ const CategoriesGrid = () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  const fallbackOption: Category[] = [
-    {
-      id: 1,
-      name: 'Ворота для дома',
-      description: 'Секционные, распашные и откатные ворота для частных домов',
-      image: '/images/category-home.jpg',
-      icon: Home,
-      color: 'bg-blue-500',
-      hoverColor: 'hover:bg-blue-600',
-      productCount: 24,
-      href: '/categories/products?category=home',
-    },
-    {
-      id: 2,
-      name: 'Ворота для гаража',
-      description: 'Автоматические и механические ворота для гаражей',
-      image: '/images/category-garage.jpg',
-      icon: Car,
-      color: 'bg-green-500',
-      hoverColor: 'hover:bg-green-600',
-      productCount: 18,
-      href: '/categories/products?category=garage',
-    },
-    {
-      id: 3,
-      name: 'Промышленные ворота',
-      description: 'Ворота для складов, ангаров и промышленных объектов',
-      image: '/images/category-industrial.jpg',
-      icon: Warehouse,
-      color: 'bg-purple-500',
-      hoverColor: 'hover:bg-purple-600',
-      productCount: 32,
-      href: '/categories/products?category=industrial',
-    },
-    {
-      id: 4,
-      name: 'Роллеты',
-      description: 'Защитные роллеты для окон, дверей и витрин',
-      image: '/images/category-rollers.jpg',
-      icon: Shield,
-      color: 'bg-orange-500',
-      hoverColor: 'hover:bg-orange-600',
-      productCount: 28,
-      href: '/categories/products?category=rollers',
-    },
-    {
-      id: 5,
-      name: 'Автоматика',
-      description: 'Системы автоматизации для ворот и роллет',
-      image: '/images/category-automation.jpg',
-      icon: Settings,
-      color: 'bg-red-500',
-      hoverColor: 'hover:bg-red-600',
-      productCount: 15,
-      href: '/categories/products?category=automation',
-    },
-    {
-      id: 6,
-      name: 'Замки и фурнитура',
-      description: 'Замки, ручки и другая фурнитура для ворот',
-      image: '/images/category-locks.jpg',
-      icon: Lock,
-      color: 'bg-indigo-500',
-      hoverColor: 'hover:bg-indigo-600',
-      productCount: 42,
-      href: '/categories/products?category=locks',
-    },
-  ];
+  const fallbackOption: Category[] = useMemo(
+    () => [
+      {
+        id: 1,
+        name: 'Ворота для дома',
+        description:
+          'Секционные, распашные и откатные ворота для частных домов',
+        image: '/RSD02LUX.webp',
+        icon: Home,
+        color: 'bg-blue-500',
+        hoverColor: 'hover:bg-blue-600',
+        productCount: 24,
+        href: '/categories/products?category=home',
+      },
+      {
+        id: 2,
+        name: 'Ворота для гаража',
+        description: 'Автоматические и механические ворота для гаражей',
+        image: '/RSD02LUX.webp',
+        icon: Car,
+        color: 'bg-green-500',
+        hoverColor: 'hover:bg-green-600',
+        productCount: 18,
+        href: '/categories/products?category=garage',
+      },
+      {
+        id: 3,
+        name: 'Промышленные ворота',
+        description: 'Ворота для складов, ангаров и промышленных объектов',
+        image: '/RSD02LUX.webp',
+        icon: Warehouse,
+        color: 'bg-purple-500',
+        hoverColor: 'hover:bg-purple-600',
+        productCount: 32,
+        href: '/categories/products?category=industrial',
+      },
+      {
+        id: 4,
+        name: 'Роллеты',
+        description: 'Защитные роллеты для окон, дверей и витрин',
+        image: '/RSD02LUX.webp',
+        icon: Shield,
+        color: 'bg-orange-500',
+        hoverColor: 'hover:bg-orange-600',
+        productCount: 28,
+        href: '/categories/products?category=rollers',
+      },
+      {
+        id: 5,
+        name: 'Автоматика',
+        description: 'Системы автоматизации для ворот и роллет',
+        image: '/RSD02LUX.webp',
+        icon: Settings,
+        color: 'bg-red-500',
+        hoverColor: 'hover:bg-red-600',
+        productCount: 15,
+        href: '/categories/products?category=automation',
+      },
+      {
+        id: 6,
+        name: 'Замки и фурнитура',
+        description: 'Замки, ручки и другая фурнитура для ворот',
+        image: '/RSD02LUX.webp',
+        icon: Lock,
+        color: 'bg-indigo-500',
+        hoverColor: 'hover:bg-indigo-600',
+        productCount: 42,
+        href: '/categories/products?category=locks',
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
-    const getCatigories = async (): Promise<void> => {
-      try {
-        setLoading(true); // ✅ Начать загрузку
-        const response = await fetch(API_ENDPOINTS.CATEGORIES);
-        const result = await response.json();
-
-        if (result.success) {
-          setCategories(result.data);
-        }
-      } catch (error) {
-        setCategories(fallbackOption);
-        console.error('Error:', error);
-      } finally {
-        setLoading(false); // ✅ Завершить загрузку
-      }
-    };
-
-    getCatigories();
-  }, []);
+    // Используем только локальные данные, так как у нас есть только 2 товара
+    setCategories(fallbackOption);
+    setLoading(false);
+  }, [fallbackOption]);
 
   return (
     <section className="pt-12 pb-8 md:pt-8 md:pb-20 bg-gradient-to-br from-gray-50 to-white">
@@ -183,7 +172,7 @@ const CategoriesGrid = () => {
                         >
                           <category.icon className="w-6 h-6 text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
+                        <h3 className="text-xl font-bold text-[#00205B] font-mонтserrat group-hover:text-[#F6A800] transition-colors">
                           {category.name}
                         </h3>
                       </div>

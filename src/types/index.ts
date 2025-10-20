@@ -3,14 +3,14 @@ import { LucideIcon } from 'lucide-react';
 // ===== API ENDPOINTS =====
 export const API_ENDPOINTS = {
   // Категории товаров
-  CATEGORIES: '/api/categories',
-  CATEGORY_BY_ID: '/api/categories/:id',
+  CATEGORIES: '/api/admin/categories',
+  CATEGORY_BY_ID: '/api/admin/categories/:id',
 
   // Товары
-  PRODUCTS: '/api/products',
-  PRODUCT_BY_ID: '/api/products/:id',
-  PRODUCTS_BY_CATEGORY: '/api/products?category=:category',
-  PRODUCTS_SEARCH: '/api/products/search?q=:query',
+  PRODUCTS: '/api/admin/products',
+  PRODUCT_BY_ID: '/api/admin/products/:id',
+  PRODUCTS_BY_CATEGORY: '/api/admin/products?category=:category',
+  PRODUCTS_SEARCH: '/api/admin/products/search?q=:query',
 
   // Поиск и фильтрация
   SEARCH: '/api/search',
@@ -162,7 +162,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
   price: number;
   totalPrice: number;
   addedAt: string;
@@ -182,13 +182,13 @@ export interface AddToCartRequest {
   productId: number;
   quantity: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
 }
 
 export interface UpdateCartItemRequest {
   quantity: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
 }
 
 // ===== ORDER TYPES =====
@@ -221,7 +221,7 @@ export interface OrderItem {
   price: number;
   totalPrice: number;
   selectedColor?: string;
-  selectedOptions?: Record<string, any>;
+  selectedOptions?: Record<string, unknown>;
 }
 
 export interface CustomerInfo {
@@ -396,7 +396,7 @@ export interface Service {
 export interface ApiError {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export interface ValidationError {
@@ -419,5 +419,5 @@ export interface PaginationOptions {
 }
 
 export interface FilterOptions {
-  [key: string]: any;
+  [key: string]: unknown;
 }

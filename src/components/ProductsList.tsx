@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   Search,
@@ -22,115 +23,111 @@ const ProductsList = () => {
 
   // Получаем категорию из URL параметров
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const category = urlParams.get('category');
-    if (category) {
-      setSelectedCategory(category);
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category');
+      if (category) {
+        setSelectedCategory(category);
+      }
     }
   }, []);
-
-  const categories = [
-    { id: 'all', name: 'Все товары', count: 159 },
-    { id: 'home', name: 'Ворота для дома', count: 24 },
-    { id: 'garage', name: 'Ворота для гаража', count: 18 },
-    { id: 'industrial', name: 'Промышленные ворота', count: 32 },
-    { id: 'rollers', name: 'Роллеты', count: 28 },
-    { id: 'automation', name: 'Автоматика', count: 15 },
-    { id: 'locks', name: 'Замки и фурнитура', count: 42 },
-  ];
 
   const products = [
     {
       id: 1,
-      name: 'Секционные ворота DoorHan 40',
+      name: 'Гаражные секционные ворота RSD02LUX',
+      title: 'Гаражные секционные ворота RSD02LUX',
       description: 'Надежные секционные ворота с утеплением для частных домов',
-      price: '125 000 ₽',
-      oldPrice: '150 000 ₽',
-      image: '/images/product-1.jpg',
+      shortDescription: 'Секционные ворота с автоматическим приводом',
+      price: 125000,
+      oldPrice: 145000,
+      currency: 'RUB',
+      image: '/images/RSD02LUX.webp',
+      images: [
+        '/images/RSD02LUX.webp',
+        '/images/RSD02LUX2padding.jpg',
+        '/images/RSD02LUXdrawing.jpg',
+        '/images/RSD02LUXscheme.png',
+      ],
       category: 'home',
-      rating: 4.8,
-      reviews: 24,
+      categoryId: 1,
+      slug: 'garage-section-gates-rsd02lux',
+      sku: 'RSD02LUX-001',
       inStock: true,
-      isNew: true,
+      stockQuantity: 10,
+      isNew: false,
+      isPopular: true,
+      isFeatured: true,
+      rating: 4.8,
+      reviews: 127,
+      color: '#00205B',
+      hoverColor: '#F6A800',
       features: ['Утепление', 'Автоматика', 'Гарантия 3 года'],
     },
     {
       id: 2,
-      name: 'Откатные ворота DoorHan 50',
+      name: 'Откатные уличные ворота SLG-A',
+      title: 'Откатные уличные ворота SLG-A',
       description: 'Прочные откатные ворота для больших проемов',
-      price: '95 000 ₽',
-      oldPrice: null,
-      image: '/images/product-2.jpg',
+      shortDescription: 'Легкие и надежные ворота с уникальной конструкцией',
+      price: 95000,
+      oldPrice: 110000,
+      currency: 'RUB',
+      image: '/images/SLG-A.png',
+      images: [
+        '/images/SLG-A.png',
+        '/images/SLG-A3dmodel.jpg',
+        '/images/SLG-Adrawing.jpg',
+        '/images/schemaSLG-A.jpg',
+      ],
       category: 'home',
-      rating: 4.6,
-      reviews: 18,
+      categoryId: 1,
+      slug: 'sliding-gates-slg-a',
+      sku: 'SLG-A-001',
       inStock: true,
+      stockQuantity: 8,
       isNew: false,
+      isPopular: true,
+      isFeatured: false,
+      rating: 4.6,
+      reviews: 89,
+      color: '#F6A800',
+      hoverColor: '#00205B',
       features: ['Прочность', 'Долговечность', 'Простота установки'],
     },
+  ];
+
+  const categories = [
+    { id: 'all', name: 'Все товары', count: products.length },
     {
-      id: 3,
-      name: 'Гаражные ворота DoorHan 30',
-      description: 'Компактные гаражные ворота с автоматическим приводом',
-      price: '85 000 ₽',
-      oldPrice: '100 000 ₽',
-      image: '/images/product-3.jpg',
-      category: 'garage',
-      rating: 4.9,
-      reviews: 31,
-      inStock: true,
-      isNew: true,
-      features: ['Автоматика', 'Безопасность', 'Экономия места'],
+      id: 'home',
+      name: 'Ворота для дома',
+      count: products.filter((p) => p.category === 'home').length,
     },
     {
-      id: 4,
-      name: 'Промышленные ворота DoorHan 100',
-      description: 'Мощные промышленные ворота для складов и ангаров',
-      price: '250 000 ₽',
-      oldPrice: null,
-      image: '/images/product-4.jpg',
-      category: 'industrial',
-      rating: 4.7,
-      reviews: 12,
-      inStock: true,
-      isNew: false,
-      features: [
-        'Высокая прочность',
-        'Большие размеры',
-        'Промышленная автоматика',
-      ],
+      id: 'garage',
+      name: 'Ворота для гаража',
+      count: products.filter((p) => p.category === 'garage').length,
     },
     {
-      id: 5,
-      name: 'Роллеты DoorHan Roll',
-      description: 'Защитные роллеты с электроприводом для окон и дверей',
-      price: '45 000 ₽',
-      oldPrice: '55 000 ₽',
-      image: '/images/product-5.jpg',
-      category: 'rollers',
-      rating: 4.5,
-      reviews: 22,
-      inStock: true,
-      isNew: true,
-      features: ['Электропривод', 'Защита от взлома', 'Шумоизоляция'],
+      id: 'industrial',
+      name: 'Промышленные ворота',
+      count: products.filter((p) => p.category === 'industrial').length,
     },
     {
-      id: 6,
-      name: 'Автоматика DoorHan Drive',
-      description: 'Система автоматизации для ворот и роллет',
-      price: '35 000 ₽',
-      oldPrice: null,
-      image: '/images/product-6.jpg',
-      category: 'automation',
-      rating: 4.8,
-      reviews: 19,
-      inStock: true,
-      isNew: false,
-      features: [
-        'Дистанционное управление',
-        'Безопасность',
-        'Простота монтажа',
-      ],
+      id: 'rollers',
+      name: 'Роллеты',
+      count: products.filter((p) => p.category === 'rollers').length,
+    },
+    {
+      id: 'automation',
+      name: 'Автоматика',
+      count: products.filter((p) => p.category === 'automation').length,
+    },
+    {
+      id: 'locks',
+      name: 'Замки и фурнитура',
+      count: products.filter((p) => p.category === 'locks').length,
     },
   ];
 
@@ -138,7 +135,9 @@ const ProductsList = () => {
     const matchesCategory =
       selectedCategory === 'all' || product.category === selectedCategory;
     const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (product.title || product.name)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -146,19 +145,13 @@ const ProductsList = () => {
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
-        return (
-          parseInt(a.price.replace(/\D/g, '')) -
-          parseInt(b.price.replace(/\D/g, ''))
-        );
+        return (a.price || 0) - (b.price || 0);
       case 'price-high':
-        return (
-          parseInt(b.price.replace(/\D/g, '')) -
-          parseInt(a.price.replace(/\D/g, ''))
-        );
+        return (b.price || 0) - (a.price || 0);
       case 'rating':
         return b.rating - a.rating;
       default:
-        return a.name.localeCompare(b.name);
+        return (a.title || a.name).localeCompare(b.title || b.name);
     }
   });
 
@@ -261,12 +254,13 @@ const ProductsList = () => {
             >
               <Link href={`/categories/products/${product.id}`}>
                 {/* Изображение товара */}
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-[#F6A800] rounded-full flex items-center justify-center">
-                      <Zap className="w-10 h-10 text-white" />
-                    </div>
-                  </div>
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.title || product.name}
+                    fill
+                    className="object-cover"
+                  />
 
                   {/* Бейджи */}
                   <div className="absolute top-4 left-4 flex flex-col space-y-2">
@@ -308,10 +302,10 @@ const ProductsList = () => {
                   </div>
 
                   <h3 className="text-lg font-bold text-[#00205B] font-montserrat mb-2 group-hover:text-[#F6A800] transition-colors">
-                    {product.name}
+                    {product.title || product.name}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    {product.description}
+                    {product.shortDescription || product.description}
                   </p>
 
                   {/* Особенности */}
@@ -330,11 +324,13 @@ const ProductsList = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xl font-bold text-[#00205B]">
-                        {product.price}
+                        {product.price?.toLocaleString('ru-RU')}{' '}
+                        {product.currency || '₽'}
                       </div>
                       {product.oldPrice && (
                         <div className="text-sm text-gray-500 line-through">
-                          {product.oldPrice}
+                          {product.oldPrice.toLocaleString('ru-RU')}{' '}
+                          {product.currency || '₽'}
                         </div>
                       )}
                     </div>

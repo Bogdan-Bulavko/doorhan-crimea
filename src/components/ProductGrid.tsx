@@ -6,8 +6,6 @@ import Image from 'next/image';
 import {
   ArrowRight,
   Shield,
-  Settings,
-  Lock,
   Star,
   CheckCircle,
   ExternalLink,
@@ -17,30 +15,75 @@ const ProductGrid = () => {
   const products = [
     {
       id: 1,
+      name: 'Гаражные секционные ворота RSD02LUX',
       title: 'Гаражные секционные ворота RSD02LUX',
       description:
         'Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью',
-      image: 'RSD02LUX.webp',
+      shortDescription: 'Секционные ворота с автоматическим приводом',
+      image: '/images/RSD02LUX.webp',
+      images: [
+        '/images/RSD02LUX.webp',
+        '/images/RSD02LUX2padding.jpg',
+        '/images/RSD02LUXdrawing.jpg',
+        '/images/RSD02LUXscheme.png',
+      ],
       features: ['Лёгкость', 'Прочность', 'Гарантия 10 лет'],
-      price: '125 000 ₽',
+      price: 125000,
+      oldPrice: 145000,
+      currency: 'RUB',
       category: 'Ворота для дома',
+      categoryId: 1,
+      slug: 'garage-section-gates-rsd02lux',
+      sku: 'RSD02LUX-001',
+      inStock: true,
+      stockQuantity: 10,
+      isNew: false,
+      isPopular: true,
+      isFeatured: true,
+      rating: 4.8,
+      reviews: 127,
+      color: '#00205B',
+      hoverColor: '#F6A800',
       icon: Shield,
-      color: 'bg-[#00205B]',
-      hoverColor: 'hover:bg-[#00153E]',
-      href: '/categories/products/',
+      bgColor: 'bg-[#00205B]',
+      bgHoverColor: 'hover:bg-[#00153E]',
+      href: '/categories/products/1',
     },
     {
       id: 2,
-      title: 'Откатные ворота DoorHan 50',
-      description: 'Прочные откатные ворота для больших проемов',
-      image: '/images/product-2.jpg',
+      name: 'Откатные уличные ворота SLG-A',
+      title: 'Откатные уличные ворота SLG-A',
+      description:
+        'Легкие и надежные ворота с уникальной конструкцией из алюминия',
+      shortDescription: 'Прочные откатные ворота для больших проемов',
+      image: '/images/SLG-A.png',
+      images: [
+        '/images/SLG-A.png',
+        '/images/SLG-A3dmodel.jpg',
+        '/images/SLG-Adrawing.jpg',
+        '/images/schemaSLG-A.jpg',
+      ],
       features: ['Прочность', 'Долговечность', 'Простота установки'],
-      price: '95 000 ₽',
+      price: 95000,
+      oldPrice: 110000,
+      currency: 'RUB',
       category: 'Ворота для дома',
+      categoryId: 1,
+      slug: 'sliding-gates-slg-a',
+      sku: 'SLG-A-001',
+      inStock: true,
+      stockQuantity: 8,
+      isNew: false,
+      isPopular: true,
+      isFeatured: false,
+      rating: 4.6,
+      reviews: 89,
+      color: '#F6A800',
+      hoverColor: '#00205B',
       icon: Shield,
-      color: 'bg-[#F6A800]',
-      hoverColor: 'hover:bg-[#ffb700]',
-      href: '/categories/products/',
+      bgColor: 'bg-[#F6A800]',
+      bgHoverColor: 'hover:bg-[#ffb700]',
+      href: '/categories/products/2',
     },
   ];
 
@@ -125,10 +168,10 @@ const ProductGrid = () => {
               {/* Контент карточки */}
               <div className="p-8">
                 <h3 className="text-xl font-bold text-[#00205B] mb-3 font-montserrat group-hover:text-[#F6A800] transition-colors">
-                  {product.title}
+                  {product.title || product.name}
                 </h3>
                 <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                  {product.description}
+                  {product.shortDescription || product.description}
                 </p>
 
                 {/* Особенности */}
@@ -146,9 +189,23 @@ const ProductGrid = () => {
 
                 {/* Цена и кнопка */}
                 <div className="flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-bold text-[#00205B]">
+                      {product.price?.toLocaleString('ru-RU')}{' '}
+                      {product.currency || '₽'}
+                    </span>
+                    {product.oldPrice && (
+                      <span className="text-sm text-gray-500 line-through">
+                        {product.oldPrice.toLocaleString('ru-RU')}{' '}
+                        {product.currency || '₽'}
+                      </span>
+                    )}
+                  </div>
                   <Link
-                    href={product.href + product.id}
-                    className={`group/btn ${product.color} ${product.hoverColor} text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105`}
+                    href={`/categories/products/${product.id}`}
+                    className={`group/btn ${product.bgColor || product.color} ${
+                      product.bgHoverColor || product.hoverColor
+                    } text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105`}
                   >
                     <span>Подробнее</span>
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
