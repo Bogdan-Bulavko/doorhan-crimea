@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   Star,
-  Shield,
   CheckCircle,
   Heart,
   Share2,
@@ -15,54 +14,73 @@ import {
   ShoppingCart,
   ChevronLeft,
   ChevronRight,
-  Package,
-  Wrench,
 } from 'lucide-react';
 
 import BreadCrumbs from './BreadCrumbs';
+import { Product } from '@/types';
 
 export default function ProductPageClient() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  // Пример данных товара (замените на реальные данные)
-  const product = {
+  const product: Product = {
     id: 1,
-    name: 'Секционные ворота DoorHan 4.0',
-    category: 'Ворота для дома',
+    name: 'Гаражные секционные ворота RSD02LUX',
+    title: 'Гаражные секционные ворота RSD02LUX',
+    description:
+      'Секционные ворота RSD02LUX представляют собой модификацию хорошо зарекомендовавших себя ворот RSD01LUX с одной отличительной особенностью — балансировочным механизмом и экономичным автоматическим приводом, размещенными внутри вала, что позволяет сэкономить пространство в гараже. Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью. Конструкция ворот термоэффективна, прочна и проста в монтаже.',
+    shortDescription:
+      'Секционные ворота с автоматическим приводом и балансировочным механизмом',
+    image: 'RSD02LUX.webp',
+    images: [
+      'RSD02LUX.webp',
+      'RSD02LUX.webp',
+      'RSD02LUX.webp',
+      'RSD02LUX.webp',
+    ],
+    features: [
+      'Автоматическое открытие/закрытие',
+      'Высокая коррозионная стойкость',
+      'Изоляция тепла',
+      'Лёгкость',
+      'Простая установка',
+      'Гарантия 10 лет',
+    ],
     price: 125000,
     oldPrice: 145000,
+    currency: 'RUB',
+    category: 'Ворота для дома',
+    categoryId: 1,
+    slug: 'garage-section-gates-rsd02lux',
+    sku: 'RSD02LUX-001',
+    inStock: true,
+    stockQuantity: 10,
+    isNew: false,
+    isPopular: true,
+    isFeatured: true,
     rating: 4.8,
     reviews: 127,
-    images: [
-      '/images/product-1.jpg',
-      '/images/product-2.jpg',
-      '/images/product-3.jpg',
-      '/images/product-4.jpg',
+    color: '#00205B',
+    hoverColor: '#F6A800',
+    specifications: [
+      { name: 'Ширина проёма, мм', value: '2 000–3 000' },
+      { name: 'Высота проема, мм', value: '1 800–3 000' },
+      { name: 'Материал', value: 'Алюминий' },
+      { name: 'Притолока, мм', value: 'От 180' },
+      { name: 'Пристенки, мм', value: 'От 100' },
+      { name: 'Гарантия', value: '10 лет' },
     ],
     colors: [
       { name: 'Синий', value: 'blue', hex: '#00205B' },
       { name: 'Белый', value: 'white', hex: '#FFFFFF' },
       { name: 'Серый', value: 'gray', hex: '#6B7280' },
     ],
-    features: [
-      'Автоматическое открытие/закрытие',
-      'Защита от взлома',
-      'Изоляция тепла и шума',
-      'Современный дизайн',
-      'Простая установка',
-      'Гарантия 5 лет',
-    ],
-    specifications: [
-      { name: 'Ширина', value: 'до 6 метров' },
-      { name: 'Высота', value: 'до 3 метров' },
-      { name: 'Материал', value: 'Оцинкованная сталь' },
-      { name: 'Изоляция', value: 'Полиуретан 40мм' },
-      { name: 'Привод', value: 'Электрический' },
-      { name: 'Гарантия', value: '5 лет' },
-    ],
-    description:
-      'Секционные ворота DoorHan 4.0 — это современное решение для защиты и удобства. Высокое качество материалов и продуманная конструкция обеспечивают надежность и долговечность.',
+    relatedProducts: [2, 3, 4],
+    seoTitle: 'Гаражные секционные ворота RSD02LUX - DoorHan Крым',
+    seoDescription:
+      'Качественные секционные ворота RSD02LUX с автоматическим приводом. Установка и гарантия в Крыму.',
+    createdAt: '2024-01-15T10:00:00Z',
+    updatedAt: '2024-01-15T10:00:00Z',
   };
 
   const containerVariants = {
@@ -97,6 +115,7 @@ export default function ProductPageClient() {
           {/* Галерея изображений */}
           <motion.div variants={itemVariants} className="space-y-4">
             {/* Главное изображение */}
+
             <div className="relative aspect-square bg-white rounded-3xl shadow-soft overflow-hidden">
               <Image
                 src={product.images[selectedImage]}
@@ -161,7 +180,7 @@ export default function ProductPageClient() {
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-[#00205B] font-montserrat mb-4">
-                {product.name}
+                {product.title || product.name}
               </h1>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-1">
@@ -186,11 +205,11 @@ export default function ProductPageClient() {
             {/* Цена */}
             <div className="flex items-center space-x-4">
               <span className="text-3xl font-bold text-[#00205B]">
-                {product.price.toLocaleString('ru-RU')} ₽
+                {product.price.toLocaleString('ru-RU')} {product.currency}
               </span>
               {product.oldPrice && (
                 <span className="text-xl text-gray-500 line-through">
-                  {product.oldPrice.toLocaleString('ru-RU')} ₽
+                  {product.oldPrice.toLocaleString('ru-RU')} {product.currency}
                 </span>
               )}
               {product.oldPrice && (
@@ -308,51 +327,6 @@ export default function ProductPageClient() {
                 <span className="text-gray-700 font-medium">{feature}</span>
               </div>
             ))}
-          </div>
-        </motion.div>
-
-        {/* Дополнительные услуги */}
-        <motion.div variants={itemVariants} className="mb-16">
-          <h2 className="text-2xl font-bold text-[#00205B] font-montserrat mb-8 text-center">
-            Дополнительные услуги
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-soft text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#00205B] to-[#1a3a6b] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Wrench className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-2">
-                Установка
-              </h3>
-              <p className="text-gray-600 text-sm mb-4">
-                Профессиональная установка нашими специалистами
-              </p>
-              <span className="text-[#F6A800] font-bold">от 15 000 ₽</span>
-            </div>
-            <div className="bg-white rounded-2xl p-6 shadow-soft text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#00205B] to-[#1a3a6b] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-2">
-                Гарантия
-              </h3>
-              <p className="text-gray-600 text-sm mb-4">
-                Расширенная гарантия до 7 лет
-              </p>
-              <span className="text-[#F6A800] font-bold">от 5 000 ₽</span>
-            </div>
-            <div className="bg-white rounded-2xl p-6 shadow-soft text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#00205B] to-[#1a3a6b] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Package className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-[#00205B] mb-2">
-                Доставка
-              </h3>
-              <p className="text-gray-600 text-sm mb-4">
-                Быстрая доставка по всему Крыму
-              </p>
-              <span className="text-[#F6A800] font-bold">от 3 000 ₽</span>
-            </div>
           </div>
         </motion.div>
 

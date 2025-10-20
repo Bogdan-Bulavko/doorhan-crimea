@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowRight,
   Shield,
   Settings,
-  Zap,
   Lock,
   Star,
   CheckCircle,
@@ -17,10 +17,11 @@ const ProductGrid = () => {
   const products = [
     {
       id: 1,
-      title: 'Секционные ворота DoorHan 40',
-      description: 'Надежные секционные ворота с утеплением для частных домов',
-      image: '/images/product-1.jpg',
-      features: ['Утепление', 'Автоматика', 'Гарантия 3 года'],
+      title: 'Гаражные секционные ворота RSD02LUX',
+      description:
+        'Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью',
+      image: 'RSD02LUX.webp',
+      features: ['Лёгкость', 'Прочность', 'Гарантия 10 лет'],
       price: '125 000 ₽',
       category: 'Ворота для дома',
       icon: Shield,
@@ -37,66 +38,6 @@ const ProductGrid = () => {
       price: '95 000 ₽',
       category: 'Ворота для дома',
       icon: Shield,
-      color: 'bg-[#F6A800]',
-      hoverColor: 'hover:bg-[#ffb700]',
-      href: '/categories/products/',
-    },
-    {
-      id: 3,
-      title: 'Гаражные ворота DoorHan 30',
-      description: 'Компактные гаражные ворота с автоматическим приводом',
-      image: '/images/product-3.jpg',
-      features: ['Автоматика', 'Безопасность', 'Экономия места'],
-      price: '85 000 ₽',
-      category: 'Ворота для гаража',
-      icon: Settings,
-      color: 'bg-[#00205B]',
-      hoverColor: 'hover:bg-[#00153E]',
-      href: '/categories/products/',
-    },
-    {
-      id: 4,
-      title: 'Промышленные ворота DoorHan 100',
-      description: 'Мощные промышленные ворота для складов и ангаров',
-      image: '/images/product-4.jpg',
-      features: [
-        'Высокая прочность',
-        'Большие размеры',
-        'Промышленная автоматика',
-      ],
-      price: '250 000 ₽',
-      category: 'Промышленные ворота',
-      icon: Shield,
-      color: 'bg-[#F6A800]',
-      hoverColor: 'hover:bg-[#ffb700]',
-      href: '/categories/products/',
-    },
-    {
-      id: 5,
-      title: 'Роллеты DoorHan Roll',
-      description: 'Защитные роллеты с электроприводом для окон и дверей',
-      image: '/images/product-5.jpg',
-      features: ['Электропривод', 'Защита от взлома', 'Шумоизоляция'],
-      price: '45 000 ₽',
-      category: 'Роллеты',
-      icon: Lock,
-      color: 'bg-[#00205B]',
-      hoverColor: 'hover:bg-[#00153E]',
-      href: '/categories/products/',
-    },
-    {
-      id: 6,
-      title: 'Автоматика DoorHan Drive',
-      description: 'Система автоматизации для ворот и роллет',
-      image: '/images/product-6.jpg',
-      features: [
-        'Дистанционное управление',
-        'Безопасность',
-        'Простота монтажа',
-      ],
-      price: '35 000 ₽',
-      category: 'Автоматика',
-      icon: Settings,
       color: 'bg-[#F6A800]',
       hoverColor: 'hover:bg-[#ffb700]',
       href: '/categories/products/',
@@ -155,7 +96,14 @@ const ProductGrid = () => {
             >
               {/* Изображение продукта */}
               <div className="relative h-64 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00205B]/20 to-[#F6A800]/20 z-10"></div>
+                <div className="absolute inset-0 z-10">
+                  <Image
+                    src={product.image}
+                    alt={product.title}
+                    fill
+                    className="object-cover"
+                  ></Image>
+                </div>
                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                   <product.icon className="w-16 h-16 text-gray-400" />
                 </div>
@@ -198,11 +146,6 @@ const ProductGrid = () => {
 
                 {/* Цена и кнопка */}
                 <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-2xl font-bold text-[#00205B] font-montserrat">
-                      {product.price}
-                    </span>
-                  </div>
                   <Link
                     href={product.href + product.id}
                     className={`group/btn ${product.color} ${product.hoverColor} text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105`}

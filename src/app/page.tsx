@@ -2,6 +2,7 @@
 export const dynamic = 'force-static';
 
 import HeroSection from '@/components/HeroSection';
+import VideoSection from '@/components/VideoSection';
 import StatsSection from '@/components/StatsSection';
 import ProductGrid from '@/components/ProductGrid';
 import AboutSection from '@/components/AboutSection';
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <HeroSection />
+      <VideoSection />
       <StatsSection />
       <ProductGrid />
       <AboutSection />
