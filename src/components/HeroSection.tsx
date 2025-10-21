@@ -3,8 +3,17 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Shield, Award, Users, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const HeroSection = () => {
+  const [region, setRegion] = useState('default');
+
+  useEffect(() => {
+    // Определяем регион только на клиенте после гидратации
+    const hostname = window.location.hostname.split('.')[0];
+    setRegion(hostname);
+  }, []);
+
   const features = [
     { icon: Shield, text: 'Гарантия качества' },
     { icon: Award, text: 'Сертификаты' },
@@ -19,11 +28,6 @@ const HeroSection = () => {
     alusta: 'Алуште',
     yalta: 'Ялте',
   };
-
-  const region =
-    typeof window !== 'undefined'
-      ? window.location.hostname.split('.')[0]
-      : 'default';
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -100,7 +104,7 @@ const HeroSection = () => {
             <span className="block">Ворота и роллеты</span>
             <span className="block text-[#F6A800]">DoorHan</span>
             <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
-              в {titleCites[region as keyof typeof titleCites]}
+              в {titleCites[region as keyof typeof titleCites] || 'Крыму'}
             </span>
           </motion.h1>
 
