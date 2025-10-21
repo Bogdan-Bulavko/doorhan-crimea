@@ -363,7 +363,7 @@ const ProductsList = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/contacts"
+                href="/#contact"
                 className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105"
               >
                 <span>Связаться с нами</span>

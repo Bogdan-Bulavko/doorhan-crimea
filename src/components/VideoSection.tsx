@@ -76,28 +76,7 @@ const VideoSection = () => {
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
             className="mt-8 text-center"
-          >
-            <p className="text-gray-600 text-lg mb-6">
-              Хотите увидеть больше? Посетите наш шоу-рум или закажите выезд
-              специалиста
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                Записаться на просмотр
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="border-2 border-[#00205B] hover:bg-[#00205B] text-[#00205B] hover:text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300"
-              >
-                Вызвать замерщика
-              </motion.button>
-            </div>
-          </motion.div>
+          ></motion.div>
         </motion.div>
       </div>
     </section>

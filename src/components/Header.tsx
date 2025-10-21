@@ -13,10 +13,12 @@ import {
   User,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import CallbackModal from './CallbackModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,12 +80,12 @@ const Header = () => {
                 9:00 - 18:00
               </div>
               <div className="w-px h-4 bg-white/20"></div>
-              <Link
-                href="#"
+              <button
+                onClick={() => setIsCallbackModalOpen(true)}
                 className="text-sm hover:text-[#F6A800] transition-colors font-medium"
               >
                 Заказать звонок
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -233,6 +235,12 @@ const Header = () => {
           )}
         </AnimatePresence>
       </motion.header>
+
+      {/* Callback Modal */}
+      <CallbackModal
+        isOpen={isCallbackModalOpen}
+        onClose={() => setIsCallbackModalOpen(false)}
+      />
     </>
   );
 };
