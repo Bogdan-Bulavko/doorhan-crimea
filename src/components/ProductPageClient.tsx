@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 
 import BreadCrumbs from './BreadCrumbs';
+import CallbackModal from './CallbackModal';
 import { Product } from '@/types';
 
 interface ProductPageClientProps {
@@ -28,6 +29,7 @@ export default function ProductPageClient({
 }: ProductPageClientProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
 
   // Функция для получения данных товара по ID
   const getProductById = (id: string): Product => {
@@ -339,6 +341,7 @@ export default function ProductPageClient({
                   <span>Добавить в корзину</span>
                 </motion.button>
                 <motion.button
+                  onClick={() => setIsCallbackModalOpen(true)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="flex-1 border-2 border-[#00205B] hover:bg-[#00205B] text-[#00205B] hover:text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2"
@@ -438,6 +441,12 @@ export default function ProductPageClient({
           </div>
         </motion.div>
       </motion.div>
+
+      {/* Callback Modal */}
+      <CallbackModal
+        isOpen={isCallbackModalOpen}
+        onClose={() => setIsCallbackModalOpen(false)}
+      />
     </main>
   );
 }

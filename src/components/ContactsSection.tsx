@@ -21,14 +21,9 @@ const ContactsSection = () => {
     message: '',
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Здесь будет логика отправки формы
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,6 +32,45 @@ const ContactsSection = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          type: 'contact',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitMessage(result.message);
+        setFormData({ name: '', phone: '', email: '', message: '' });
+        setIsSubmitted(true);
+        setTimeout(() => setIsSubmitted(false), 5000);
+      } else {
+        setSubmitMessage(
+          result.message || 'Произошла ошибка при отправке формы'
+        );
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitMessage(
+        'Произошла ошибка при отправке формы. Попробуйте еще раз.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const contactInfo = [
@@ -310,12 +344,34 @@ const ContactsSection = () => {
                   />
                 </div>
 
+                {submitMessage && (
+                  <div
+                    className={`p-4 rounded-xl text-center ${
+                      submitMessage.includes('успешно')
+                        ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+                        : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                    }`}
+                  >
+                    {submitMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-[#F6A800] hover:bg-[#ffb700] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105"
+                  disabled={isLoading}
+                  className="w-full bg-[#F6A800] hover:bg-[#ffb700] disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105"
                 >
-                  <Send size={20} />
-                  <span>Отправить заявку</span>
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Отправляем...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      <span>Отправить заявку</span>
+                    </>
+                  )}
                 </button>
 
                 <p className="text-xs text-gray-300 text-center">
