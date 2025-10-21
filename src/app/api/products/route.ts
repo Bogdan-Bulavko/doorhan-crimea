@@ -12,18 +12,33 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    let whereClause: any = { isActive: true };
+    console.log('🔍 API products запрос:', {
+      categoryId,
+      categorySlug,
+      page,
+      limit,
+      search,
+      sortBy,
+      sortOrder,
+    });
+
+    const whereClause: Record<string, unknown> = {};
 
     // Фильтр по категории
     if (categoryId) {
+      console.log('🔍 Фильтр по categoryId:', categoryId);
       whereClause.categoryId = parseInt(categoryId);
     } else if (categorySlug) {
+      console.log('🔍 Фильтр по categorySlug:', categorySlug);
       const category = await db.category.findFirst({
         where: { slug: categorySlug, isActive: true },
       });
+      console.log('🔍 Найденная категория:', category);
       if (category) {
         whereClause.categoryId = category.id;
+        console.log('🔍 Установлен categoryId в whereClause:', category.id);
       } else {
+        console.log('🔍 Категория не найдена для slug:', categorySlug);
         return NextResponse.json(
           {
             success: false,
@@ -34,13 +49,83 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Поиск по названию
+    // Поиск по названию, описанию и категории
     if (search) {
-      whereClause.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
+      console.log('🔍 Поиск по запросу:', search);
+
+      // Сначала найдем категории, которые содержат поисковый запрос
+      const matchingCategories = await db.category.findMany({
+        where: {
+          name: { contains: search },
+          isActive: true,
+        },
+        select: { id: true, name: true },
+      });
+
+      console.log('🔍 Найденные категории:', matchingCategories);
+
+      // Создаем условия поиска
+      const searchConditions: Record<string, unknown>[] = [
+        { name: { contains: search } },
+        { description: { contains: search } },
       ];
+
+      // Если найдены подходящие категории, добавляем их в условия
+      if (matchingCategories.length > 0) {
+        searchConditions.push({
+          categoryId: { in: matchingCategories.map((c) => c.id) },
+        });
+      }
+
+      whereClause.OR = searchConditions;
+      console.log('🔍 Условие поиска:', JSON.stringify(whereClause, null, 2));
+
+      // Дополнительная отладка - проверим каждое условие отдельно
+      console.log('🔍 Тестируем каждое условие:');
+
+      // Тест 1: Поиск по названию
+      const testByName = await db.product.findMany({
+        where: { name: { contains: search } },
+        include: { category: { select: { name: true } } },
+      });
+      console.log(
+        '🔍 По названию:',
+        testByName.map((p) => ({ name: p.name, category: p.category.name }))
+      );
+
+      // Тест 2: Поиск по описанию
+      const testByDescription = await db.product.findMany({
+        where: { description: { contains: search } },
+        include: { category: { select: { name: true } } },
+      });
+      console.log(
+        '🔍 По описанию:',
+        testByDescription.map((p) => ({
+          name: p.name,
+          category: p.category.name,
+        }))
+      );
+
+      // Тест 3: Поиск по категории
+      if (matchingCategories.length > 0) {
+        const testByCategory = await db.product.findMany({
+          where: { categoryId: { in: matchingCategories.map((c) => c.id) } },
+          include: { category: { select: { name: true } } },
+        });
+        console.log(
+          '🔍 По категории:',
+          testByCategory.map((p) => ({
+            name: p.name,
+            category: p.category.name,
+          }))
+        );
+      }
     }
+
+    console.log(
+      '🔍 Финальный whereClause:',
+      JSON.stringify(whereClause, null, 2)
+    );
 
     const skip = (page - 1) * limit;
 
@@ -64,6 +149,30 @@ export async function GET(req: NextRequest) {
       db.product.count({ where: whereClause }),
     ]);
 
+    if (search) {
+      console.log('🔍 Найдено товаров:', products.length);
+      console.log(
+        '🔍 Результаты:',
+        products.map((p) => ({
+          name: p.name,
+          category: p.category.name,
+          categoryId: p.categoryId,
+        }))
+      );
+
+      // Дополнительная отладка - покажем все товары в базе
+      const allProducts = await db.product.findMany({
+        include: { category: { select: { name: true } } },
+      });
+      console.log(
+        '🔍 Все товары в базе:',
+        allProducts.map((p) => ({
+          name: p.name,
+          category: p.category.name,
+        }))
+      );
+    }
+
     return NextResponse.json({
       success: true,
       data: products,
@@ -85,4 +194,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-

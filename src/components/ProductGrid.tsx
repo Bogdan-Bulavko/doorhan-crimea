@@ -3,108 +3,114 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  ArrowRight,
-  Shield,
-  Star,
-  CheckCircle,
-  ExternalLink,
-} from 'lucide-react';
+import { Star, ShoppingCart, Eye, Heart } from 'lucide-react';
+import { useProducts } from '@/hooks/useProducts';
 
-const ProductGrid = () => {
-  const products = [
-    {
-      id: 1,
-      name: 'Гаражные секционные ворота RSD02LUX',
-      title: 'Гаражные секционные ворота RSD02LUX',
-      description:
-        'Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью',
-      shortDescription: 'Секционные ворота с автоматическим приводом',
-      image: '/images/RSD02LUX.webp',
-      images: [
-        '/images/RSD02LUX.webp',
-        '/images/RSD02LUX2padding.jpg',
-        '/images/RSD02LUXdrawing.jpg',
-        '/images/RSD02LUXscheme.png',
-      ],
-      features: ['Лёгкость', 'Прочность', 'Гарантия 10 лет'],
-      price: 125000,
-      oldPrice: 145000,
-      currency: 'RUB',
-      category: 'Ворота для дома',
-      categoryId: 1,
-      slug: 'garage-section-gates-rsd02lux',
-      sku: 'RSD02LUX-001',
-      inStock: true,
-      stockQuantity: 10,
-      isNew: false,
-      isPopular: true,
-      isFeatured: true,
-      rating: 4.8,
-      reviews: 127,
-      color: '#00205B',
-      hoverColor: '#F6A800',
-      icon: Shield,
-      bgColor: 'bg-[#00205B]',
-      bgHoverColor: 'hover:bg-[#00153E]',
-      href: '/categories/products/1',
-    },
-    {
-      id: 2,
-      name: 'Откатные уличные ворота SLG-A',
-      title: 'Откатные уличные ворота SLG-A',
-      description:
-        'Легкие и надежные ворота с уникальной конструкцией из алюминия',
-      shortDescription: 'Прочные откатные ворота для больших проемов',
-      image: '/images/SLG-A.png',
-      images: [
-        '/images/SLG-A.png',
-        '/images/SLG-A3dmodel.jpg',
-        '/images/SLG-Adrawing.jpg',
-        '/images/schemaSLG-A.jpg',
-      ],
-      features: ['Прочность', 'Долговечность', 'Простота установки'],
-      price: 95000,
-      oldPrice: 110000,
-      currency: 'RUB',
-      category: 'Ворота для дома',
-      categoryId: 1,
-      slug: 'sliding-gates-slg-a',
-      sku: 'SLG-A-001',
-      inStock: true,
-      stockQuantity: 8,
-      isNew: false,
-      isPopular: true,
-      isFeatured: false,
-      rating: 4.6,
-      reviews: 89,
-      color: '#F6A800',
-      hoverColor: '#00205B',
-      icon: Shield,
-      bgColor: 'bg-[#F6A800]',
-      bgHoverColor: 'hover:bg-[#ffb700]',
-      href: '/categories/products/2',
-    },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
+interface Product {
+  id: number;
+  name: string;
+  title?: string;
+  description?: string;
+  shortDescription?: string;
+  mainImageUrl?: string;
+  categoryId: number;
+  category?: {
+    id: number;
+    name: string;
+    slug: string;
   };
+  slug: string;
+  sku?: string;
+  price: string;
+  oldPrice?: string | null;
+  currency: string;
+  inStock: boolean;
+  stockQuantity: number;
+  isNew: boolean;
+  isPopular: boolean;
+  isFeatured: boolean;
+  rating: string;
+  reviewsCount: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  images?: unknown[];
+  specifications?: unknown[];
+  colors?: unknown[];
+  createdAt: string;
+  updatedAt: string;
+}
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
-  };
+interface ProductGridProps {
+  products?: Product[];
+  loading?: boolean;
+  error?: string | null;
+}
+
+const ProductGrid = ({
+  products: externalProducts,
+  loading: externalLoading,
+  error: externalError,
+}: ProductGridProps) => {
+  // Если данные переданы извне, используем их
+  const {
+    products: hookProducts,
+    loading: hookLoading,
+    error: hookError,
+  } = useProducts({ limit: 8 });
+
+  // Используем переданные данные или данные из хука
+  const products = externalProducts || hookProducts;
+  const loading = externalLoading !== undefined ? externalLoading : hookLoading;
+  const error = externalError !== undefined ? externalError : hookError;
+
+  // Проверяем, что products существует
+  if (!products) {
+    return (
+      <div className="flex justify-center items-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800]"></div>
+        <span className="ml-4 text-gray-600">Инициализация...</span>
+      </div>
+    );
+  }
+
+  // Обработка ошибок
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500">Ошибка при загрузке товаров: {error}</p>
+      </div>
+    );
+  }
+
+  // Показываем загрузку
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800]"></div>
+        <span className="ml-4 text-gray-600">Загрузка товаров...</span>
+      </div>
+    );
+  }
+
+  // Если нет товаров
+  if (!products || products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-gray-400 mb-4">
+          <ShoppingCart className="w-16 h-16 mx-auto" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          Товары не найдены
+        </h3>
+        <p className="text-gray-500">
+          Попробуйте изменить параметры поиска или фильтры
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <section id="products" className="pt-12 pb-8 md:py-20 bg-white">
+    <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Заголовок секции */}
         <motion.div
@@ -114,144 +120,131 @@ const ProductGrid = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#00205B] font-montserrat mb-6">
-            Наша продукция
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#00205B] font-montserrat mb-6">
+            Популярные товары
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-            Широкий ассортимент качественных ворот, роллет и автоматических
-            систем
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Выберите качественные ворота и роллеты DoorHan для вашего дома
           </p>
         </motion.div>
 
-        {/* Сетка продуктов */}
+        {/* Сетка товаров */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {products.map((product) => (
+          {products.map((product, index) => (
             <motion.div
               key={product.id}
-              variants={itemVariants}
-              className="group bg-white rounded-2xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-[#F6A800]/20"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * index }}
+              className="group bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
-              {/* Изображение продукта */}
-              <div className="relative h-64 overflow-hidden">
-                <div className="absolute inset-0 z-10">
+              <Link href={`/categories/products/${product.slug}`}>
+                {/* Изображение товара */}
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                   <Image
-                    src={product.image}
-                    alt={product.title}
+                    src={product.mainImageUrl || '/images/placeholder.jpg'}
+                    alt={product.title || product.name}
                     fill
                     className="object-cover"
-                  ></Image>
-                </div>
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <product.icon className="w-16 h-16 text-gray-400" />
-                </div>
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="bg-white/90 text-[#00205B] px-3 py-1 rounded-full text-sm font-medium">
-                    {product.category}
+                  />
+
+                  {/* Бейджи */}
+                  <div className="absolute top-4 left-4 flex flex-col space-y-2">
+                    {product.isNew && (
+                      <span className="bg-[#F6A800] text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Новинка
+                      </span>
+                    )}
+                    {product.oldPrice && (
+                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Скидка
                   </span>
+                    )}
                 </div>
-                <div className="absolute top-4 right-4 z-20">
-                  <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center">
-                    <Star
-                      className="w-5 h-5 text-[#F6A800]"
-                      fill="currentColor"
-                    />
-                  </div>
+
+                  {/* Действия */}
+                  <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
+                      <Heart className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
+                      <Eye className="w-4 h-4 text-gray-600" />
+                    </button>
                 </div>
               </div>
 
-              {/* Контент карточки */}
-              <div className="p-8">
-                <h3 className="text-xl font-bold text-[#00205B] mb-3 font-montserrat group-hover:text-[#F6A800] transition-colors">
+                {/* Контент товара */}
+                <div className="p-6">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                      <span className="text-sm font-medium text-gray-700">
+                        {parseFloat(product.rating).toFixed(1)}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      ({product.reviewsCount} отзывов)
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-[#00205B] font-montserrat mb-2 group-hover:text-[#F6A800] transition-colors">
                   {product.title || product.name}
                 </h3>
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                   {product.shortDescription || product.description}
                 </p>
 
                 {/* Особенности */}
-                <div className="mb-4">
-                  {product.features.map((feature, featureIndex) => (
-                    <div
-                      key={featureIndex}
-                      className="flex items-center space-x-2 mb-2"
-                    >
-                      <CheckCircle className="w-4 h-4 text-[#F6A800] flex-shrink-0" />
-                      <span className="text-sm text-gray-600">{feature}</span>
-                    </div>
-                  ))}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {product.isPopular && (
+                      <span className="bg-[#F6A800] text-white px-2 py-1 rounded-lg text-xs">
+                        Популярный
+                      </span>
+                    )}
+                    {product.isFeatured && (
+                      <span className="bg-[#00205B] text-white px-2 py-1 rounded-lg text-xs">
+                        Рекомендуем
+                      </span>
+                    )}
+                    {product.inStock ? (
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs">
+                        В наличии
+                      </span>
+                    ) : (
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-lg text-xs">
+                        Нет в наличии
+                      </span>
+                    )}
                 </div>
 
                 {/* Цена и кнопка */}
                 <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-bold text-[#00205B]">
-                      {product.price?.toLocaleString('ru-RU')}{' '}
+                    <div>
+                      <div className="text-xl font-bold text-[#00205B]">
+                        {parseFloat(product.price).toLocaleString('ru-RU')}{' '}
                       {product.currency || '₽'}
-                    </span>
+                      </div>
                     {product.oldPrice && (
-                      <span className="text-sm text-gray-500 line-through">
-                        {product.oldPrice.toLocaleString('ru-RU')}{' '}
+                        <div className="text-sm text-gray-500 line-through">
+                          {parseFloat(product.oldPrice).toLocaleString('ru-RU')}{' '}
                         {product.currency || '₽'}
-                      </span>
+                        </div>
                     )}
                   </div>
-                  <Link
-                    href={`/categories/products/${product.id}`}
-                    className={`group/btn ${product.bgColor || product.color} ${
-                      product.bgHoverColor || product.hoverColor
-                    } text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105`}
-                  >
-                    <span>Подробнее</span>
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </Link>
+                    <button className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105">
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>В корзину</span>
+                    </button>
                 </div>
               </div>
-
-              {/* Hover эффект */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#F6A800]/5 to-[#00205B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+              </Link>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* CTA секция */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
-          <div className="bg-gradient-to-r from-[#00205B] to-[#00153E] rounded-3xl p-8 md:p-16 text-white">
-            <h3 className="text-2xl md:text-3xl font-bold font-montserrat mb-4">
-              Нужна консультация?
-            </h3>
-            <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-              Наши специалисты помогут подобрать оптимальное решение для вашего
-              объекта
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="#contacts"
-                className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105"
-              >
-                <span>Получить консультацию</span>
-                <ExternalLink size={20} />
-              </Link>
-              <Link
-                href="/categories"
-                className="border-2 border-white hover:bg-white hover:text-[#00205B] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2"
-              >
-                <span>Интернет-магазин</span>
-                <ExternalLink size={20} />
-              </Link>
-            </div>
-          </div>
         </motion.div>
       </div>
     </section>
