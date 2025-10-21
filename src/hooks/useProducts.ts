@@ -17,15 +17,15 @@ interface Product {
   };
   slug: string;
   sku?: string;
-  price: number;
-  oldPrice?: number;
+  price: string; // Изменено на string для Decimal
+  oldPrice?: string | null; // Изменено на string для Decimal
   currency: string;
   inStock: boolean;
   stockQuantity: number;
   isNew: boolean;
   isPopular: boolean;
   isFeatured: boolean;
-  rating: number;
+  rating: string; // Изменено на string для Decimal
   reviewsCount: number;
   seoTitle?: string;
   seoDescription?: string;
@@ -72,6 +72,8 @@ export const useProducts = (
         setLoading(true);
         setError(null);
 
+        console.log('🔍 useProducts вызывается с параметрами:', options);
+
         const params = new URLSearchParams();
         if (options.categoryId)
           params.append('categoryId', options.categoryId.toString());
@@ -87,7 +89,15 @@ export const useProducts = (
         const result = await response.json();
 
         if (result.success) {
-          setProducts(result.data);
+          // Сериализуем данные для корректной работы с Decimal
+          const serializedProducts = result.data.map((product: any) => ({
+            ...product,
+            price: product.price.toString(),
+            oldPrice: product.oldPrice?.toString() || null,
+            rating: product.rating.toString(),
+          }));
+
+          setProducts(serializedProducts);
           setPagination(result.pagination);
         } else {
           setError(result.message || 'Ошибка при загрузке товаров');
@@ -125,4 +135,3 @@ export const useProductsByCategory = (
 export const useFeaturedProducts = (limit = 8) => {
   return useProducts({ limit, sortBy: 'isFeatured', sortOrder: 'desc' });
 };
-

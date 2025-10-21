@@ -33,12 +33,12 @@ const ContactsSection = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setSubmitMessage('');
-
+  
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -50,9 +50,9 @@ const ContactsSection = () => {
           type: 'contact',
         }),
       });
-
+  
       const result = await response.json();
-
+  
       if (result.success) {
         setSubmitMessage(result.message);
         setFormData({ name: '', phone: '', email: '', message: '' });
@@ -368,8 +368,8 @@ const ContactsSection = () => {
                     </>
                   ) : (
                     <>
-                      <Send size={20} />
-                      <span>Отправить заявку</span>
+                  <Send size={20} />
+                  <span>Отправить заявку</span>
                     </>
                   )}
                 </button>

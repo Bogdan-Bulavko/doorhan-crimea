@@ -1,159 +1,110 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import {
-  ArrowLeft,
-  Search,
-  Star,
-  ShoppingCart,
-  Eye,
-  Heart,
-  Zap,
-} from 'lucide-react';
+import { ArrowLeft, Search } from 'lucide-react';
 
 import BreadCrumbs from './BreadCrumbs';
+import ProductGrid from './ProductGrid';
+import { useProducts } from '@/hooks/useProducts';
+import { useMainCategories } from '@/hooks/useCategories';
 
 const ProductsList = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Получаем категорию из URL параметров
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const category = urlParams.get('category');
+      console.log('🔍 URL категория:', category);
       if (category) {
         setSelectedCategory(category);
+        console.log('🔍 Установлена категория:', category);
       }
+      setIsInitialized(true);
     }
   }, []);
 
-  const products = [
-    {
-      id: 1,
-      name: 'Гаражные секционные ворота RSD02LUX',
-      title: 'Гаражные секционные ворота RSD02LUX',
-      description: 'Надежные секционные ворота с утеплением для частных домов',
-      shortDescription: 'Секционные ворота с автоматическим приводом',
-      price: 125000,
-      oldPrice: 145000,
-      currency: 'RUB',
-      image: '/images/RSD02LUX.webp',
-      images: [
-        '/images/RSD02LUX.webp',
-        '/images/RSD02LUX2padding.jpg',
-        '/images/RSD02LUXdrawing.jpg',
-        '/images/RSD02LUXscheme.png',
-      ],
-      category: 'home',
-      categoryId: 1,
-      slug: 'garage-section-gates-rsd02lux',
-      sku: 'RSD02LUX-001',
-      inStock: true,
-      stockQuantity: 10,
-      isNew: false,
-      isPopular: true,
-      isFeatured: true,
-      rating: 4.8,
-      reviews: 127,
-      color: '#00205B',
-      hoverColor: '#F6A800',
-      features: ['Утепление', 'Автоматика', 'Гарантия 3 года'],
-    },
-    {
-      id: 2,
-      name: 'Откатные уличные ворота SLG-A',
-      title: 'Откатные уличные ворота SLG-A',
-      description: 'Прочные откатные ворота для больших проемов',
-      shortDescription: 'Легкие и надежные ворота с уникальной конструкцией',
-      price: 95000,
-      oldPrice: 110000,
-      currency: 'RUB',
-      image: '/images/SLG-A.png',
-      images: [
-        '/images/SLG-A.png',
-        '/images/SLG-A3dmodel.jpg',
-        '/images/SLG-Adrawing.jpg',
-        '/images/schemaSLG-A.jpg',
-      ],
-      category: 'home',
-      categoryId: 1,
-      slug: 'sliding-gates-slg-a',
-      sku: 'SLG-A-001',
-      inStock: true,
-      stockQuantity: 8,
-      isNew: false,
-      isPopular: true,
-      isFeatured: false,
-      rating: 4.6,
-      reviews: 89,
-      color: '#F6A800',
-      hoverColor: '#00205B',
-      features: ['Прочность', 'Долговечность', 'Простота установки'],
-    },
-  ];
+  // Debounce для поиска
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
 
-  const categories = [
-    { id: 'all', name: 'Все товары', count: products.length },
-    {
-      id: 'home',
-      name: 'Ворота для дома',
-      count: products.filter((p) => p.category === 'home').length,
-    },
-    {
-      id: 'garage',
-      name: 'Ворота для гаража',
-      count: products.filter((p) => p.category === 'garage').length,
-    },
-    {
-      id: 'industrial',
-      name: 'Промышленные ворота',
-      count: products.filter((p) => p.category === 'industrial').length,
-    },
-    {
-      id: 'rollers',
-      name: 'Роллеты',
-      count: products.filter((p) => p.category === 'rollers').length,
-    },
-    {
-      id: 'automation',
-      name: 'Автоматика',
-      count: products.filter((p) => p.category === 'automation').length,
-    },
-    {
-      id: 'locks',
-      name: 'Замки и фурнитура',
-      count: products.filter((p) => p.category === 'locks').length,
-    },
-  ];
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch =
-      (product.title || product.name)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+  // Получаем категории из БД
+  const { categories, loading: categoriesLoading } = useMainCategories();
+
+  // Получаем товары из БД (только после инициализации)
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+  } = useProducts({
+    categorySlug:
+      isInitialized && selectedCategory !== 'all'
+        ? selectedCategory
+        : undefined,
+    search: debouncedSearchTerm || undefined,
+    sortBy:
+      sortBy === 'name'
+        ? 'createdAt'
+        : sortBy === 'price-low'
+        ? 'price'
+        : sortBy === 'price-high'
+        ? 'price'
+        : 'createdAt',
+    sortOrder: sortBy === 'price-high' ? 'desc' : 'asc',
   });
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-low':
-        return (a.price || 0) - (b.price || 0);
-      case 'price-high':
-        return (b.price || 0) - (a.price || 0);
-      case 'rating':
-        return b.rating - a.rating;
-      default:
-        return (a.title || a.name).localeCompare(b.title || b.name);
-    }
+  // Логирование для отладки
+  console.log('🔍 ProductsList состояние:', {
+    isInitialized,
+    selectedCategory,
+    categorySlug:
+      isInitialized && selectedCategory !== 'all'
+        ? selectedCategory
+        : undefined,
+    productsCount: products.length,
+    loading: productsLoading,
   });
+
+  // Получаем общее количество товаров для каждой категории (только один раз)
+  const { products: allProducts } = useProducts({});
+
+  // Формируем список категорий для селекта с мемоизацией
+  const categoriesForSelect = useMemo(
+    () => [
+      { id: 'all', name: 'Все товары', count: allProducts.length },
+      ...categories.map((category) => ({
+        id: category.slug,
+        name: category.name,
+        count: allProducts.filter((p) => p.category?.slug === category.slug)
+          .length,
+      })),
+    ],
+    [categories, allProducts]
+  );
+
+  // Показываем загрузку для категорий или инициализации
+  if (categoriesLoading || !isInitialized) {
+    return (
+      <div className="flex justify-center items-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800]"></div>
+        <span className="ml-4 text-gray-600">
+          {!isInitialized ? 'Инициализация...' : 'Загрузка категорий...'}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <section className="pt-12 pb-8 md:pt-8 md:pb-20 bg-white">
@@ -193,6 +144,11 @@ const ProductsList = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F6A800] focus:border-transparent"
               />
+              {searchTerm !== debouncedSearchTerm && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="w-4 h-4 border-2 border-[#F6A800] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
             </div>
 
             {/* Категории */}
@@ -201,7 +157,7 @@ const ProductsList = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F6A800] focus:border-transparent"
             >
-              {categories.map((category) => (
+              {categoriesForSelect.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name} ({category.count})
                 </option>
@@ -232,118 +188,17 @@ const ProductsList = () => {
           <p className="text-gray-600">
             Найдено товаров:{' '}
             <span className="font-semibold text-[#00205B]">
-              {sortedProducts.length}
+              {products.length}
             </span>
           </p>
         </motion.div>
 
         {/* Сетка товаров */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {sortedProducts.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index }}
-              className="group bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
-            >
-              <Link href={`/categories/products/${product.id}`}>
-                {/* Изображение товара */}
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.title || product.name}
-                    fill
-                    className="object-cover"
-                  />
-
-                  {/* Бейджи */}
-                  <div className="absolute top-4 left-4 flex flex-col space-y-2">
-                    {product.isNew && (
-                      <span className="bg-[#F6A800] text-white px-3 py-1 rounded-full text-xs font-medium">
-                        Новинка
-                      </span>
-                    )}
-                    {product.oldPrice && (
-                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        Скидка
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Действия */}
-                  <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
-                      <Heart className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
-                      <Eye className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Контент товара */}
-                <div className="p-6">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium text-gray-700">
-                        {product.rating}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      ({product.reviews} отзывов)
-                    </span>
-                  </div>
-
-                  <h3 className="text-lg font-bold text-[#00205B] font-montserrat mb-2 group-hover:text-[#F6A800] transition-colors">
-                    {product.title || product.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    {product.shortDescription || product.description}
-                  </p>
-
-                  {/* Особенности */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {product.features.slice(0, 2).map((feature, idx) => (
-                      <span
-                        key={idx}
-                        className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-xs"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Цена и кнопка */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-xl font-bold text-[#00205B]">
-                        {product.price?.toLocaleString('ru-RU')}{' '}
-                        {product.currency || '₽'}
-                      </div>
-                      {product.oldPrice && (
-                        <div className="text-sm text-gray-500 line-through">
-                          {product.oldPrice.toLocaleString('ru-RU')}{' '}
-                          {product.currency || '₽'}
-                        </div>
-                      )}
-                    </div>
-                    <button className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105">
-                      <ShoppingCart className="w-4 h-4" />
-                      <span>В корзину</span>
-                    </button>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
+        <ProductGrid
+          products={products || []}
+          loading={productsLoading}
+          error={productsError}
+        />
 
         {/* CTA секция */}
         <motion.div
