@@ -1,8 +1,8 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { LoadingButton } from '../_components/ProgressBar';
-import { LoadingOverlay } from '../_components/LoadingStates';
+import { LoadingButton } from '../../_components/ProgressBar';
+import { LoadingOverlay } from '../../_components/LoadingStates';
 
 export default function NewUserPage() {
   const router = useRouter();

@@ -1,21 +1,17 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
-import { Category } from '@/types';
+// import { Category } from '@/types';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import {
-  Home,
-  Car,
-  Warehouse,
-  Lock,
-  Shield,
-  Settings,
-  Zap,
-} from 'lucide-react';
+import Image from 'next/image';
+import { Zap } from 'lucide-react';
+import { useMainCategories } from '@/hooks/useCategories';
 
 const CategoriesGrid = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true); // ✅ Добавить состояние загрузки
+  const { categories, loading, error } = useMainCategories();
+
+  const getCategoryColor = (category: { color?: string }) => {
+    return category.color || '#ffb700';
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -32,84 +28,14 @@ const CategoriesGrid = () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  const fallbackOption: Category[] = useMemo(
-    () => [
-      {
-        id: 1,
-        name: 'Ворота для дома',
-        description:
-          'Секционные, распашные и откатные ворота для частных домов',
-        image: '/RSD02LUX.webp',
-        icon: Home,
-        color: 'bg-blue-500',
-        hoverColor: 'hover:bg-blue-600',
-        productCount: 24,
-        href: '/categories/products?category=home',
-      },
-      {
-        id: 2,
-        name: 'Ворота для гаража',
-        description: 'Автоматические и механические ворота для гаражей',
-        image: '/RSD02LUX.webp',
-        icon: Car,
-        color: 'bg-green-500',
-        hoverColor: 'hover:bg-green-600',
-        productCount: 18,
-        href: '/categories/products?category=garage',
-      },
-      {
-        id: 3,
-        name: 'Промышленные ворота',
-        description: 'Ворота для складов, ангаров и промышленных объектов',
-        image: '/RSD02LUX.webp',
-        icon: Warehouse,
-        color: 'bg-purple-500',
-        hoverColor: 'hover:bg-purple-600',
-        productCount: 32,
-        href: '/categories/products?category=industrial',
-      },
-      {
-        id: 4,
-        name: 'Роллеты',
-        description: 'Защитные роллеты для окон, дверей и витрин',
-        image: '/RSD02LUX.webp',
-        icon: Shield,
-        color: 'bg-orange-500',
-        hoverColor: 'hover:bg-orange-600',
-        productCount: 28,
-        href: '/categories/products?category=rollers',
-      },
-      {
-        id: 5,
-        name: 'Автоматика',
-        description: 'Системы автоматизации для ворот и роллет',
-        image: '/RSD02LUX.webp',
-        icon: Settings,
-        color: 'bg-red-500',
-        hoverColor: 'hover:bg-red-600',
-        productCount: 15,
-        href: '/categories/products?category=automation',
-      },
-      {
-        id: 6,
-        name: 'Замки и фурнитура',
-        description: 'Замки, ручки и другая фурнитура для ворот',
-        image: '/RSD02LUX.webp',
-        icon: Lock,
-        color: 'bg-indigo-500',
-        hoverColor: 'hover:bg-indigo-600',
-        productCount: 42,
-        href: '/categories/products?category=locks',
-      },
-    ],
-    []
-  );
-
-  useEffect(() => {
-    // Используем только локальные данные, так как у нас есть только 2 товара
-    setCategories(fallbackOption);
-    setLoading(false);
-  }, [fallbackOption]);
+  // Обработка ошибок
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500">Ошибка при загрузке категорий: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <section className="pt-12 pb-8 md:pt-8 md:pb-20 bg-gradient-to-br from-gray-50 to-white">
@@ -130,7 +56,6 @@ const CategoriesGrid = () => {
           </p>
         </motion.div>
 
-        {/* ✅ Убрать Suspense и использовать loading состояние */}
         {loading ? (
           <div className="flex justify-center items-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800]"></div>
@@ -150,44 +75,50 @@ const CategoriesGrid = () => {
                 variants={itemVariants}
                 className="group"
               >
-                <Link href={category.href}>
+                <Link href={`/categories/products?category=${category.slug}`}>
                   <div className="bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden group-hover:scale-105">
                     {/* Изображение категории */}
                     <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <category.icon className="w-16 h-16 text-gray-400" />
-                      </div>
-                      <div className="absolute top-4 right-4">
-                        <span className="bg-white/90 text-[#00205B] px-3 py-1 rounded-full text-sm font-medium">
-                          {category.productCount} товаров
-                        </span>
-                      </div>
+                      {category.imageUrl ? (
+                        <Image
+                          src={category.imageUrl}
+                          alt={category.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-16 h-16 bg-gradient-to-br from-[#ffb700] to-[#F6A800] rounded-full flex items-center justify-center shadow-lg">
+                            <span className="text-white text-2xl font-bold">
+                              {category.name.charAt(0)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Контент карточки */}
                     <div className="p-8">
                       <div className="flex items-center space-x-3 mb-4">
                         <div
-                          className={`p-3 ${category.color} rounded-xl group-hover:scale-110 transition-transform duration-300`}
+                          className="p-3 rounded-xl group-hover:scale-110 transition-transform duration-300"
+                          style={{
+                            backgroundColor: getCategoryColor(category),
+                          }}
                         >
-                          <category.icon className="w-6 h-6 text-white" />
+                          <Zap className="w-6 h-6 text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-[#00205B] font-mонтserrat group-hover:text-[#F6A800] transition-colors">
+                        <h3 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
                           {category.name}
                         </h3>
                       </div>
                       <p className="text-gray-600 mb-6 leading-relaxed">
-                        {category.description}
+                        {category.description || 'Описание категории'}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">
+                      <div className="flex items-center justify-start">
+                        <span className="text-sm font-medium text-gray-600 group-hover:text-[#ffb700] bg-gray-100 group-hover:bg-[#ffb700]/10 px-4 py-2 rounded-lg group-hover:scale-105 transition-all duration-300">
                           Посмотреть товары
                         </span>
-                        <div
-                          className={`${category.color} ${category.hoverColor} text-white p-2 rounded-lg group-hover:scale-110 transition-all duration-300`}
-                        >
-                          <Zap className="w-4 h-4" />
-                        </div>
                       </div>
                     </div>
                   </div>

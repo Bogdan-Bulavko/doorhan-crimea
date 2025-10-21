@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useFormValidation, FormField } from '../_components/FormValidation';
+import { useFormValidation, FormField } from '../../_components/FormValidation';
 import { z } from 'zod';
 
 type Category = { id: number; name: string };
