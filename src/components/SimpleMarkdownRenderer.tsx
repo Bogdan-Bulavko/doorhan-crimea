@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 interface SimpleMarkdownRendererProps {
   content: string;
@@ -34,7 +34,7 @@ export default function SimpleMarkdownRenderer({ content, className = '' }: Simp
     }
 
     const lines = content.split('\n');
-    const elements: JSX.Element[] = [];
+    const elements: React.ReactElement[] = [];
     let i = 0;
 
     while (i < lines.length) {
