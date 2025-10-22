@@ -16,7 +16,12 @@
     "create-admin": "npx tsx scripts/create-admin.ts",
     "create-admin-custom": "npx tsx scripts/create-admin-custom.ts",
     "reset-admin-password": "npx tsx scripts/reset-admin-password.ts",
-    "list-admins": "npx tsx scripts/list-admins.ts"
+    "list-admins": "npx tsx scripts/list-admins.ts",
+    "export-database": "npx tsx scripts/export-database.ts",
+    "import-database": "npx tsx scripts/import-database.ts",
+    "create-sql-dump": "npx tsx scripts/create-sql-dump.ts",
+    "deploy": "npx tsx scripts/simple-deploy.ts",
+    "deploy-full": "npx tsx scripts/deploy-to-server.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
