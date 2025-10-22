@@ -5,37 +5,37 @@ export const API_ENDPOINTS = {
   // Категории товаров
   CATEGORIES: '/api/categories',
   CATEGORY_BY_ID: '/api/categories/:id',
-  
+
   // Товары
   PRODUCTS: '/api/products',
   PRODUCT_BY_ID: '/api/products/:id',
   PRODUCTS_BY_CATEGORY: '/api/products?category=:category',
   PRODUCTS_SEARCH: '/api/products/search?q=:query',
-  
+
   // Поиск и фильтрация
   SEARCH: '/api/search',
   FILTER_PRODUCTS: '/api/products/filter',
-  
+
   // Корзина
   CART: '/api/cart',
   CART_ITEM: '/api/cart/:id',
-  
+
   // Заказы
   ORDERS: '/api/orders',
   ORDER_BY_ID: '/api/orders/:id',
   CREATE_ORDER: '/api/orders',
-  
+
   // Пользователи
   USERS: '/api/users',
   USER_BY_ID: '/api/users/:id',
-  
+
   // Контакты и формы
   CONTACT_FORM: '/api/contact',
   CALLBACK_FORM: '/api/callback',
-  
+
   // Файлы и изображения
   UPLOAD_IMAGE: '/api/upload/image',
-  
+
   // Статистика
   STATS: '/api/stats',
 } as const;
@@ -43,7 +43,7 @@ export const API_ENDPOINTS = {
 // ===== API RESPONSE TYPES =====
 export interface ApiResponse<T> {
   success: boolean;
-  data: T;
+  data?: T;
   message?: string;
   errors?: string[];
 }
@@ -64,18 +64,18 @@ export interface Category {
   name: string;
   description: string;
   image: string;
-  icon?: LucideIcon;
+  icon: LucideIcon;
   color: string;
   hoverColor: string;
   productCount: number;
   href: string;
-  slug: string;
+  slug?: string;
   parentId?: number;
   children?: Category[];
-  isActive: boolean;
-  sortOrder: number;
-  createdAt: string;
-  updatedAt: string;
+  isActive?: boolean;
+  sortOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CategoryFilters {
@@ -240,7 +240,13 @@ export interface Address {
   country: string;
 }
 
-export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 export interface CreateOrderRequest {

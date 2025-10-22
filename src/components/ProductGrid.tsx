@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowRight,
   Shield,
   Settings,
-  Zap,
   Lock,
   Star,
   CheckCircle,
@@ -17,95 +17,30 @@ const ProductGrid = () => {
   const products = [
     {
       id: 1,
-      title: 'Секционные ворота',
+      title: 'Гаражные секционные ворота RSD02LUX',
       description:
-        'Современные секционные ворота с отличной теплоизоляцией и надежной конструкцией.',
-      image: '/images/sectional-gates.jpg',
-      features: ['Теплоизоляция', 'Автоматика', 'Гарантия 5 лет'],
-      price: 'от 45 000 ₽',
-      category: 'Ворота',
+        'Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью',
+      image: 'RSD02LUX.webp',
+      features: ['Лёгкость', 'Прочность', 'Гарантия 10 лет'],
+      price: '125 000 ₽',
+      category: 'Ворота для дома',
       icon: Shield,
       color: 'bg-[#00205B]',
       hoverColor: 'hover:bg-[#00153E]',
+      href: '/categories/products/',
     },
     {
       id: 2,
-      title: 'Роллетные системы',
-      description:
-        'Защитные роллеты для окон и дверей с высоким уровнем безопасности.',
-      image: '/images/roller-shutters.jpg',
-      features: ['Безопасность', 'Шумоизоляция', 'Энергосбережение'],
-      price: 'от 25 000 ₽',
-      category: 'Роллеты',
-      icon: Lock,
-      color: 'bg-[#F6A800]',
-      hoverColor: 'hover:bg-[#ffb700]',
-    },
-    {
-      id: 3,
-      title: 'Автоматические ворота',
-      description:
-        'Умные ворота с дистанционным управлением и системами безопасности.',
-      image: '/images/automatic-gates.jpg',
-      features: ['Дистанционное управление', 'Безопасность', 'Умный дом'],
-      price: 'от 65 000 ₽',
-      category: 'Автоматика',
-      icon: Settings,
-      color: 'bg-[#00205B]',
-      hoverColor: 'hover:bg-[#00153E]',
-    },
-    {
-      id: 4,
-      title: 'Распашные ворота',
-      description:
-        'Классические распашные ворота с современным дизайном и надежностью.',
-      image: '/images/swing-gates.jpg',
-      features: ['Классический дизайн', 'Прочность', 'Легкость установки'],
-      price: 'от 35 000 ₽',
-      category: 'Ворота',
+      title: 'Откатные ворота DoorHan 50',
+      description: 'Прочные откатные ворота для больших проемов',
+      image: '/images/product-2.jpg',
+      features: ['Прочность', 'Долговечность', 'Простота установки'],
+      price: '95 000 ₽',
+      category: 'Ворота для дома',
       icon: Shield,
       color: 'bg-[#F6A800]',
       hoverColor: 'hover:bg-[#ffb700]',
-    },
-    {
-      id: 5,
-      title: 'Складные ворота',
-      description: 'Компактные складные ворота для ограниченного пространства.',
-      image: '/images/folding-gates.jpg',
-      features: ['Компактность', 'Экономия места', 'Быстрое открытие'],
-      price: 'от 40 000 ₽',
-      category: 'Ворота',
-      icon: Zap,
-      color: 'bg-[#00205B]',
-      hoverColor: 'hover:bg-[#00153E]',
-    },
-    {
-      id: 6,
-      title: 'Системы управления',
-      description: 'Современные системы управления воротами и автоматикой.',
-      image: '/images/control-systems.jpg',
-      features: ['Умное управление', 'Интеграция', 'Мониторинг'],
-      price: 'от 15 000 ₽',
-      category: 'Автоматика',
-      icon: Settings,
-      color: 'bg-[#F6A800]',
-      hoverColor: 'hover:bg-[#ffb700]',
-    },
-  ];
-
-  const categories = [
-    { name: 'Все', count: products.length },
-    {
-      name: 'Ворота',
-      count: products.filter((p) => p.category === 'Ворота').length,
-    },
-    {
-      name: 'Роллеты',
-      count: products.filter((p) => p.category === 'Роллеты').length,
-    },
-    {
-      name: 'Автоматика',
-      count: products.filter((p) => p.category === 'Автоматика').length,
+      href: '/categories/products/',
     },
   ];
 
@@ -143,25 +78,6 @@ const ProductGrid = () => {
             Широкий ассортимент качественных ворот, роллет и автоматических
             систем
           </p>
-
-          {/* Категории */}
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
-              <motion.button
-                key={category.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                viewport={{ once: true }}
-                className="px-6 py-3 bg-gray-100 hover:bg-[#00205B] hover:text-white text-gray-700 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2"
-              >
-                <span>{category.name}</span>
-                <span className="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">
-                  {category.count}
-                </span>
-              </motion.button>
-            ))}
-          </div>
         </motion.div>
 
         {/* Сетка продуктов */}
@@ -180,7 +96,14 @@ const ProductGrid = () => {
             >
               {/* Изображение продукта */}
               <div className="relative h-64 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00205B]/20 to-[#F6A800]/20 z-10"></div>
+                <div className="absolute inset-0 z-10">
+                  <Image
+                    src={product.image}
+                    alt={product.title}
+                    fill
+                    className="object-cover"
+                  ></Image>
+                </div>
                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                   <product.icon className="w-16 h-16 text-gray-400" />
                 </div>
@@ -223,13 +146,8 @@ const ProductGrid = () => {
 
                 {/* Цена и кнопка */}
                 <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-2xl font-bold text-[#00205B] font-montserrat">
-                      {product.price}
-                    </span>
-                  </div>
                   <Link
-                    href="/categories"
+                    href={product.href + product.id}
                     className={`group/btn ${product.color} ${product.hoverColor} text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105`}
                   >
                     <span>Подробнее</span>
