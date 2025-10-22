@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# deployment scripts (excluded from git)
+scripts/
+
+# database exports (excluded from git)
+database-export.json
+database-dump.sql
