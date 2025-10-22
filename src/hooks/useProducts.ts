@@ -39,15 +39,15 @@ interface Product {
   };
   slug: string;
   sku?: string;
-  price: string; // Изменено на string для Decimal
-  oldPrice?: string | null; // Изменено на string для Decimal
+  price: number; // Изменено на number для сериализованных данных
+  oldPrice?: number | null; // Изменено на number для сериализованных данных
   currency: string;
   inStock: boolean;
   stockQuantity: number;
   isNew: boolean;
   isPopular: boolean;
   isFeatured: boolean;
-  rating: string; // Изменено на string для Decimal
+  rating: number; // Изменено на number для сериализованных данных
   reviewsCount: number;
   seoTitle?: string;
   seoDescription?: string;
@@ -95,9 +95,12 @@ export const useProducts = (
 
   // Debounce опции для предотвращения слишком частых запросов
   const debouncedOptions = useDebounce(options, 300);
-  
+
   // Кэширование для предотвращения повторных запросов
-  const cache = useCache<{ products: Product[]; pagination: { page: number; limit: number; total: number; pages: number } }>(2 * 60 * 1000); // 2 минуты
+  const cache = useCache<{
+    products: Product[];
+    pagination: { page: number; limit: number; total: number; pages: number };
+  }>(2 * 60 * 1000); // 2 минуты
 
   useEffect(() => {
     let isMounted = true;
@@ -106,10 +109,12 @@ export const useProducts = (
 
     const fetchProducts = async () => {
       if (!isMounted) return;
-      
+
+      let timeoutId: NodeJS.Timeout | null = null;
+
       // Создаем ключ кэша на основе параметров
       const cacheKey = JSON.stringify(debouncedOptions);
-      
+
       // Проверяем кэш
       const cachedData = cache.get(cacheKey);
       if (cachedData) {
@@ -118,26 +123,50 @@ export const useProducts = (
         setLoading(false);
         return;
       }
-      
+
+      // Проверяем, есть ли хотя бы один параметр для запроса
+      const hasSearchParams =
+        debouncedOptions.search ||
+        debouncedOptions.categoryId ||
+        debouncedOptions.categorySlug ||
+        debouncedOptions.page ||
+        debouncedOptions.limit;
+
+      // Если нет параметров поиска, не делаем запрос
+      if (!hasSearchParams) {
+        setProducts([]);
+        setPagination(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
-
 
         const params = new URLSearchParams();
         if (debouncedOptions.categoryId)
           params.append('categoryId', debouncedOptions.categoryId.toString());
         if (debouncedOptions.categorySlug)
           params.append('categorySlug', debouncedOptions.categorySlug);
-        if (debouncedOptions.page) params.append('page', debouncedOptions.page.toString());
-        if (debouncedOptions.limit) params.append('limit', debouncedOptions.limit.toString());
-        if (debouncedOptions.search) params.append('search', debouncedOptions.search);
-        if (debouncedOptions.sortBy) params.append('sortBy', debouncedOptions.sortBy);
-        if (debouncedOptions.sortOrder) params.append('sortOrder', debouncedOptions.sortOrder);
+        if (debouncedOptions.page)
+          params.append('page', debouncedOptions.page.toString());
+        if (debouncedOptions.limit)
+          params.append('limit', debouncedOptions.limit.toString());
+        if (debouncedOptions.search)
+          params.append('search', debouncedOptions.search);
+        if (debouncedOptions.sortBy)
+          params.append('sortBy', debouncedOptions.sortBy);
+        if (debouncedOptions.sortOrder)
+          params.append('sortOrder', debouncedOptions.sortOrder);
 
         // Добавляем таймаут для запроса
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд таймаут
+        timeoutId = setTimeout(() => {
+          if (!controller.signal.aborted) {
+            controller.abort();
+          }
+        }, 5000); // 5 секунд таймаут
 
         const response = await fetch(`/api/products/?${params}`, {
           signal: controller.signal,
@@ -145,15 +174,18 @@ export const useProducts = (
             'Content-Type': 'application/json',
           },
         });
-        
-        clearTimeout(timeoutId);
+
+        // Очищаем таймаут только если запрос прошел успешно
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
 
         if (!response.ok) {
           if (response.status === 404 && retryCount < maxRetries) {
             retryCount++;
             console.warn(`API не найден, попытка ${retryCount}/${maxRetries}`);
             // Задержка перед повтором
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise((resolve) => setTimeout(resolve, 2000));
             if (isMounted) {
               return fetchProducts();
             }
@@ -166,13 +198,8 @@ export const useProducts = (
         if (!isMounted) return;
 
         if (result.success) {
-          // Сериализуем данные для корректной работы с Decimal
-          const serializedProducts = result.data.map((product: Product) => ({
-            ...product,
-            price: product.price.toString(),
-            oldPrice: product.oldPrice?.toString() || null,
-            rating: product.rating.toString(),
-          }));
+          // Данные уже сериализованы в API
+          const serializedProducts = result.data;
 
           // Сохраняем в кэш
           cache.set(cacheKey, {
@@ -187,14 +214,19 @@ export const useProducts = (
         }
       } catch (err) {
         if (!isMounted) return;
-        
+
+        // Очищаем таймаут в случае ошибки
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
         if (err instanceof Error && err.name === 'AbortError') {
           setError('Превышено время ожидания запроса');
         } else {
           setError('Ошибка сети при загрузке товаров');
         }
         console.error('Products fetch error:', err);
-        
+
         // Устанавливаем пустой массив при ошибке
         setProducts([]);
       } finally {

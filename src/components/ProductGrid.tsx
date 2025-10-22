@@ -29,15 +29,15 @@ interface Product {
   };
   slug: string;
   sku?: string;
-  price: string;
-  oldPrice?: string | null;
+  price: number; // Изменено на number для сериализованных данных
+  oldPrice?: number | null; // Изменено на number для сериализованных данных
   currency: string;
   inStock: boolean;
   stockQuantity: number;
   isNew: boolean;
   isPopular: boolean;
   isFeatured: boolean;
-  rating: string;
+  rating: number; // Изменено на number для сериализованных данных
   reviewsCount: number;
   seoTitle?: string;
   seoDescription?: string;
@@ -94,8 +94,8 @@ const ProductGrid = ({
               Ошибка загрузки товаров
             </h3>
             <p className="text-red-500 mb-4">{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-6 py-2 rounded-xl font-medium transition-all duration-300"
             >
               Попробовать снова
@@ -116,7 +116,8 @@ const ProductGrid = ({
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800] mx-auto mb-4"></div>
               <span className="text-gray-600 text-lg">Загрузка товаров...</span>
               <p className="text-gray-500 text-sm mt-2">
-                Если загрузка занимает слишком много времени, попробуйте обновить страницу
+                Если загрузка занимает слишком много времени, попробуйте
+                обновить страницу
               </p>
             </div>
           </div>
@@ -124,7 +125,6 @@ const ProductGrid = ({
       </section>
     );
   }
-
 
   // Если есть ошибка
   if (error) {
@@ -138,9 +138,7 @@ const ProductGrid = ({
             <h3 className="text-xl font-semibold text-red-600 mb-2">
               Ошибка загрузки товаров
             </h3>
-            <p className="text-gray-500 mb-4">
-              {error}
-            </p>
+            <p className="text-gray-500 mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -177,7 +175,6 @@ const ProductGrid = ({
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
-
         {/* Сетка товаров */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -193,22 +190,33 @@ const ProductGrid = ({
               transition={{ delay: 0.1 * index }}
               className="group bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
-              <Link href={`/${product.category?.slug}/${product.slug || product.id}`}>
+              <Link
+                href={`/${product.category?.slug}/${
+                  product.slug || product.id
+                }`}
+              >
                 {/* Изображение товара */}
                 <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                   <Image
                     src={(() => {
                       const mainImage = product.mainImageUrl;
-                      const mainFromImages = product.images?.find(img => img.isMain)?.imageUrl;
+                      const mainFromImages = product.images?.find(
+                        (img) => img.isMain
+                      )?.imageUrl;
                       const firstImage = product.images?.[0]?.imageUrl;
-                      return mainImage || mainFromImages || firstImage || '/images/placeholder.svg';
+                      return (
+                        mainImage ||
+                        mainFromImages ||
+                        firstImage ||
+                        '/images/placeholder.svg'
+                      );
                     })()}
                     alt={product.title || product.name}
                     fill
                     className="object-contain"
-                    style={{ 
+                    style={{
                       objectFit: 'contain',
-                      backgroundColor: '#f9fafb'
+                      backgroundColor: '#f9fafb',
                     }}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -247,7 +255,7 @@ const ProductGrid = ({
                     <div className="flex items-center space-x-1">
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
                       <span className="text-sm font-medium text-gray-700">
-                        {parseFloat(product.rating).toFixed(1)}
+                        {product.rating.toFixed(1)}
                       </span>
                     </div>
                     <span className="text-sm text-gray-500">
@@ -289,12 +297,12 @@ const ProductGrid = ({
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xl font-bold text-[#00205B]">
-                        {parseFloat(product.price).toLocaleString('ru-RU')}{' '}
+                        {product.price.toLocaleString('ru-RU')}{' '}
                         {product.currency || '₽'}
                       </div>
                       {product.oldPrice && (
                         <div className="text-sm text-gray-500 line-through">
-                          {parseFloat(product.oldPrice).toLocaleString('ru-RU')}{' '}
+                          {product.oldPrice.toLocaleString('ru-RU')}{' '}
                           {product.currency || '₽'}
                         </div>
                       )}

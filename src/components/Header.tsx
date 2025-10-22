@@ -14,12 +14,14 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CallbackModal from './CallbackModal';
+import SearchModal from './SearchModal';
 import { useSettings } from '@/hooks/useSettings';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { settings } = useSettings();
 
   useEffect(() => {
@@ -70,9 +72,7 @@ const Header = () => {
                 <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
                   <MapPin size={14} />
                 </div>
-                <span className="font-medium">
-                  {settings.address}
-                </span>
+                <span className="font-medium">{settings.address}</span>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -139,6 +139,7 @@ const Header = () => {
             <div className="flex items-center space-x-2">
               {/* Поиск */}
               <motion.button
+                onClick={() => setIsSearchModalOpen(true)}
                 className="hidden md:flex items-center justify-center w-11 h-11 text-white hover:text-[#F6A800] hover:bg-white/10 rounded-xl transition-all duration-300 border border-transparent hover:border-[#F6A800]/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -214,7 +215,25 @@ const Header = () => {
                       </Link>
                     </motion.div>
                   ))}
+                  {/* Поиск в мобильном меню */}
                   <div className="pt-4 mt-4 border-t border-[#F6A800]/20">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="mb-4"
+                    >
+                      <button
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setIsSearchModalOpen(true);
+                        }}
+                        className="flex items-center justify-center space-x-2 w-full bg-white/10 hover:bg-white/20 text-white px-6 py-4 rounded-xl font-medium transition-all duration-300"
+                      >
+                        <Search size={20} />
+                        <span>Поиск товаров</span>
+                      </button>
+                    </motion.div>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -241,6 +260,12 @@ const Header = () => {
       <CallbackModal
         isOpen={isCallbackModalOpen}
         onClose={() => setIsCallbackModalOpen(false)}
+      />
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
       />
     </>
   );

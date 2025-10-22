@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { serializeProducts } from '@/lib/serialization';
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,7 +12,6 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search');
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
-
 
     const whereClause: Record<string, unknown> = {};
 
@@ -82,24 +82,8 @@ export async function GET(req: NextRequest) {
       db.product.count({ where: whereClause }),
     ]);
 
-
-    // Convert Decimal to numbers for client components
-    const serializedProducts = products.map(product => ({
-      ...product,
-      price: Number(product.price),
-      oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
-      rating: Number(product.rating),
-      createdAt: product.createdAt.toISOString(),
-      updatedAt: product.updatedAt.toISOString(),
-      // Convert null to undefined for interface compatibility
-      title: product.title || undefined,
-      description: product.description || undefined,
-      shortDescription: product.shortDescription || undefined,
-      mainImageUrl: product.mainImageUrl || undefined,
-      sku: product.sku || undefined,
-      seoTitle: product.seoTitle || undefined,
-      seoDescription: product.seoDescription || undefined,
-    }));
+    // Сериализуем данные для передачи в Client Components
+    const serializedProducts = serializeProducts(products);
 
     return NextResponse.json({
       success: true,

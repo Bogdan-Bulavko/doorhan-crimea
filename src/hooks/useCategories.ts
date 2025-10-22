@@ -48,6 +48,8 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
     const fetchCategories = async () => {
       if (!isMounted) return;
       
+      let timeoutId: NodeJS.Timeout | null = null;
+      
       try {
         setLoading(true);
         setError(null);
@@ -61,7 +63,11 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
 
         // Добавляем таймаут для запроса
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд таймаут
+        timeoutId = setTimeout(() => {
+          if (!controller.signal.aborted) {
+            controller.abort();
+          }
+        }, 5000); // 5 секунд таймаут
 
         const response = await fetch(`/api/categories?${params}`, {
           signal: controller.signal,
@@ -70,7 +76,10 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
           },
         });
         
-        clearTimeout(timeoutId);
+        // Очищаем таймаут только если запрос прошел успешно
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
 
         if (!response.ok) {
           if (response.status === 404 && retryCount < maxRetries) {
@@ -96,6 +105,11 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
         }
       } catch (err) {
         if (!isMounted) return;
+        
+        // Очищаем таймаут в случае ошибки
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
         
         if (err instanceof Error && err.name === 'AbortError') {
           setError('Превышено время ожидания запроса');
