@@ -150,8 +150,19 @@ class ServerDeployer {
       );
 
       await this.executeCommand(
-        'apt install -y curl git nginx nodejs npm',
+        'apt install -y curl git nginx',
         'Установка базовых зависимостей'
+      );
+
+      // Установка Node.js через NodeSource
+      await this.executeCommand(
+        'curl -fsSL https://deb.nodesource.com/setup_18.x | bash -',
+        'Добавление NodeSource репозитория'
+      );
+
+      await this.executeCommand(
+        'apt install -y nodejs',
+        'Установка Node.js 18.x'
       );
 
       // 3. Клонирование репозитория

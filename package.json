@@ -21,7 +21,8 @@
     "import-database": "npx tsx scripts/import-database.ts",
     "create-sql-dump": "npx tsx scripts/create-sql-dump.ts",
     "deploy": "npx tsx scripts/simple-deploy.ts",
-    "deploy-full": "npx tsx scripts/deploy-to-server.ts"
+    "deploy-full": "npx tsx scripts/deploy-to-server.ts",
+    "deploy-robust": "npx tsx scripts/robust-deploy.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
