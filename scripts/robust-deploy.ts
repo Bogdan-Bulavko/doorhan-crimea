@@ -17,7 +17,7 @@ const PROJECT = {
   branch: 'copy/main'
 };
 
-class SimpleDeployer {
+class RobustDeployer {
   private client: Client;
 
   constructor() {
@@ -108,25 +108,41 @@ class SimpleDeployer {
       );
 
       await this.runCommand(
-        'apt install -y curl git nginx',
+        'apt install -y curl git nginx wget',
         'Установка базовых зависимостей'
       );
 
-      // Установка Node.js через NodeSource
+      // 3. Установка Node.js через NVM (более надежно)
       await this.runCommand(
-        'curl -fsSL https://deb.nodesource.com/setup_18.x | bash -',
-        'Добавление NodeSource репозитория'
+        'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash',
+        'Установка NVM'
       );
 
       await this.runCommand(
-        'apt install -y nodejs',
-        'Установка Node.js 18.x'
+        'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && nvm install 18 && nvm use 18 && nvm alias default 18',
+        'Установка Node.js 18 через NVM'
       );
 
-      // 3. Клонирование проекта
+      // 4. Настройка PATH для всех пользователей
+      await this.runCommand(
+        'echo "export NVM_DIR=\\"$HOME/.nvm\\"" >> /etc/profile',
+        'Настройка NVM для всех пользователей'
+      );
+
+      await this.runCommand(
+        'echo "[ -s \\"$NVM_DIR/nvm.sh\\" ] && \\. \\"$NVM_DIR/nvm.sh\\"" >> /etc/profile',
+        'Добавление NVM в профиль'
+      );
+
+      await this.runCommand(
+        'echo "[ -s \\"$NVM_DIR/bash_completion\\" ] && \\. \\"$NVM_DIR/bash_completion\\"" >> /etc/profile',
+        'Добавление автодополнения NVM'
+      );
+
+      // 5. Клонирование проекта
       await this.runCommand(
         `rm -rf /var/www/${PROJECT.name}`,
-        'Очистка'
+        'Очистка старой версии'
       );
 
       await this.runCommand(
@@ -134,18 +150,18 @@ class SimpleDeployer {
         'Клонирование проекта'
       );
 
-      // 4. Установка зависимостей
+      // 6. Установка зависимостей проекта
       await this.runCommand(
-        `cd /var/www/${PROJECT.name} && npm install`,
+        `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npm install`,
         'Установка npm пакетов'
       );
 
       await this.runCommand(
-        `cd /var/www/${PROJECT.name} && npm install --save-dev tsx`,
+        `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npm install --save-dev tsx`,
         'Установка tsx'
       );
 
-      // 5. Загрузка файлов
+      // 7. Загрузка файлов
       const files = ['database-export.json', '.env'];
       for (const file of files) {
         try {
@@ -159,7 +175,7 @@ class SimpleDeployer {
         }
       }
 
-      // 6. Настройка .env
+      // 8. Настройка .env
       await this.runCommand(
         `cd /var/www/${PROJECT.name} && echo 'DATABASE_URL="file:./prisma/prod.db"' >> .env`,
         'Настройка DATABASE_URL'
@@ -170,40 +186,40 @@ class SimpleDeployer {
         'Настройка NODE_ENV'
       );
 
-      // 7. Настройка базы данных
+      // 9. Настройка базы данных
       await this.runCommand(
-        `cd /var/www/${PROJECT.name} && npx prisma generate`,
+        `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npx prisma generate`,
         'Генерация Prisma'
       );
 
       await this.runCommand(
-        `cd /var/www/${PROJECT.name} && npx prisma db push`,
+        `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npx prisma db push`,
         'Создание БД'
       );
 
-      // 8. Импорт данных
+      // 10. Импорт данных
       try {
         await this.runCommand(
-          `cd /var/www/${PROJECT.name} && npm run import-database`,
+          `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npm run import-database`,
           'Импорт данных'
         );
       } catch {
         console.log('⚠️ Импорт данных пропущен (файл не найден)');
       }
 
-      // 9. Сборка
+      // 11. Сборка
       await this.runCommand(
-        `cd /var/www/${PROJECT.name} && npm run build`,
+        `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npm run build`,
         'Сборка проекта'
       );
 
-      // 10. Установка PM2
+      // 12. Установка PM2
       await this.runCommand(
-        'npm install -g pm2',
+        `export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && npm install -g pm2`,
         'Установка PM2'
       );
 
-      // 11. Создание PM2 конфига
+      // 13. Создание PM2 конфига
       const pm2Config = `module.exports = {
   apps: [{
     name: '${PROJECT.name}',
@@ -222,7 +238,7 @@ class SimpleDeployer {
         'Создание PM2 конфига'
       );
 
-      // 12. Настройка Nginx
+      // 14. Настройка Nginx
       const nginxConfig = `server {
     listen 80;
     server_name ${SERVER.host};
@@ -260,20 +276,20 @@ class SimpleDeployer {
         'Перезагрузка Nginx'
       );
 
-      // 13. Запуск приложения
+      // 15. Запуск приложения
       await this.runCommand(
-        `cd /var/www/${PROJECT.name} && pm2 start ecosystem.config.js`,
+        `cd /var/www/${PROJECT.name} && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && pm2 start ecosystem.config.js`,
         'Запуск приложения'
       );
 
       await this.runCommand(
-        'pm2 save && pm2 startup',
+        `export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && pm2 save && pm2 startup`,
         'Настройка автозапуска'
       );
 
-      // 14. Проверка
+      // 16. Проверка
       await this.runCommand(
-        'pm2 status',
+        `export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && pm2 status`,
         'Проверка статуса'
       );
 
@@ -282,7 +298,7 @@ class SimpleDeployer {
         'Проверка приложения'
       );
 
-      // 15. Файрвол
+      // 17. Файрвол
       await this.runCommand(
         'ufw allow 22 && ufw allow 80 && ufw --force enable',
         'Настройка файрвола'
@@ -303,7 +319,7 @@ class SimpleDeployer {
 
 // Запуск
 async function main() {
-  const deployer = new SimpleDeployer();
+  const deployer = new RobustDeployer();
   
   try {
     await deployer.deploy();
