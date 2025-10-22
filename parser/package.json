@@ -1,0 +1,20 @@
+{
+  "name": "doorhan-parser",
+  "version": "1.0.0",
+  "description": "Parser for doorhan-crimea.com with Winston logging",
+  "main": "index.js",
+  "scripts": {
+    "parse": "node index.js",
+    "parse-optimized": "node optimized-parser.js",
+    "import-db": "node import-to-prisma.js",
+    "test": "node test-parser.js"
+  },
+  "dependencies": {
+    "winston": "^3.11.0",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "fs-extra": "^11.1.1",
+    "p-limit": "^4.0.0",
+    "@prisma/client": "^5.7.0"
+  }
+}

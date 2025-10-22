@@ -33,6 +33,8 @@ export default async function AdminCategoriesPage() {
     })),
     children: category.children.map((child) => ({
       ...child,
+      children: [],
+      products: [],
     })),
   }));
 
