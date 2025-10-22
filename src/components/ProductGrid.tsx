@@ -163,9 +163,9 @@ const ProductGrid = ({
                     {product.oldPrice && (
                       <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
                         Скидка
-                  </span>
+                      </span>
                     )}
-                </div>
+                  </div>
 
                   {/* Действия */}
                   <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -175,8 +175,8 @@ const ProductGrid = ({
                     <button className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors">
                       <Eye className="w-4 h-4 text-gray-600" />
                     </button>
+                  </div>
                 </div>
-              </div>
 
                 {/* Контент товара */}
                 <div className="p-6">
@@ -193,13 +193,13 @@ const ProductGrid = ({
                   </div>
 
                   <h3 className="text-lg font-bold text-[#00205B] font-montserrat mb-2 group-hover:text-[#F6A800] transition-colors">
-                  {product.title || product.name}
-                </h3>
+                    {product.title || product.name}
+                  </h3>
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                  {product.shortDescription || product.description}
-                </p>
+                    {product.shortDescription || product.description}
+                  </p>
 
-                {/* Особенности */}
+                  {/* Особенности */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {product.isPopular && (
                       <span className="bg-[#F6A800] text-white px-2 py-1 rounded-lg text-xs">
@@ -220,28 +220,28 @@ const ProductGrid = ({
                         Нет в наличии
                       </span>
                     )}
-                </div>
+                  </div>
 
-                {/* Цена и кнопка */}
-                <div className="flex items-center justify-between">
+                  {/* Цена и кнопка */}
+                  <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xl font-bold text-[#00205B]">
                         {parseFloat(product.price).toLocaleString('ru-RU')}{' '}
-                      {product.currency || '₽'}
+                        {product.currency || '₽'}
                       </div>
-                    {product.oldPrice && (
+                      {product.oldPrice && (
                         <div className="text-sm text-gray-500 line-through">
                           {parseFloat(product.oldPrice).toLocaleString('ru-RU')}{' '}
-                        {product.currency || '₽'}
+                          {product.currency || '₽'}
                         </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
                     <button className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105">
                       <ShoppingCart className="w-4 h-4" />
                       <span>В корзину</span>
                     </button>
+                  </div>
                 </div>
-              </div>
               </Link>
             </motion.div>
           ))}
