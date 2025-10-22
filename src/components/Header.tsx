@@ -14,11 +14,13 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CallbackModal from './CallbackModal';
+import { useSettings } from '@/hooks/useSettings';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
+  const { settings } = useSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,13 +56,13 @@ const Header = () => {
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-8">
               <Link
-                href="tel:+7972944149"
+                href={`tel:${settings.phone.replace(/\D/g, '')}`}
                 className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
               >
                 <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
                   <Phone size={14} />
                 </div>
-                <span className="font-medium">+7 (978) 294 41 49</span>
+                <span className="font-medium">{settings.phone}</span>
               </Link>
               <Link
                 href="#"
@@ -70,14 +72,14 @@ const Header = () => {
                   <MapPin size={14} />
                 </div>
                 <span className="font-medium">
-                  Симферополь, ул. Примерная, 1
+                  {settings.address}
                 </span>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-300">
                 <span className="text-[#F6A800] font-semibold">Работаем:</span>{' '}
-                9:00 - 18:00
+                {settings.workingHours}
               </div>
               <div className="w-px h-4 bg-white/20"></div>
               <button

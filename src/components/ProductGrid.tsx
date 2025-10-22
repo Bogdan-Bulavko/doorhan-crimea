@@ -6,6 +6,14 @@ import Image from 'next/image';
 import { Star, ShoppingCart, Eye, Heart } from 'lucide-react';
 import { useProducts } from '@/hooks/useProducts';
 
+interface ProductImage {
+  id: number;
+  imageUrl: string;
+  altText?: string;
+  sortOrder: number;
+  isMain: boolean;
+}
+
 interface Product {
   id: number;
   name: string;
@@ -33,7 +41,7 @@ interface Product {
   reviewsCount: number;
   seoTitle?: string;
   seoDescription?: string;
-  images?: unknown[];
+  images?: ProductImage[];
   specifications?: unknown[];
   colors?: unknown[];
   createdAt: string;
@@ -76,57 +84,99 @@ const ProductGrid = ({
   // Обработка ошибок
   if (error) {
     return (
-      <div className="text-center py-12">
-        <p className="text-red-500">Ошибка при загрузке товаров: {error}</p>
-      </div>
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center py-12">
+            <div className="text-red-400 mb-4">
+              <ShoppingCart className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold text-red-600 mb-2">
+              Ошибка загрузки товаров
+            </h3>
+            <p className="text-red-500 mb-4">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-6 py-2 rounded-xl font-medium transition-all duration-300"
+            >
+              Попробовать снова
+            </button>
+          </div>
+        </div>
+      </section>
     );
   }
 
-  // Показываем загрузку
+  // Показываем загрузку с таймаутом
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800]"></div>
-        <span className="ml-4 text-gray-600">Загрузка товаров...</span>
-      </div>
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="flex justify-center items-center py-16">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F6A800] mx-auto mb-4"></div>
+              <span className="text-gray-600 text-lg">Загрузка товаров...</span>
+              <p className="text-gray-500 text-sm mt-2">
+                Если загрузка занимает слишком много времени, попробуйте обновить страницу
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+
+  // Если есть ошибка
+  if (error) {
+    return (
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center py-12">
+            <div className="text-red-400 mb-4">
+              <ShoppingCart className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold text-red-600 mb-2">
+              Ошибка загрузки товаров
+            </h3>
+            <p className="text-gray-500 mb-4">
+              {error}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Попробовать снова
+            </button>
+          </div>
+        </div>
+      </section>
     );
   }
 
   // Если нет товаров
   if (!products || products.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-gray-400 mb-4">
-          <ShoppingCart className="w-16 h-16 mx-auto" />
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <ShoppingCart className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              Товары не найдены
+            </h3>
+            <p className="text-gray-500">
+              Попробуйте изменить параметры поиска или фильтры
+            </p>
+          </div>
         </div>
-        <h3 className="text-xl font-semibold text-gray-600 mb-2">
-          Товары не найдены
-        </h3>
-        <p className="text-gray-500">
-          Попробуйте изменить параметры поиска или фильтры
-        </p>
-      </div>
+      </section>
     );
   }
 
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
-        {/* Заголовок секции */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#00205B] font-montserrat mb-6">
-            Популярные товары
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Выберите качественные ворота и роллеты DoorHan для вашего дома
-          </p>
-        </motion.div>
 
         {/* Сетка товаров */}
         <motion.div
@@ -143,14 +193,27 @@ const ProductGrid = ({
               transition={{ delay: 0.1 * index }}
               className="group bg-white rounded-3xl shadow-soft hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
-              <Link href={`/categories/products/${product.slug}`}>
+              <Link href={`/${product.category?.slug}/${product.slug || product.id}`}>
                 {/* Изображение товара */}
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                   <Image
-                    src={product.mainImageUrl || '/images/placeholder.jpg'}
+                    src={(() => {
+                      const mainImage = product.mainImageUrl;
+                      const mainFromImages = product.images?.find(img => img.isMain)?.imageUrl;
+                      const firstImage = product.images?.[0]?.imageUrl;
+                      return mainImage || mainFromImages || firstImage || '/images/placeholder.svg';
+                    })()}
                     alt={product.title || product.name}
                     fill
-                    className="object-cover"
+                    className="object-contain"
+                    style={{ 
+                      objectFit: 'contain',
+                      backgroundColor: '#f9fafb'
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/placeholder.svg';
+                    }}
                   />
 
                   {/* Бейджи */}

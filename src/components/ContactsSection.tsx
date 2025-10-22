@@ -12,8 +12,11 @@ import {
   MessageCircle,
   Calendar,
 } from 'lucide-react';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const ContactsSection = () => {
+  const { settings, loading: settingsLoading } = useSiteSettings();
+  
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -77,32 +80,32 @@ const ContactsSection = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: '+7 (978) 294 41 49',
-      description: 'Звонки принимаются ежедневно',
-      href: 'tel:+79782944149',
+      content: settings?.phone || '',
+      description: settings?.phoneDescription || '',
+      href: `tel:${settings?.phone?.replace(/\D/g, '') || ''}`,
       color: 'bg-[#F6A800]',
     },
     {
       icon: Mail,
       title: 'Email',
-      content: 'zakaz@doorhan-zavod.ru',
-      description: 'Ответим в течение часа',
-      href: 'mailto:zakaz@doorhan-zavod.ru',
+      content: settings?.email || '',
+      description: settings?.emailDescription || '',
+      href: `mailto:${settings?.email || ''}`,
       color: 'bg-[#00205B]',
     },
     {
       icon: MapPin,
       title: 'Адрес',
-      content: 'Симферополь, ул. Примерная, 1',
-      description: 'Офис и выставочный зал',
+      content: settings?.address || '',
+      description: settings?.addressDescription || '',
       href: '#',
       color: 'bg-[#F6A800]',
     },
     {
       icon: Clock,
       title: 'Режим работы',
-      content: 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00',
-      description: 'Воскресенье - выходной',
+      content: settings?.workingHours || '',
+      description: settings?.workingHoursDescription || '',
       href: '#',
       color: 'bg-[#00205B]',
     },
@@ -144,6 +147,18 @@ const ContactsSection = () => {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 },
   };
+
+  if (settingsLoading || !settings) {
+    return (
+      <section id="contacts" className="pt-12 pb-8 md:py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#00205B]"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="contacts" className="pt-12 pb-8 md:py-20 bg-white">
@@ -382,7 +397,7 @@ const ContactsSection = () => {
           </motion.div>
         </div>
 
-        {/* Карта (заглушка) */}
+        {/* Карта */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -393,17 +408,24 @@ const ContactsSection = () => {
           <h3 className="text-2xl font-bold text-[#00205B] font-montserrat text-center mb-8">
             Как нас найти
           </h3>
-          <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl h-96 p-8 flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="w-16 h-16 text-[#F6A800] mx-auto mb-4" />
-              <h4 className="text-xl font-semibold text-[#00205B] mb-2">
-                Симферополь, ул. Примерная, 1
-              </h4>
-              <p className="text-gray-600">
-                Офис и выставочный зал DoorHan Крым
-              </p>
+          {settings?.mapIframe ? (
+            <div 
+              className="rounded-3xl overflow-hidden shadow-2xl"
+              dangerouslySetInnerHTML={{ __html: settings.mapIframe }}
+            />
+          ) : (
+            <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl h-96 p-8 flex items-center justify-center">
+              <div className="text-center">
+                <MapPin className="w-16 h-16 text-[#F6A800] mx-auto mb-4" />
+                <h4 className="text-xl font-semibold text-[#00205B] mb-2">
+                  {settings?.address || 'Симферополь, ул. Примерная, 1'}
+                </h4>
+                <p className="text-gray-600">
+                  {settings?.addressDescription || 'Офис и выставочный зал DoorHan Крым'}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </section>

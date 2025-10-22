@@ -2,6 +2,12 @@
 
 import { useState, useEffect } from 'react';
 
+interface Product {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 interface Category {
   id: number;
   name: string;
@@ -18,7 +24,7 @@ interface Category {
   sortOrder: number;
   seoTitle?: string;
   seoDescription?: string;
-  products?: any[];
+  products?: Product[];
   createdAt: string;
   updatedAt: string;
 }
@@ -35,7 +41,13 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    let retryCount = 0;
+    const maxRetries = 2;
+
     const fetchCategories = async () => {
+      if (!isMounted) return;
+      
       try {
         setLoading(true);
         setError(null);
@@ -47,8 +59,35 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
         }
         if (options.slug) params.append('slug', options.slug);
 
-        const response = await fetch(`/api/categories?${params}`);
+        // Добавляем таймаут для запроса
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд таймаут
+
+        const response = await fetch(`/api/categories?${params}`, {
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          if (response.status === 404 && retryCount < maxRetries) {
+            retryCount++;
+            console.warn(`API категорий не найден, попытка ${retryCount}/${maxRetries}`);
+            // Задержка перед повтором
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            if (isMounted) {
+              return fetchCategories();
+            }
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+
+        if (!isMounted) return;
 
         if (result.success) {
           setCategories(result.data);
@@ -56,14 +95,27 @@ export const useCategories = (options: UseCategoriesOptions = {}) => {
           setError(result.message || 'Ошибка при загрузке категорий');
         }
       } catch (err) {
-        setError('Ошибка сети при загрузке категорий');
+        if (!isMounted) return;
+        
+        if (err instanceof Error && err.name === 'AbortError') {
+          setError('Превышено время ожидания запроса');
+        } else {
+          setError('Ошибка сети при загрузке категорий');
+        }
         console.error('Categories fetch error:', err);
+        setCategories([]);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchCategories();
+
+    return () => {
+      isMounted = false;
+    };
   }, [options.includeProducts, options.parentId, options.slug]);
 
   return { categories, loading, error };
