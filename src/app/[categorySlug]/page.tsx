@@ -2,18 +2,21 @@ import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import CategoryProducts from '@/components/CategoryProducts';
+import { serializeCategory, serializeProducts } from '@/lib/serialization';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: CategoryPageProps): Promise<Metadata> {
   const { categorySlug } = await params;
-  
+
   const category = await db.category.findFirst({
-    where: { 
+    where: {
       slug: categorySlug,
-      isActive: true 
+      isActive: true,
     },
   });
 
@@ -25,8 +28,11 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   }
 
   const title = category.seoTitle || `${category.name} | DoorHan Крым`;
-  const description = category.seoDescription || category.description || `Каталог товаров категории ${category.name} от DoorHan. Качественные ворота и автоматические системы.`;
-  
+  const description =
+    category.seoDescription ||
+    category.description ||
+    `Каталог товаров категории ${category.name} от DoorHan. Качественные ворота и автоматические системы.`;
+
   return {
     title,
     description,
@@ -36,21 +42,23 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       description,
       url: `https://doorhan-crimea/${categorySlug}`,
       siteName: 'DoorHan Крым',
-      images: category.imageUrl ? [
-        {
-          url: category.imageUrl,
-          width: 1200,
-          height: 630,
-          alt: category.name,
-        },
-      ] : [
-        {
-          url: '/doorhan-crimea/og-image.jpg',
-          width: 1200,
-          height: 630,
-          alt: 'DoorHan Крым',
-        },
-      ],
+      images: category.imageUrl
+        ? [
+            {
+              url: category.imageUrl,
+              width: 1200,
+              height: 630,
+              alt: category.name,
+            },
+          ]
+        : [
+            {
+              url: '/doorhan-crimea/og-image.jpg',
+              width: 1200,
+              height: 630,
+              alt: 'DoorHan Крым',
+            },
+          ],
       locale: 'ru_RU',
       type: 'website',
     },
@@ -58,7 +66,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       card: 'summary_large_image',
       title,
       description,
-      images: category.imageUrl ? [category.imageUrl] : ['/doorhan-crimea/og-image.jpg'],
+      images: category.imageUrl
+        ? [category.imageUrl]
+        : ['/doorhan-crimea/og-image.jpg'],
     },
     alternates: {
       canonical: `https://doorhan-crimea/${categorySlug}`,
@@ -71,9 +81,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // Найти категорию по slug
   const category = await db.category.findFirst({
-    where: { 
+    where: {
       slug: categorySlug,
-      isActive: true 
+      isActive: true,
     },
     include: {
       products: {
@@ -94,53 +104,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  // Конвертируем Decimal в числа для клиентских компонентов
-  const serializedProducts = category.products.map(product => ({
-    ...product,
-    price: Number(product.price),
-    oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
-    rating: Number(product.rating),
-    // Конвертируем все Decimal поля
-    createdAt: product.createdAt.toISOString(),
-    updatedAt: product.updatedAt.toISOString(),
-    // Конвертируем null в undefined для совместимости с интерфейсом
-    title: product.title || undefined,
-    description: product.description || undefined,
-    shortDescription: product.shortDescription || undefined,
-    mainImageUrl: product.mainImageUrl || undefined,
-    sku: product.sku || undefined,
-    seoTitle: product.seoTitle || undefined,
-    seoDescription: product.seoDescription || undefined,
-    // Сериализуем изображения
-    images: product.images?.map(img => ({
-      ...img,
-      altText: img.altText || undefined,
-    })) || [],
-    // Сериализуем спецификации
-    specifications: product.specifications?.map(spec => ({
-      ...spec,
-      unit: spec.unit || undefined,
-    })) || [],
-    // Сериализуем цвета
-    colors: product.colors?.map(color => ({
-      ...color,
-      imageUrl: color.imageUrl || undefined,
-    })) || [],
-  }));
-
-  // Сериализуем категорию
-  const serializedCategory = {
-    ...category,
-    description: category.description || undefined,
-    imageUrl: category.imageUrl || undefined,
-    seoTitle: category.seoTitle || undefined,
-    seoDescription: category.seoDescription || undefined,
-  };
+  // Сериализуем данные для передачи в Client Components
+  const serializedProducts = serializeProducts(category.products);
+  const serializedCategory = serializeCategory(category);
 
   return (
     <main className="min-h-screen">
-      <CategoryProducts 
-        category={serializedCategory} 
+      <CategoryProducts
+        category={serializedCategory}
         products={serializedProducts}
       />
     </main>

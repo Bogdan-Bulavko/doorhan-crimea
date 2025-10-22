@@ -8,10 +8,6 @@ import { useMainCategories } from '@/hooks/useCategories';
 const CategoriesGrid = () => {
   const { categories, loading, error } = useMainCategories();
 
-  const getCategoryColor = (category: { color?: string }) => {
-    return category.color || '#ffb700';
-  };
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -100,13 +96,11 @@ const CategoriesGrid = () => {
                         </h3>
                       </div>
                       <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3 flex-grow">
-                        {category.description ? 
-                          (category.description.length > 120 ? 
-                            `${category.description.substring(0, 120)}...` : 
-                            category.description
-                          ) : 
-                          'Описание категории'
-                        }
+                        {category.description
+                          ? category.description.length > 120
+                            ? `${category.description.substring(0, 120)}...`
+                            : category.description
+                          : 'Описание категории'}
                       </p>
                       <div className="flex items-center justify-start mt-auto">
                         <span className="text-sm font-medium text-gray-600 group-hover:text-[#ffb700] bg-gray-100 group-hover:bg-[#ffb700]/10 px-4 py-2 rounded-lg group-hover:scale-105 transition-all duration-300">

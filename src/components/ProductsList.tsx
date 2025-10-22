@@ -10,10 +10,14 @@ import ProductGrid from './ProductGrid';
 import { useProducts } from '@/hooks/useProducts';
 import { useMainCategories } from '@/hooks/useCategories';
 
-const ProductsList = () => {
+interface ProductsListProps {
+  initialSearch?: string;
+}
+
+const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearch);
   const [sortBy, setSortBy] = useState('name');
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -30,6 +34,14 @@ const ProductsList = () => {
       setIsInitialized(true);
     }
   }, []);
+
+  // Обновляем поисковый термин при изменении initialSearch
+  useEffect(() => {
+    if (initialSearch) {
+      setSearchTerm(initialSearch);
+      setDebouncedSearchTerm(initialSearch);
+    }
+  }, [initialSearch]);
 
   // Debounce для поиска
   useEffect(() => {
@@ -65,22 +77,17 @@ const ProductsList = () => {
     sortOrder: sortBy === 'price-high' ? 'desc' : 'asc',
   });
 
-
-  // Получаем общее количество товаров для каждой категории (только один раз)
-  const { products: allProducts } = useProducts({});
-
   // Формируем список категорий для селекта с мемоизацией
   const categoriesForSelect = useMemo(
     () => [
-      { id: 'all', name: 'Все товары', count: allProducts.length },
+      { id: 'all', name: 'Все товары', count: 0 },
       ...categories.map((category) => ({
         id: category.slug,
         name: category.name,
-        count: allProducts.filter((p) => p.category?.slug === category.slug)
-          .length,
+        count: 0, // Убираем подсчет для улучшения производительности
       })),
     ],
-    [categories, allProducts]
+    [categories]
   );
 
   // Показываем загрузку для категорий или инициализации
