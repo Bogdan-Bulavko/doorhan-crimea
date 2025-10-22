@@ -13,16 +13,6 @@
     "prisma:push": "prisma db push",
     "prisma:seed": "node prisma/seed.js",
     "prisma:studio": "prisma studio",
-    "create-admin": "npx tsx scripts/create-admin.ts",
-    "create-admin-custom": "npx tsx scripts/create-admin-custom.ts",
-    "reset-admin-password": "npx tsx scripts/reset-admin-password.ts",
-    "list-admins": "npx tsx scripts/list-admins.ts",
-    "export-database": "npx tsx scripts/export-database.ts",
-    "import-database": "npx tsx scripts/import-database.ts",
-    "create-sql-dump": "npx tsx scripts/create-sql-dump.ts",
-    "deploy": "npx tsx scripts/simple-deploy.ts",
-    "deploy-full": "npx tsx scripts/deploy-to-server.ts",
-    "deploy-robust": "npx tsx scripts/robust-deploy.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
