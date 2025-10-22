@@ -13,8 +13,11 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSettings } from '@/hooks/useSettings';
 
 const Footer = () => {
+  const { settings } = useSettings();
+  
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -55,25 +58,25 @@ const Footer = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: '+7 (978) 294 41 49',
-      href: 'tel:+79782944149',
+      content: settings.phone,
+      href: `tel:${settings.phone.replace(/\D/g, '')}`,
     },
     {
       icon: Mail,
       title: 'Email',
-      content: 'zakaz@doorhan-zavod.ru',
-      href: 'mailto:zakaz@doorhan-zavod.ru',
+      content: settings.email,
+      href: `mailto:${settings.email}`,
     },
     {
       icon: MapPin,
       title: 'Адрес',
-      content: 'Симферополь, ул. Примерная, 1',
+      content: settings.address,
       href: '#',
     },
     {
       icon: Clock,
       title: 'Режим работы',
-      content: 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00',
+      content: settings.workingHours,
       href: '#',
     },
   ];

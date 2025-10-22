@@ -19,6 +19,9 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       "prisma/**",
+      "scripts/**",
+      "database-export.json",
+      "database-dump.sql",
     ],
   },
 ];

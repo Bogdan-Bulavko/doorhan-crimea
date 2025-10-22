@@ -64,7 +64,11 @@ export async function GET(req: NextRequest) {
     );
 
     // 6. Поиск товаров в найденных категориях
-    let productsByCategory = [];
+    let productsByCategory: Array<{
+      id: number;
+      name: string;
+      category: { name: string };
+    }> = [];
     if (matchingCategories.length > 0) {
       productsByCategory = await db.product.findMany({
         where: { categoryId: { in: matchingCategories.map((c) => c.id) } },
@@ -80,7 +84,11 @@ export async function GET(req: NextRequest) {
     );
 
     // 7. Комбинированный поиск (как в основном API)
-    const searchConditions = [
+    const searchConditions: Array<{
+      name?: { contains: string };
+      description?: { contains: string };
+      categoryId?: { in: number[] };
+    }> = [
       { name: { contains: search } },
       { description: { contains: search } },
     ];
@@ -133,7 +141,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error('Test search error:', error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

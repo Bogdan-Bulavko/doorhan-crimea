@@ -1,6 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useDebounce } from './useDebounce';
+import { useCache } from './useCache';
+
+interface ProductImage {
+  id: number;
+  imageUrl: string;
+  altText?: string;
+  sortOrder: number;
+  isMain: boolean;
+}
+
+interface ProductSpecification {
+  id: number;
+  name: string;
+  value: string;
+}
+
+interface ProductColor {
+  id: number;
+  name: string;
+  hex: string;
+}
 
 interface Product {
   id: number;
@@ -29,9 +51,9 @@ interface Product {
   reviewsCount: number;
   seoTitle?: string;
   seoDescription?: string;
-  images?: any[];
-  specifications?: any[];
-  colors?: any[];
+  images?: ProductImage[];
+  specifications?: ProductSpecification[];
+  colors?: ProductColor[];
   createdAt: string;
   updatedAt: string;
 }
@@ -64,38 +86,99 @@ export const useProducts = (
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pagination, setPagination] = useState<any>(null);
+  const [pagination, setPagination] = useState<{
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  } | null>(null);
+
+  // Debounce опции для предотвращения слишком частых запросов
+  const debouncedOptions = useDebounce(options, 300);
+  
+  // Кэширование для предотвращения повторных запросов
+  const cache = useCache<{ products: Product[]; pagination: { page: number; limit: number; total: number; pages: number } }>(2 * 60 * 1000); // 2 минуты
 
   useEffect(() => {
+    let isMounted = true;
+    let retryCount = 0;
+    const maxRetries = 2;
+
     const fetchProducts = async () => {
+      if (!isMounted) return;
+      
+      // Создаем ключ кэша на основе параметров
+      const cacheKey = JSON.stringify(debouncedOptions);
+      
+      // Проверяем кэш
+      const cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        setProducts(cachedData.products);
+        setPagination(cachedData.pagination);
+        setLoading(false);
+        return;
+      }
+      
       try {
         setLoading(true);
         setError(null);
 
-        console.log('🔍 useProducts вызывается с параметрами:', options);
 
         const params = new URLSearchParams();
-        if (options.categoryId)
-          params.append('categoryId', options.categoryId.toString());
-        if (options.categorySlug)
-          params.append('categorySlug', options.categorySlug);
-        if (options.page) params.append('page', options.page.toString());
-        if (options.limit) params.append('limit', options.limit.toString());
-        if (options.search) params.append('search', options.search);
-        if (options.sortBy) params.append('sortBy', options.sortBy);
-        if (options.sortOrder) params.append('sortOrder', options.sortOrder);
+        if (debouncedOptions.categoryId)
+          params.append('categoryId', debouncedOptions.categoryId.toString());
+        if (debouncedOptions.categorySlug)
+          params.append('categorySlug', debouncedOptions.categorySlug);
+        if (debouncedOptions.page) params.append('page', debouncedOptions.page.toString());
+        if (debouncedOptions.limit) params.append('limit', debouncedOptions.limit.toString());
+        if (debouncedOptions.search) params.append('search', debouncedOptions.search);
+        if (debouncedOptions.sortBy) params.append('sortBy', debouncedOptions.sortBy);
+        if (debouncedOptions.sortOrder) params.append('sortOrder', debouncedOptions.sortOrder);
 
-        const response = await fetch(`/api/products?${params}`);
+        // Добавляем таймаут для запроса
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 секунд таймаут
+
+        const response = await fetch(`/api/products/?${params}`, {
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          if (response.status === 404 && retryCount < maxRetries) {
+            retryCount++;
+            console.warn(`API не найден, попытка ${retryCount}/${maxRetries}`);
+            // Задержка перед повтором
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            if (isMounted) {
+              return fetchProducts();
+            }
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+
+        if (!isMounted) return;
 
         if (result.success) {
           // Сериализуем данные для корректной работы с Decimal
-          const serializedProducts = result.data.map((product: any) => ({
+          const serializedProducts = result.data.map((product: Product) => ({
             ...product,
             price: product.price.toString(),
             oldPrice: product.oldPrice?.toString() || null,
             rating: product.rating.toString(),
           }));
+
+          // Сохраняем в кэш
+          cache.set(cacheKey, {
+            products: serializedProducts,
+            pagination: result.pagination,
+          });
 
           setProducts(serializedProducts);
           setPagination(result.pagination);
@@ -103,23 +186,30 @@ export const useProducts = (
           setError(result.message || 'Ошибка при загрузке товаров');
         }
       } catch (err) {
-        setError('Ошибка сети при загрузке товаров');
+        if (!isMounted) return;
+        
+        if (err instanceof Error && err.name === 'AbortError') {
+          setError('Превышено время ожидания запроса');
+        } else {
+          setError('Ошибка сети при загрузке товаров');
+        }
         console.error('Products fetch error:', err);
+        
+        // Устанавливаем пустой массив при ошибке
+        setProducts([]);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProducts();
-  }, [
-    options.categoryId,
-    options.categorySlug,
-    options.page,
-    options.limit,
-    options.search,
-    options.sortBy,
-    options.sortOrder,
-  ]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [debouncedOptions, cache]);
 
   return { products, loading, error, pagination };
 };

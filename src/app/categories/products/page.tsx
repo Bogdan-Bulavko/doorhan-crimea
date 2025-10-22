@@ -1,15 +1,6 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-
-const ProductsList = dynamic(() => import('@/components/ProductsList'), {
-  ssr: false,
-});
+import { redirect } from 'next/navigation';
 
 export default function ProductsPage() {
-  return (
-    <main className="min-h-screen">
-      <ProductsList />
-    </main>
-  );
+  // Перенаправляем на страницу категорий
+  redirect('/categories');
 }
