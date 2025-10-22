@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Zap } from 'lucide-react';
 import { useMainCategories } from '@/hooks/useCategories';
 
 const CategoriesGrid = () => {
@@ -95,15 +94,7 @@ const CategoriesGrid = () => {
 
                     {/* Контент карточки */}
                     <div className="p-8 flex flex-col flex-grow">
-                      <div className="flex items-center space-x-3 mb-4">
-                        <div
-                          className="p-3 rounded-xl group-hover:scale-110 transition-transform duration-300"
-                          style={{
-                            backgroundColor: getCategoryColor(category),
-                          }}
-                        >
-                          <Zap className="w-6 h-6 text-white" />
-                        </div>
+                      <div className="mb-4">
                         <h3 className="text-xl font-bold text-[#00205B] font-montserrat group-hover:text-[#F6A800] transition-colors">
                           {category.name}
                         </h3>
