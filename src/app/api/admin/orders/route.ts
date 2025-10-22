@@ -6,6 +6,24 @@ export async function GET() {
     include: { user: true, items: { include: { product: true } } },
     orderBy: { createdAt: 'desc' },
   });
-  return NextResponse.json({ success: true, data: orders });
+
+  // Convert Decimal to numbers for client components
+  const serializedOrders = orders.map(order => ({
+    ...order,
+    subtotal: Number(order.subtotal),
+    shippingCost: Number(order.shippingCost),
+    tax: Number(order.tax),
+    discount: Number(order.discount),
+    total: Number(order.total),
+    createdAt: order.createdAt.toISOString(),
+    updatedAt: order.updatedAt.toISOString(),
+    items: order.items.map(item => ({
+      ...item,
+      price: Number(item.price),
+      totalPrice: Number(item.totalPrice),
+    })),
+  }));
+
+  return NextResponse.json({ success: true, data: serializedOrders });
 }
 

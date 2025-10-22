@@ -12,33 +12,19 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    console.log('🔍 API products запрос:', {
-      categoryId,
-      categorySlug,
-      page,
-      limit,
-      search,
-      sortBy,
-      sortOrder,
-    });
 
     const whereClause: Record<string, unknown> = {};
 
     // Фильтр по категории
     if (categoryId) {
-      console.log('🔍 Фильтр по categoryId:', categoryId);
       whereClause.categoryId = parseInt(categoryId);
     } else if (categorySlug) {
-      console.log('🔍 Фильтр по categorySlug:', categorySlug);
       const category = await db.category.findFirst({
         where: { slug: categorySlug, isActive: true },
       });
-      console.log('🔍 Найденная категория:', category);
       if (category) {
         whereClause.categoryId = category.id;
-        console.log('🔍 Установлен categoryId в whereClause:', category.id);
       } else {
-        console.log('🔍 Категория не найдена для slug:', categorySlug);
         return NextResponse.json(
           {
             success: false,
@@ -51,8 +37,6 @@ export async function GET(req: NextRequest) {
 
     // Поиск по названию, описанию и категории
     if (search) {
-      console.log('🔍 Поиск по запросу:', search);
-
       // Сначала найдем категории, которые содержат поисковый запрос
       const matchingCategories = await db.category.findMany({
         where: {
@@ -61,8 +45,6 @@ export async function GET(req: NextRequest) {
         },
         select: { id: true, name: true },
       });
-
-      console.log('🔍 Найденные категории:', matchingCategories);
 
       // Создаем условия поиска
       const searchConditions: Record<string, unknown>[] = [
@@ -78,54 +60,7 @@ export async function GET(req: NextRequest) {
       }
 
       whereClause.OR = searchConditions;
-      console.log('🔍 Условие поиска:', JSON.stringify(whereClause, null, 2));
-
-      // Дополнительная отладка - проверим каждое условие отдельно
-      console.log('🔍 Тестируем каждое условие:');
-
-      // Тест 1: Поиск по названию
-      const testByName = await db.product.findMany({
-        where: { name: { contains: search } },
-        include: { category: { select: { name: true } } },
-      });
-      console.log(
-        '🔍 По названию:',
-        testByName.map((p) => ({ name: p.name, category: p.category.name }))
-      );
-
-      // Тест 2: Поиск по описанию
-      const testByDescription = await db.product.findMany({
-        where: { description: { contains: search } },
-        include: { category: { select: { name: true } } },
-      });
-      console.log(
-        '🔍 По описанию:',
-        testByDescription.map((p) => ({
-          name: p.name,
-          category: p.category.name,
-        }))
-      );
-
-      // Тест 3: Поиск по категории
-      if (matchingCategories.length > 0) {
-        const testByCategory = await db.product.findMany({
-          where: { categoryId: { in: matchingCategories.map((c) => c.id) } },
-          include: { category: { select: { name: true } } },
-        });
-        console.log(
-          '🔍 По категории:',
-          testByCategory.map((p) => ({
-            name: p.name,
-            category: p.category.name,
-          }))
-        );
-      }
     }
-
-    console.log(
-      '🔍 Финальный whereClause:',
-      JSON.stringify(whereClause, null, 2)
-    );
 
     const skip = (page - 1) * limit;
 
@@ -133,9 +68,7 @@ export async function GET(req: NextRequest) {
       db.product.findMany({
         where: whereClause,
         include: {
-          category: {
-            select: { id: true, name: true, slug: true },
-          },
+          category: true,
           images: {
             orderBy: { sortOrder: 'asc' },
           },
@@ -149,33 +82,28 @@ export async function GET(req: NextRequest) {
       db.product.count({ where: whereClause }),
     ]);
 
-    if (search) {
-      console.log('🔍 Найдено товаров:', products.length);
-      console.log(
-        '🔍 Результаты:',
-        products.map((p) => ({
-          name: p.name,
-          category: p.category.name,
-          categoryId: p.categoryId,
-        }))
-      );
 
-      // Дополнительная отладка - покажем все товары в базе
-      const allProducts = await db.product.findMany({
-        include: { category: { select: { name: true } } },
-      });
-      console.log(
-        '🔍 Все товары в базе:',
-        allProducts.map((p) => ({
-          name: p.name,
-          category: p.category.name,
-        }))
-      );
-    }
+    // Convert Decimal to numbers for client components
+    const serializedProducts = products.map(product => ({
+      ...product,
+      price: Number(product.price),
+      oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+      rating: Number(product.rating),
+      createdAt: product.createdAt.toISOString(),
+      updatedAt: product.updatedAt.toISOString(),
+      // Convert null to undefined for interface compatibility
+      title: product.title || undefined,
+      description: product.description || undefined,
+      shortDescription: product.shortDescription || undefined,
+      mainImageUrl: product.mainImageUrl || undefined,
+      sku: product.sku || undefined,
+      seoTitle: product.seoTitle || undefined,
+      seoDescription: product.seoDescription || undefined,
+    }));
 
     return NextResponse.json({
       success: true,
-      data: products,
+      data: serializedProducts,
       pagination: {
         page,
         limit,

@@ -65,17 +65,6 @@ const ProductsList = () => {
     sortOrder: sortBy === 'price-high' ? 'desc' : 'asc',
   });
 
-  // Логирование для отладки
-  console.log('🔍 ProductsList состояние:', {
-    isInitialized,
-    selectedCategory,
-    categorySlug:
-      isInitialized && selectedCategory !== 'all'
-        ? selectedCategory
-        : undefined,
-    productsCount: products.length,
-    loading: productsLoading,
-  });
 
   // Получаем общее количество товаров для каждой категории (только один раз)
   const { products: allProducts } = useProducts({});
@@ -110,7 +99,7 @@ const ProductsList = () => {
     <section className="pt-12 pb-8 md:pt-8 md:pb-20 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Хлебные крошки */}
-        <BreadCrumbs />
+        <BreadCrumbs items={[]} />
         {/* Заголовок */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

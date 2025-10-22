@@ -2,8 +2,30 @@
 export const dynamic = 'force-dynamic';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import ProductSpecifications from '../../_components/ProductSpecifications';
+import ImageUpload from '../../_components/ImageUpload';
 
 type Category = { id: number; name: string };
+
+interface Specification {
+  id?: number;
+  name: string;
+  value: string;
+  unit?: string;
+  sortOrder: number;
+}
+
+interface ImageData {
+  id: string;
+  fileName: string;
+  url: string;
+  type: 'image' | 'video';
+  size: number;
+  originalName: string;
+  isMain?: boolean;
+  sortOrder: number;
+  altText?: string;
+}
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -27,6 +49,8 @@ export default function EditProductPage() {
   const [shortDescription, setShortDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [specifications, setSpecifications] = useState<Specification[]>([]);
+  const [images, setImages] = useState<ImageData[]>([]);
 
   useEffect(() => {
     const load = async () => {
@@ -44,6 +68,8 @@ export default function EditProductPage() {
           const p = prodJ.data as {
             name: string; slug: string; categoryId: number; price: number; currency: string;
             title?: string; description?: string; shortDescription?: string; seoTitle?: string; seoDescription?: string;
+            specifications?: Specification[];
+            images?: Array<{ id: string; url: string; fileName: string; isMain: boolean; altText?: string; sortOrder?: number }>;
           };
           setName(p.name);
           setSlug(p.slug);
@@ -55,6 +81,22 @@ export default function EditProductPage() {
           setShortDescription(p.shortDescription ?? '');
           setSeoTitle(p.seoTitle ?? '');
           setSeoDescription(p.seoDescription ?? '');
+          setSpecifications(p.specifications || []);
+          
+          // Преобразуем изображения из базы данных в формат компонента
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const formattedImages: ImageData[] = (p.images || []).map((img: any, index: number) => ({
+            id: `img_${img.id || index}`,
+            fileName: (img.imageUrl || img.url)?.split('/').pop() || `image_${index}`,
+            url: img.imageUrl || img.url || '',
+            type: (img.imageUrl || img.url)?.includes('video') ? 'video' : 'image',
+            size: 0, // Размер не сохраняется в БД
+            originalName: img.altText || `Image ${index + 1}`,
+            isMain: img.isMain || false,
+            sortOrder: img.sortOrder || index,
+            altText: img.altText || '',
+          }));
+          setImages(formattedImages);
         } else {
           setError('Товар не найден');
         }
@@ -80,6 +122,8 @@ export default function EditProductPage() {
       shortDescription: shortDescription || undefined,
       seoTitle: seoTitle || undefined,
       seoDescription: seoDescription || undefined,
+      specifications: specifications.filter(spec => spec.name.trim() && spec.value.trim()),
+      images: images,
     };
     const res = await fetch(`/api/admin/products/${productId}`, {
       method: 'PUT',
@@ -130,8 +174,17 @@ export default function EditProductPage() {
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} />
         </div>
         <div>
-          <label className="block text-sm text-gray-600">Описание</label>
-          <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Описание товара
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            disabled={loading}
+            rows={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#F6A800] focus:border-transparent disabled:bg-gray-100"
+            placeholder="Введите подробное описание товара с поддержкой Markdown и HTML..."
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
@@ -143,6 +196,21 @@ export default function EditProductPage() {
             <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
           </div>
         </div>
+      </div>
+      
+      <div className="rounded-xl border bg-white p-6">
+        <ImageUpload
+          images={images}
+          onChange={setImages}
+          maxImages={10}
+        />
+      </div>
+      
+      <div className="rounded-xl border bg-white p-6">
+        <ProductSpecifications
+          specifications={specifications}
+          onChange={setSpecifications}
+        />
       </div>
       <div className="flex gap-2">
         <button className="px-4 py-2 border rounded-lg" onClick={() => router.push('/admin/products')}>Назад</button>

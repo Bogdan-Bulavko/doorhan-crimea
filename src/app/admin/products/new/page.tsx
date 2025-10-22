@@ -2,9 +2,31 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormValidation, FormField } from '../../_components/FormValidation';
+import ProductSpecifications from '../../_components/ProductSpecifications';
+import ImageUpload from '../../_components/ImageUpload';
 import { z } from 'zod';
 
 type Category = { id: number; name: string };
+
+interface Specification {
+  id?: number;
+  name: string;
+  value: string;
+  unit?: string;
+  sortOrder: number;
+}
+
+interface ImageData {
+  id: string;
+  fileName: string;
+  url: string;
+  type: 'image' | 'video';
+  size: number;
+  originalName: string;
+  isMain?: boolean;
+  sortOrder: number;
+  altText?: string;
+}
 
 const productSchema = z.object({
   name: z.string().min(1, 'Название обязательно'),
@@ -31,6 +53,23 @@ export default function NewProductPage() {
   // form state
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
+
+  // Функция для генерации slug из названия
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Удаляем все символы кроме букв, цифр, пробелов и дефисов
+      .replace(/\s+/g, '-') // Заменяем пробелы на дефисы
+      .replace(/-+/g, '-') // Убираем множественные дефисы
+      .replace(/^-|-$/g, ''); // Убираем дефисы в начале и конце
+  };
+
+  // Автоматически генерируем slug при изменении названия
+  useEffect(() => {
+    if (name && !slug) {
+      setSlug(generateSlug(name));
+    }
+  }, [name, slug]);
   const [categoryId, setCategoryId] = useState<number | ''>('');
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState('RUB');
@@ -39,6 +78,8 @@ export default function NewProductPage() {
   const [shortDescription, setShortDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [specifications, setSpecifications] = useState<Specification[]>([]);
+  const [images, setImages] = useState<ImageData[]>([]);
 
   useEffect(() => {
     const load = async () => {
@@ -56,7 +97,7 @@ export default function NewProductPage() {
     load();
   }, []);
 
-  const next = () => setStep((s) => Math.min(3, s + 1));
+  const next = () => setStep((s) => Math.min(5, s + 1));
   const prev = () => setStep((s) => Math.max(1, s - 1));
 
   const submit = async () => {
@@ -74,6 +115,8 @@ export default function NewProductPage() {
       shortDescription: shortDescription || undefined,
       seoTitle: seoTitle || undefined,
       seoDescription: seoDescription || undefined,
+      specifications: specifications.filter(spec => spec.name.trim() && spec.value.trim()),
+      images: images,
     };
 
     const validation = validate(body);
@@ -111,13 +154,23 @@ export default function NewProductPage() {
             />
           </FormField>
           <FormField label="Slug" error={getFieldError('slug')} required>
-            <input
-              className={`mt-1 w-full border rounded-lg px-3 py-2 ${
-                getFieldError('slug') ? 'border-red-500' : ''
-              }`}
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-            />
+            <div className="flex gap-2">
+              <input
+                className={`mt-1 flex-1 border rounded-lg px-3 py-2 ${
+                  getFieldError('slug') ? 'border-red-500' : ''
+                }`}
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setSlug(generateSlug(name))}
+                className="mt-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm transition-colors"
+                disabled={!name}
+              >
+                Авто
+              </button>
+            </div>
           </FormField>
           <FormField
             label="Категория"
@@ -179,17 +232,41 @@ export default function NewProductPage() {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600">Описание</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Описание товара
+            </label>
             <textarea
-              className="mt-1 w-full border rounded-lg px-3 py-2"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              disabled={loading}
+              rows={8}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#F6A800] focus:border-transparent disabled:bg-gray-100"
+              placeholder="Введите подробное описание товара с поддержкой Markdown и HTML..."
             />
           </div>
         </div>
       )}
 
       {step === 3 && (
+        <div className="rounded-xl border bg-white p-6">
+          <ImageUpload
+            images={images}
+            onChange={setImages}
+            maxImages={10}
+          />
+        </div>
+      )}
+
+      {step === 4 && (
+        <div className="rounded-xl border bg-white p-6">
+          <ProductSpecifications
+            specifications={specifications}
+            onChange={setSpecifications}
+          />
+        </div>
+      )}
+
+      {step === 5 && (
         <div className="rounded-xl border bg-white p-4 grid gap-3">
           <div>
             <label className="block text-sm text-gray-600">SEO Title</label>
@@ -226,7 +303,7 @@ export default function NewProductPage() {
         >
           Назад
         </button>
-        {step < 3 ? (
+        {step < 5 ? (
           <button
             className="px-4 py-2 bg-[#00205B] text-white rounded-lg"
             onClick={next}

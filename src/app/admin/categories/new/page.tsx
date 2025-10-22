@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function NewCategoryPage() {
   const router = useRouter();
@@ -9,6 +10,7 @@ export default function NewCategoryPage() {
   const [description, setDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const submit = async () => {
@@ -19,6 +21,7 @@ export default function NewCategoryPage() {
       description: description || undefined,
       seoTitle: seoTitle || undefined,
       seoDescription: seoDescription || undefined,
+      imageUrl: imageUrl || undefined,
     };
     const res = await fetch('/api/admin/categories', {
       method: 'POST',
@@ -54,6 +57,33 @@ export default function NewCategoryPage() {
         <div>
           <label className="block text-sm text-gray-600">SEO Description</label>
           <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Изображение категории</label>
+          <div className="mt-1">
+            <input
+              type="text"
+              placeholder="URL изображения"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full border rounded-lg px-3 py-2"
+            />
+            {imageUrl && (
+              <div className="mt-2">
+                <Image
+                  src={imageUrl}
+                  alt="Предварительный просмотр"
+                  width={128}
+                  height={128}
+                  className="object-cover rounded-lg border"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="flex gap-2">

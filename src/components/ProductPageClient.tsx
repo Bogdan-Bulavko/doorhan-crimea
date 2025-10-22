@@ -18,144 +18,130 @@ import {
 
 import BreadCrumbs from './BreadCrumbs';
 import CallbackModal from './CallbackModal';
-import { Product } from '@/types';
+import SimpleMarkdownRenderer from './SimpleMarkdownRenderer';
+import SEOOptimizer from './SEOOptimizer';
 
 interface ProductPageClientProps {
-  productId?: string;
+  product: {
+    id: number;
+    name: string;
+    title?: string;
+    description?: string;
+    shortDescription?: string;
+    price: number;
+    oldPrice?: number | null;
+    currency: string;
+    inStock: boolean;
+    stockQuantity: number;
+    isNew: boolean;
+    isPopular: boolean;
+    isFeatured: boolean;
+    rating: number;
+    reviewsCount: number;
+    mainImageUrl?: string;
+    slug: string;
+    sku?: string;
+    seoTitle?: string;
+    seoDescription?: string;
+    category?: {
+      id: number;
+      name: string;
+      slug: string;
+    };
+    images?: Array<{
+      id: number;
+      imageUrl: string;
+      altText?: string;
+      isMain: boolean;
+      sortOrder: number;
+    }>;
+    specifications?: Array<{
+      id: number;
+      name: string;
+      value: string;
+      unit?: string;
+      sortOrder: number;
+    }>;
+    colors?: Array<{
+      id: number;
+      name: string;
+      value: string;
+      hexColor: string;
+      imageUrl?: string;
+      sortOrder: number;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+  };
+  category: {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    imageUrl?: string;
+  };
 }
 
 export default function ProductPageClient({
-  productId = '1',
+  product: apiProduct,
+  category,
 }: ProductPageClientProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
 
-  // Функция для получения данных товара по ID
-  const getProductById = (id: string): Product => {
-    const products: Record<string, Product> = {
-      '1': {
-        id: 1,
-        name: 'Гаражные секционные ворота RSD02LUX',
-        title: 'Гаражные секционные ворота RSD02LUX',
-        description:
-          'Секционные ворота RSD02LUX представляют собой модификацию хорошо зарекомендовавших себя ворот RSD01LUX с одной отличительной особенностью — балансировочным механизмом и экономичным автоматическим приводом, размещенными внутри вала, что позволяет сэкономить пространство в гараже. Легкая и прочная панель из алюминия обладает высокой коррозионной стойкостью. Конструкция ворот термоэффективна, прочна и проста в монтаже.',
-        shortDescription:
-          'Секционные ворота с автоматическим приводом и балансировочным механизмом',
-        image: '/images/RSD02LUX.webp',
-        images: [
-          '/images/RSD02LUX.webp',
-          '/images/RSD02LUX2padding.jpg',
-          '/images/RSD02LUXdrawing.jpg',
-          '/images/RSD02LUXscheme.png',
-        ],
-        features: [
-          'Автоматическое открытие/закрытие',
-          'Высокая коррозионная стойкость',
-          'Изоляция тепла',
-          'Лёгкость',
-          'Простая установка',
-          'Гарантия 10 лет',
-        ],
-        price: 125000,
-        oldPrice: 145000,
-        currency: 'RUB',
-        category: 'Ворота для дома',
-        categoryId: 1,
-        slug: 'garage-section-gates-rsd02lux',
-        sku: 'RSD02LUX-001',
-        inStock: true,
-        stockQuantity: 10,
-        isNew: false,
-        isPopular: true,
-        isFeatured: true,
-        rating: 4.8,
-        reviews: 127,
-        color: '#00205B',
-        hoverColor: '#F6A800',
-        specifications: [
-          { name: 'Ширина проёма, мм', value: '2 000–3 000' },
-          { name: 'Высота проема, мм', value: '1 800–3 000' },
-          { name: 'Материал', value: 'Алюминий' },
-          { name: 'Притолока, мм', value: 'От 180' },
-          { name: 'Пристенки, мм', value: 'От 100' },
-          { name: 'Гарантия', value: '10 лет' },
-        ],
-        colors: [
-          { name: 'Синий', value: 'blue', hex: '#00205B' },
-          { name: 'Белый', value: 'white', hex: '#FFFFFF' },
-          { name: 'Серый', value: 'gray', hex: '#6B7280' },
-        ],
-        relatedProducts: [2, 3, 4],
-        seoTitle: 'Гаражные секционные ворота RSD02LUX - DoorHan Крым',
-        seoDescription:
-          'Качественные секционные ворота RSD02LUX с автоматическим приводом. Установка и гарантия в Крыму.',
-        createdAt: '2024-01-15T10:00:00Z',
-        updatedAt: '2024-01-15T10:00:00Z',
-      },
-      '2': {
-        id: 2,
-        name: 'Откатные уличные ворота SLG-A',
-        title: 'Откатные уличные ворота SLG-A',
-        description:
-          'Легкие и надежные ворота с уникальной конструкцией из алюминия и сэндвич-панелей. Устанавливаются на объекты частного или промышленного сектора: дачные участки, поселки, складские и производственные комплексы.',
-        shortDescription: 'Прочные откатные ворота для больших проемов',
-        image: '/images/SLG-A.png',
-        images: [
-          '/images/SLG-A.png',
-          '/images/SLG-A3dmodel.jpg',
-          '/images/SLG-Adrawing.jpg',
-          '/images/schemaSLG-A.jpg',
-        ],
-        features: [
-          'Прочность и надежность',
-          'Долговечность конструкции',
-          'Простота установки',
-          'Автоматическое управление',
-          'Защита от коррозии',
-          'Гарантия 5 лет',
-        ],
-        price: 95000,
-        oldPrice: 110000,
-        currency: 'RUB',
-        category: 'Ворота для дома',
-        categoryId: 1,
-        slug: 'sliding-gates-doorhan-50',
-        sku: 'DH-SG-50',
-        inStock: true,
-        stockQuantity: 8,
-        isNew: false,
-        isPopular: true,
-        isFeatured: false,
-        rating: 4.6,
-        reviews: 89,
-        color: '#F6A800',
-        hoverColor: '#00205B',
-        specifications: [
-          { name: 'Ширина проёма, мм', value: '2 000–7 500' },
-          { name: 'Высота проема, мм', value: '1 000–3 200' },
-          { name: 'Материал', value: 'Алюминий' },
-          { name: 'Просвет, мм', value: 'От 74' },
-          { name: 'Гарантия', value: '5 лет' },
-        ],
-        colors: [
-          { name: 'Белый', value: 'white', hex: '#FFFFFF' },
-          { name: 'Серый', value: 'gray', hex: '#6B7280' },
-          { name: 'Коричневый', value: 'brown', hex: '#8B4513' },
-        ],
-        relatedProducts: [1, 3, 4],
-        seoTitle: 'Откатные ворота DoorHan 50 - DoorHan Крым',
-        seoDescription:
-          'Качественные откатные ворота DoorHan 50 для больших проемов. Установка и гарантия в Крыму.',
-        createdAt: '2024-01-20T10:00:00Z',
-        updatedAt: '2024-01-20T10:00:00Z',
-      },
-    };
+  // Преобразуем данные из API в формат компонента
+  
+  const product = apiProduct ? {
+    ...apiProduct,
+    images: apiProduct.images?.map((img: { id: number; imageUrl: string; altText?: string; isMain: boolean; sortOrder: number }, index: number) => ({
+      id: `img_${img.id || index}`,
+      fileName: img.imageUrl?.split('/').pop() || `image_${index}`,
+      url: img.imageUrl || '',
+      type: img.imageUrl?.includes('video') ? 'video' : 'image',
+      size: 0,
+      originalName: img.altText || `Image ${index + 1}`,
+      isMain: img.isMain || false,
+      sortOrder: img.sortOrder || index,
+      altText: img.altText || '',
+    })) || [],
+    features: [
+      'Высокое качество материалов',
+      'Долговечность конструкции', 
+      'Простота установки',
+      'Надежность в эксплуатации',
+      'Современный дизайн',
+      'Гарантия производителя'
+    ],
+  } : null;
 
-    return products[id] || products['1'];
-  };
+  console.log('🔍 ProductPageClient final product:', product);
+  console.log('🔍 ProductPageClient final images:', product?.images);
 
-  const product: Product = getProductById(productId);
+  // Показываем ошибку если нет продукта
+  if (!product) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <div className="text-center py-12">
+            <div className="text-red-400 mb-4">
+              <ShoppingCart className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold text-red-600 mb-2">
+              Товар не найден
+            </h3>
+            <p className="text-red-500 mb-4">Товар с указанным ID не существует</p>
+            <Link 
+              href="/categories"
+              className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-6 py-2 rounded-xl font-medium transition-all duration-300"
+            >
+              Вернуться к каталогу
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -174,6 +160,15 @@ export default function ProductPageClient({
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      {/* SEO Оптимизатор */}
+      <SEOOptimizer
+        productName={product.name || ''}
+        productDescription={product.description || ''}
+        productImages={product.images?.map((img: { url: string }) => img.url) || []}
+        productPrice={product.price.toString()}
+        productCategory={product.category?.name || ''}
+      />
+      
       {/* Хлебные крошки */}
 
       <motion.div
@@ -182,7 +177,14 @@ export default function ProductPageClient({
         animate="visible"
         className="container mx-auto px-4 py-8 max-w-7xl"
       >
-        <BreadCrumbs productName={product.name} />
+        <BreadCrumbs 
+          items={[
+            { label: 'Главная', href: '/' },
+            { label: 'Категории', href: '/categories' },
+            { label: category.name, href: `/${category.slug}` },
+            { label: product.name, href: `/${category.slug}/${product.slug}` }
+          ]}
+        />
 
         {/* Основная информация о товаре */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
@@ -191,12 +193,30 @@ export default function ProductPageClient({
             {/* Главное изображение */}
 
             <div className="relative aspect-square bg-white rounded-3xl shadow-soft overflow-hidden">
-              <Image
-                src={product.images[selectedImage]}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
+              {product.images?.[selectedImage]?.type === 'video' ? (
+                <video
+                  src={product.images[selectedImage].url}
+                  className="w-full h-full object-contain"
+                  controls
+                  muted
+                  style={{ backgroundColor: '#f9fafb' }}
+                />
+              ) : (
+                <Image
+                  src={product.images?.[selectedImage]?.url || product.mainImageUrl || '/images/placeholder.svg'}
+                  alt={product.name}
+                  fill
+                  className="object-contain"
+                  style={{ 
+                    objectFit: 'contain',
+                    backgroundColor: '#f9fafb'
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/placeholder.svg';
+                  }}
+                />
+              )}
               {/* Кнопки навигации по изображениям */}
               <button
                 onClick={() => setSelectedImage(Math.max(0, selectedImage - 1))}
@@ -207,7 +227,7 @@ export default function ProductPageClient({
               <button
                 onClick={() =>
                   setSelectedImage(
-                    Math.min(product.images.length - 1, selectedImage + 1)
+                    Math.min((product.images?.length || 1) - 1, selectedImage + 1)
                   )
                 }
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
@@ -216,7 +236,7 @@ export default function ProductPageClient({
               </button>
               {/* Индикаторы */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                {product.images.map((_, index) => (
+                {(product.images || []).map((_, index: number) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -230,7 +250,7 @@ export default function ProductPageClient({
 
             {/* Миниатюры */}
             <div className="grid grid-cols-4 gap-3">
-              {product.images.map((image, index) => (
+              {(product.images || []).map((image: { url: string; type?: string }, index: number) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
@@ -240,13 +260,32 @@ export default function ProductPageClient({
                       : 'border-gray-200'
                   }`}
                 >
-                  <Image
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    width={100}
-                    height={100}
-                    className="w-full h-full object-cover"
-                  />
+                  {image.type === 'video' ? (
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-6 h-6 mx-auto mb-1 bg-gray-400 rounded-full flex items-center justify-center">
+                          <div className="w-0 h-0 border-l-2 border-l-gray-600 border-t-1 border-b-1 border-t-transparent border-b-transparent ml-0.5"></div>
+                        </div>
+                        <span className="text-xs text-gray-500">Видео</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <Image
+                      src={image.url || '/images/placeholder.svg'}
+                      alt={`${product.name} ${index + 1}`}
+                      width={100}
+                      height={100}
+                      className="w-full h-full object-contain"
+                      style={{ 
+                        objectFit: 'contain',
+                        backgroundColor: '#f9fafb'
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/placeholder.svg';
+                      }}
+                    />
+                  )}
                 </button>
               ))}
             </div>
@@ -258,7 +297,7 @@ export default function ProductPageClient({
             <div>
               <div className="flex items-center space-x-2 mb-2">
                 <span className="bg-[#F6A800]/10 text-[#F6A800] px-3 py-1 rounded-full text-sm font-medium">
-                  {product.category}
+                  {product.category?.name || 'Товар'}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-[#00205B] font-montserrat mb-4">
@@ -271,14 +310,14 @@ export default function ProductPageClient({
                       key={i}
                       size={18}
                       className={
-                        i < Math.floor(product.rating)
+                        i < Math.floor(Number(product.rating))
                           ? 'text-[#F6A800] fill-current'
                           : 'text-gray-300'
                       }
                     />
                   ))}
                   <span className="text-sm text-gray-600 ml-2">
-                    {product.rating} ({product.reviews} отзывов)
+                    {product.rating.toFixed(1)} ({product.reviewsCount} отзывов)
                   </span>
                 </div>
               </div>
@@ -301,10 +340,14 @@ export default function ProductPageClient({
               )}
             </div>
 
-            {/* Описание */}
-            <p className="text-gray-600 text-lg leading-relaxed">
-              {product.description}
-            </p>
+            {/* Краткое описание */}
+            {product.shortDescription && (
+              <div className="bg-blue-50 border-l-4 border-[#F6A800] p-4 rounded-r-lg">
+                <p className="text-gray-700 font-medium text-lg leading-relaxed">
+                  {product.shortDescription}
+                </p>
+              </div>
+            )}
 
             {/* Количество и кнопки */}
             <div className="space-y-4">
@@ -369,6 +412,21 @@ export default function ProductPageClient({
           </motion.div>
         </div>
 
+        {/* Основное описание */}
+        {product.description && (
+          <motion.div variants={itemVariants} className="mb-16">
+            <div className="bg-white rounded-3xl shadow-soft p-8">
+              <h2 className="text-2xl font-bold text-[#00205B] font-montserrat mb-6">
+                Описание товара
+              </h2>
+              <SimpleMarkdownRenderer 
+                content={product.description} 
+                className="text-gray-700"
+              />
+            </div>
+          </motion.div>
+        )}
+
         {/* Характеристики */}
         <motion.div variants={itemVariants} className="mb-16">
           <div className="bg-white rounded-3xl shadow-soft p-8">
@@ -376,7 +434,7 @@ export default function ProductPageClient({
               Характеристики
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {product.specifications.map((spec, index) => (
+              {(product.specifications || []).map((spec: { name: string; value: string }, index: number) => (
                 <div
                   key={index}
                   className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
@@ -399,7 +457,14 @@ export default function ProductPageClient({
             Преимущества товара
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {product.features.map((feature, index) => (
+            {[
+              'Высокое качество материалов',
+              'Долговечность конструкции',
+              'Простота установки',
+              'Надежность в эксплуатации',
+              'Современный дизайн',
+              'Гарантия производителя'
+            ].map((feature, index) => (
               <div
                 key={index}
                 className="bg-white rounded-2xl p-6 shadow-soft flex items-center space-x-4"
