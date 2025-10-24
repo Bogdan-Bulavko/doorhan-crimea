@@ -46,3 +46,7 @@ scripts/
 # database exports (excluded from git)
 database-export.json
 database-dump.sql
+
+.env
+.env.local
+dev.db
