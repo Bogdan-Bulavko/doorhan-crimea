@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMainCategories } from '@/hooks/useCategories';
+import { useMainCategories } from '@/hooks/useAllCategories';
 
 const CategoriesGrid = () => {
   const { categories, loading, error } = useMainCategories();

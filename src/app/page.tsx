@@ -11,12 +11,15 @@ import ContactsSection from '@/components/ContactsSection';
 
 export const metadata: Metadata = {
   title: 'DoorHan Крым | Ворота и автоматика',
-  description: 'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы. Качество и надежность с 1993 года.',
-  keywords: 'DoorHan, ворота, роллеты, автоматика, Крым, гаражные ворота, рольставни',
+  description:
+    'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы. Качество и надежность с 1993 года.',
+  keywords:
+    'DoorHan, ворота, роллеты, автоматика, Крым, гаражные ворота, рольставни',
   openGraph: {
     title: 'DoorHan Крым | Ворота и автоматика',
-    description: 'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
-    url: 'https://doorhan-crimea',
+    description:
+      'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
+    url: 'https://doorhan-crimea.ru',
     siteName: 'DoorHan Крым',
     images: [
       {
@@ -32,11 +35,12 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DoorHan Крым | Ворота и автоматика',
-    description: 'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
+    description:
+      'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
     images: ['/doorhan-crimea/og-image.jpg'],
   },
   alternates: {
-    canonical: 'https://doorhan-crimea',
+    canonical: 'https://doorhan-crimea.ru',
   },
 };
 

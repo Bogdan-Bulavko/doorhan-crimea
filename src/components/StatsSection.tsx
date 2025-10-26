@@ -94,6 +94,7 @@ const StatsSection = () => {
       if (!isInView) return;
 
       let startTime: number;
+      let animationId: number;
       const startValue = 0;
       const endValue = value;
 
@@ -108,11 +109,17 @@ const StatsSection = () => {
         setDisplayValue(Math.floor(currentValue));
 
         if (progress < 1) {
-          requestAnimationFrame(animate);
+          animationId = requestAnimationFrame(animate);
         }
       };
 
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
+
+      return () => {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+      };
     }, [value, duration]);
 
     return (

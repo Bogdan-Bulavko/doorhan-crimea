@@ -91,32 +91,43 @@ export default function ProductPageClient({
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
 
   // Преобразуем данные из API в формат компонента
-  
-  const product = apiProduct ? {
-    ...apiProduct,
-    images: apiProduct.images?.map((img: { id: number; imageUrl: string; altText?: string; isMain: boolean; sortOrder: number }, index: number) => ({
-      id: `img_${img.id || index}`,
-      fileName: img.imageUrl?.split('/').pop() || `image_${index}`,
-      url: img.imageUrl || '',
-      type: img.imageUrl?.includes('video') ? 'video' : 'image',
-      size: 0,
-      originalName: img.altText || `Image ${index + 1}`,
-      isMain: img.isMain || false,
-      sortOrder: img.sortOrder || index,
-      altText: img.altText || '',
-    })) || [],
-    features: [
-      'Высокое качество материалов',
-      'Долговечность конструкции', 
-      'Простота установки',
-      'Надежность в эксплуатации',
-      'Современный дизайн',
-      'Гарантия производителя'
-    ],
-  } : null;
 
-  console.log('🔍 ProductPageClient final product:', product);
-  console.log('🔍 ProductPageClient final images:', product?.images);
+  const product = apiProduct
+    ? {
+        ...apiProduct,
+        images:
+          apiProduct.images?.map(
+            (
+              img: {
+                id: number;
+                imageUrl: string;
+                altText?: string;
+                isMain: boolean;
+                sortOrder: number;
+              },
+              index: number
+            ) => ({
+              id: `img_${img.id || index}`,
+              fileName: img.imageUrl?.split('/').pop() || `image_${index}`,
+              url: img.imageUrl || '',
+              type: img.imageUrl?.includes('video') ? 'video' : 'image',
+              size: 0,
+              originalName: img.altText || `Image ${index + 1}`,
+              isMain: img.isMain || false,
+              sortOrder: img.sortOrder || index,
+              altText: img.altText || '',
+            })
+          ) || [],
+        features: [
+          'Высокое качество материалов',
+          'Долговечность конструкции',
+          'Простота установки',
+          'Надежность в эксплуатации',
+          'Современный дизайн',
+          'Гарантия производителя',
+        ],
+      }
+    : null;
 
   // Показываем ошибку если нет продукта
   if (!product) {
@@ -130,8 +141,10 @@ export default function ProductPageClient({
             <h3 className="text-xl font-semibold text-red-600 mb-2">
               Товар не найден
             </h3>
-            <p className="text-red-500 mb-4">Товар с указанным ID не существует</p>
-            <Link 
+            <p className="text-red-500 mb-4">
+              Товар с указанным ID не существует
+            </p>
+            <Link
               href="/categories"
               className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-6 py-2 rounded-xl font-medium transition-all duration-300"
             >
@@ -164,11 +177,13 @@ export default function ProductPageClient({
       <SEOOptimizer
         productName={product.name || ''}
         productDescription={product.description || ''}
-        productImages={product.images?.map((img: { url: string }) => img.url) || []}
+        productImages={
+          product.images?.map((img: { url: string }) => img.url) || []
+        }
         productPrice={product.price.toString()}
         productCategory={product.category?.name || ''}
       />
-      
+
       {/* Хлебные крошки */}
 
       <motion.div
@@ -177,12 +192,12 @@ export default function ProductPageClient({
         animate="visible"
         className="container mx-auto px-4 py-8 max-w-7xl"
       >
-        <BreadCrumbs 
+        <BreadCrumbs
           items={[
             { label: 'Главная', href: '/' },
             { label: 'Категории', href: '/categories' },
             { label: category.name, href: `/${category.slug}` },
-            { label: product.name, href: `/${category.slug}/${product.slug}` }
+            { label: product.name, href: `/${category.slug}/${product.slug}` },
           ]}
         />
 
@@ -203,13 +218,17 @@ export default function ProductPageClient({
                 />
               ) : (
                 <Image
-                  src={product.images?.[selectedImage]?.url || product.mainImageUrl || '/images/placeholder.svg'}
+                  src={
+                    product.images?.[selectedImage]?.url ||
+                    product.mainImageUrl ||
+                    '/images/placeholder.svg'
+                  }
                   alt={product.name}
                   fill
                   className="object-contain"
-                  style={{ 
+                  style={{
                     objectFit: 'contain',
-                    backgroundColor: '#f9fafb'
+                    backgroundColor: '#f9fafb',
                   }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -227,7 +246,10 @@ export default function ProductPageClient({
               <button
                 onClick={() =>
                   setSelectedImage(
-                    Math.min((product.images?.length || 1) - 1, selectedImage + 1)
+                    Math.min(
+                      (product.images?.length || 1) - 1,
+                      selectedImage + 1
+                    )
                   )
                 }
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
@@ -250,44 +272,46 @@ export default function ProductPageClient({
 
             {/* Миниатюры */}
             <div className="grid grid-cols-4 gap-3">
-              {(product.images || []).map((image: { url: string; type?: string }, index: number) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`aspect-square bg-white rounded-xl overflow-hidden border-2 transition-all ${
-                    index === selectedImage
-                      ? 'border-[#F6A800]'
-                      : 'border-gray-200'
-                  }`}
-                >
-                  {image.type === 'video' ? (
-                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-6 h-6 mx-auto mb-1 bg-gray-400 rounded-full flex items-center justify-center">
-                          <div className="w-0 h-0 border-l-2 border-l-gray-600 border-t-1 border-b-1 border-t-transparent border-b-transparent ml-0.5"></div>
+              {(product.images || []).map(
+                (image: { url: string; type?: string }, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`aspect-square bg-white rounded-xl overflow-hidden border-2 transition-all ${
+                      index === selectedImage
+                        ? 'border-[#F6A800]'
+                        : 'border-gray-200'
+                    }`}
+                  >
+                    {image.type === 'video' ? (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="w-6 h-6 mx-auto mb-1 bg-gray-400 rounded-full flex items-center justify-center">
+                            <div className="w-0 h-0 border-l-2 border-l-gray-600 border-t-1 border-b-1 border-t-transparent border-b-transparent ml-0.5"></div>
+                          </div>
+                          <span className="text-xs text-gray-500">Видео</span>
                         </div>
-                        <span className="text-xs text-gray-500">Видео</span>
                       </div>
-                    </div>
-                  ) : (
-                    <Image
-                      src={image.url || '/images/placeholder.svg'}
-                      alt={`${product.name} ${index + 1}`}
-                      width={100}
-                      height={100}
-                      className="w-full h-full object-contain"
-                      style={{ 
-                        objectFit: 'contain',
-                        backgroundColor: '#f9fafb'
-                      }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/images/placeholder.svg';
-                      }}
-                    />
-                  )}
-                </button>
-              ))}
+                    ) : (
+                      <Image
+                        src={image.url || '/images/placeholder.svg'}
+                        alt={`${product.name} ${index + 1}`}
+                        width={100}
+                        height={100}
+                        className="w-full h-full object-contain"
+                        style={{
+                          objectFit: 'contain',
+                          backgroundColor: '#f9fafb',
+                        }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/images/placeholder.svg';
+                        }}
+                      />
+                    )}
+                  </button>
+                )
+              )}
             </div>
           </motion.div>
 
@@ -419,8 +443,8 @@ export default function ProductPageClient({
               <h2 className="text-2xl font-bold text-[#00205B] font-montserrat mb-6">
                 Описание товара
               </h2>
-              <SimpleMarkdownRenderer 
-                content={product.description} 
+              <SimpleMarkdownRenderer
+                content={product.description}
                 className="text-gray-700"
               />
             </div>
@@ -434,19 +458,21 @@ export default function ProductPageClient({
               Характеристики
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(product.specifications || []).map((spec: { name: string; value: string }, index: number) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
-                >
-                  <span className="text-gray-600 font-medium">
-                    {spec.name}:
-                  </span>
-                  <span className="text-[#00205B] font-semibold">
-                    {spec.value}
-                  </span>
-                </div>
-              ))}
+              {(product.specifications || []).map(
+                (spec: { name: string; value: string }, index: number) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
+                  >
+                    <span className="text-gray-600 font-medium">
+                      {spec.name}:
+                    </span>
+                    <span className="text-[#00205B] font-semibold">
+                      {spec.value}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </motion.div>
@@ -463,7 +489,7 @@ export default function ProductPageClient({
               'Простота установки',
               'Надежность в эксплуатации',
               'Современный дизайн',
-              'Гарантия производителя'
+              'Гарантия производителя',
             ].map((feature, index) => (
               <div
                 key={index}

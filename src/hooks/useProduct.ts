@@ -73,10 +73,8 @@ export const useProduct = (id: string): UseProductResult => {
         setLoading(true);
         setError(null);
 
-        console.log('🔍 useProduct вызывается с ID:', id);
-
         const response = await fetch(`/api/products/${id}`);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
