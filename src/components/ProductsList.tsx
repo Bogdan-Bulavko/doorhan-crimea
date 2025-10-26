@@ -7,8 +7,56 @@ import { ArrowLeft, Search } from 'lucide-react';
 
 import BreadCrumbs from './BreadCrumbs';
 import ProductGrid from './ProductGrid';
-import { useProducts } from '@/hooks/useProducts';
-import { useMainCategories } from '@/hooks/useCategories';
+import { useAllProducts } from '@/hooks/useAllProducts';
+import { useMainCategories } from '@/hooks/useAllCategories';
+
+interface Product {
+  id: number;
+  name: string;
+  title?: string;
+  description?: string;
+  shortDescription?: string;
+  mainImageUrl?: string;
+  categoryId: number;
+  category?: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  slug: string;
+  sku?: string;
+  price: number;
+  oldPrice?: number | null;
+  currency: string;
+  inStock: boolean;
+  stockQuantity: number;
+  isNew: boolean;
+  isPopular: boolean;
+  isFeatured: boolean;
+  rating: number;
+  reviewsCount: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  images?: Array<{
+    id: number;
+    imageUrl: string;
+    altText?: string;
+    sortOrder: number;
+    isMain: boolean;
+  }>;
+  specifications?: Array<{
+    id: number;
+    name: string;
+    value: string;
+  }>;
+  colors?: Array<{
+    id: number;
+    name: string;
+    hex: string;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface ProductsListProps {
   initialSearch?: string;
@@ -20,16 +68,18 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearch);
   const [sortBy, setSortBy] = useState('name');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allDisplayedProducts, setAllDisplayedProducts] = useState<Product[]>(
+    []
+  );
 
   // Получаем категорию из URL параметров
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const category = urlParams.get('category');
-      console.log('🔍 URL категория:', category);
       if (category) {
         setSelectedCategory(category);
-        console.log('🔍 Установлена категория:', category);
       }
       setIsInitialized(true);
     }
@@ -43,6 +93,12 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
     }
   }, [initialSearch]);
 
+  // Сбрасываем страницу и накопленные товары при изменении фильтров
+  useEffect(() => {
+    setCurrentPage(1);
+    setAllDisplayedProducts([]);
+  }, [selectedCategory, debouncedSearchTerm, sortBy]);
+
   // Debounce для поиска
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -55,40 +111,122 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   // Получаем категории из БД
   const { categories, loading: categoriesLoading } = useMainCategories();
 
-  // Получаем товары из БД (только после инициализации)
+  // Получаем все товары для подсчета (без фильтрации)
+  const { products: allProducts, loading: allProductsLoading } = useAllProducts(
+    {}
+  );
+
+  // Получаем отфильтрованные товары для отображения с пагинацией
   const {
     products,
     loading: productsLoading,
     error: productsError,
-  } = useProducts({
+    pagination,
+  } = useAllProducts({
     categorySlug:
       isInitialized && selectedCategory !== 'all'
         ? selectedCategory
         : undefined,
-    search: debouncedSearchTerm || undefined,
+    search:
+      debouncedSearchTerm && debouncedSearchTerm.trim() !== ''
+        ? debouncedSearchTerm
+        : undefined,
     sortBy:
       sortBy === 'name'
-        ? 'createdAt'
+        ? 'name'
         : sortBy === 'price-low'
         ? 'price'
         : sortBy === 'price-high'
         ? 'price'
-        : 'createdAt',
+        : 'name',
     sortOrder: sortBy === 'price-high' ? 'desc' : 'asc',
+    page: currentPage,
+    limit: 12, // Показываем по 12 товаров
   });
 
-  // Формируем список категорий для селекта с мемоизацией
-  const categoriesForSelect = useMemo(
-    () => [
-      { id: 'all', name: 'Все товары', count: 0 },
+  // Получаем общее количество отфильтрованных товаров для отображения
+  const { products: filteredProductsForCount } = useAllProducts({
+    categorySlug:
+      isInitialized && selectedCategory !== 'all'
+        ? selectedCategory
+        : undefined,
+    search:
+      debouncedSearchTerm && debouncedSearchTerm.trim() !== ''
+        ? debouncedSearchTerm
+        : undefined,
+    sortBy:
+      sortBy === 'name'
+        ? 'name'
+        : sortBy === 'price-low'
+        ? 'price'
+        : sortBy === 'price-high'
+        ? 'price'
+        : 'name',
+    sortOrder: sortBy === 'price-high' ? 'desc' : 'asc',
+    // Без пагинации для подсчета
+  });
+
+  // Вычисляем правильное количество товаров для отображения
+  const getTotalCount = () => {
+    // Если выбрана категория "Все товары" и нет поиска, показываем общее количество
+    if (
+      selectedCategory === 'all' &&
+      (!debouncedSearchTerm || debouncedSearchTerm.trim() === '')
+    ) {
+      return allProducts.length;
+    }
+    // Иначе показываем количество отфильтрованных товаров
+    return filteredProductsForCount.length;
+  };
+
+  // Формируем список категорий для селекта с подсчетом товаров
+  const categoriesForSelect = useMemo(() => {
+    // Проверяем, что все товары загружены
+    if (allProductsLoading || allProducts.length === 0) {
+      return [
+        { id: 'all', name: 'Все товары', count: 0 },
+        ...categories.map((category) => ({
+          id: category.slug,
+          name: category.name,
+          count: 0,
+        })),
+      ];
+    }
+
+    // Подсчитываем товары для каждой категории
+    const categoryCounts = categories.reduce((acc, category) => {
+      const count = allProducts.filter(
+        (product) => product.category?.slug === category.slug
+      ).length;
+      acc[category.slug] = count;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Общий счетчик всех товаров
+    const totalCount = allProducts.length;
+
+    return [
+      { id: 'all', name: 'Все товары', count: totalCount },
       ...categories.map((category) => ({
         id: category.slug,
         name: category.name,
-        count: 0, // Убираем подсчет для улучшения производительности
+        count: categoryCounts[category.slug] || 0,
       })),
-    ],
-    [categories]
-  );
+    ];
+  }, [categories, allProducts, allProductsLoading]);
+
+  // Накопление товаров при загрузке новых страниц
+  useEffect(() => {
+    if (products && products.length > 0) {
+      if (currentPage === 1) {
+        // Первая страница - заменяем
+        setAllDisplayedProducts(products);
+      } else {
+        // Последующие страницы - добавляем
+        setAllDisplayedProducts((prev) => [...prev, ...products]);
+      }
+    }
+  }, [products, currentPage]);
 
   // Показываем загрузку для категорий или инициализации
   if (categoriesLoading || !isInitialized) {
@@ -184,17 +322,42 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
           <p className="text-gray-600">
             Найдено товаров:{' '}
             <span className="font-semibold text-[#00205B]">
-              {products.length}
+              {getTotalCount()}
             </span>
           </p>
         </motion.div>
 
         {/* Сетка товаров */}
         <ProductGrid
-          products={products || []}
+          products={allDisplayedProducts || []}
           loading={productsLoading}
           error={productsError}
         />
+
+        {/* Кнопка "Загрузить еще" */}
+        {pagination && pagination.pages > currentPage && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mt-8"
+          >
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={productsLoading}
+              className="bg-[#F6A800] hover:bg-[#ffb700] disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:hover:scale-100"
+            >
+              {productsLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Загрузка...</span>
+                </div>
+              ) : (
+                'Загрузить еще'
+              )}
+            </button>
+          </motion.div>
+        )}
 
         {/* CTA секция */}
         <motion.div

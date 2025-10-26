@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Поиск по названию, описанию и категории
+    // Поиск только по названию товара и названию категории
     if (search) {
       // Сначала найдем категории, которые содержат поисковый запрос
       const matchingCategories = await db.category.findMany({
@@ -46,10 +46,9 @@ export async function GET(req: NextRequest) {
         select: { id: true, name: true },
       });
 
-      // Создаем условия поиска
+      // Создаем условия поиска только по названию товара
       const searchConditions: Record<string, unknown>[] = [
         { name: { contains: search } },
-        { description: { contains: search } },
       ];
 
       // Если найдены подходящие категории, добавляем их в условия

@@ -16,7 +16,7 @@ import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const ContactsSection = () => {
   const { settings, loading: settingsLoading } = useSiteSettings();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -36,12 +36,12 @@ const ContactsSection = () => {
       [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setSubmitMessage('');
-  
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -53,9 +53,9 @@ const ContactsSection = () => {
           type: 'contact',
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (result.success) {
         setSubmitMessage(result.message);
         setFormData({ name: '', phone: '', email: '', message: '' });
@@ -67,7 +67,10 @@ const ContactsSection = () => {
         );
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      // В production логируем ошибку на сервер, но не показываем детали пользователю
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Form submission error:', error);
+      }
       setSubmitMessage(
         'Произошла ошибка при отправке формы. Попробуйте еще раз.'
       );
@@ -383,8 +386,8 @@ const ContactsSection = () => {
                     </>
                   ) : (
                     <>
-                  <Send size={20} />
-                  <span>Отправить заявку</span>
+                      <Send size={20} />
+                      <span>Отправить заявку</span>
                     </>
                   )}
                 </button>
@@ -409,7 +412,7 @@ const ContactsSection = () => {
             Как нас найти
           </h3>
           {settings?.mapIframe ? (
-            <div 
+            <div
               className="rounded-3xl overflow-hidden shadow-2xl"
               dangerouslySetInnerHTML={{ __html: settings.mapIframe }}
             />
@@ -421,7 +424,8 @@ const ContactsSection = () => {
                   {settings?.address || 'Симферополь, ул. Примерная, 1'}
                 </h4>
                 <p className="text-gray-600">
-                  {settings?.addressDescription || 'Офис и выставочный зал DoorHan Крым'}
+                  {settings?.addressDescription ||
+                    'Офис и выставочный зал DoorHan Крым'}
                 </p>
               </div>
             </div>
