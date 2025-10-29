@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -59,12 +60,19 @@ const ProductGrid = ({
   loading: externalLoading,
   error: externalError,
 }: ProductGridProps) => {
-  // Если данные переданы извне, используем их
+  // Если данные переданы извне, не вызываем хук (избегаем лишних запросов)
+  const shouldUseHook = !externalProducts && externalLoading === undefined;
+
+  // Стабилизируем объект options через useMemo, чтобы избежать перерендеров
+  const hookOptions = useMemo(() => {
+    return shouldUseHook ? { limit: 8 } : {};
+  }, [shouldUseHook]);
+
   const {
     products: hookProducts,
     loading: hookLoading,
     error: hookError,
-  } = useProducts({ limit: 8 });
+  } = useProducts(hookOptions);
 
   // Используем переданные данные или данные из хука
   const products = externalProducts || hookProducts;

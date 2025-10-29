@@ -35,30 +35,9 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Поиск только по названию товара и названию категории
+    // Поиск только по названию товара (упрощенная версия для скорости)
     if (search) {
-      // Сначала найдем категории, которые содержат поисковый запрос
-      const matchingCategories = await db.category.findMany({
-        where: {
-          name: { contains: search },
-          isActive: true,
-        },
-        select: { id: true, name: true },
-      });
-
-      // Создаем условия поиска только по названию товара
-      const searchConditions: Record<string, unknown>[] = [
-        { name: { contains: search } },
-      ];
-
-      // Если найдены подходящие категории, добавляем их в условия
-      if (matchingCategories.length > 0) {
-        searchConditions.push({
-          categoryId: { in: matchingCategories.map((c) => c.id) },
-        });
-      }
-
-      whereClause.OR = searchConditions;
+      whereClause.name = { contains: search };
     }
 
     const skip = (page - 1) * limit;

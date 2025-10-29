@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDebounce } from './useDebounce';
 import { useCache } from './useCache';
 
@@ -93,8 +93,29 @@ export const useProducts = (
     pages: number;
   } | null>(null);
 
+  // Стабилизируем объект options для предотвращения ненужных перерендеров
+  const stableOptions = useMemo(() => {
+    return {
+      search: options.search,
+      categoryId: options.categoryId,
+      categorySlug: options.categorySlug,
+      page: options.page,
+      limit: options.limit,
+      sortBy: options.sortBy,
+      sortOrder: options.sortOrder,
+    };
+  }, [
+    options.search,
+    options.categoryId,
+    options.categorySlug,
+    options.page,
+    options.limit,
+    options.sortBy,
+    options.sortOrder,
+  ]);
+
   // Debounce опции для предотвращения слишком частых запросов
-  const debouncedOptions = useDebounce(options, 300);
+  const debouncedOptions = useDebounce(stableOptions, 300);
 
   // Кэширование для предотвращения повторных запросов
   const cache = useCache<{
@@ -110,8 +131,6 @@ export const useProducts = (
     const fetchProducts = async () => {
       if (!isMounted) return;
 
-      let timeoutId: NodeJS.Timeout | null = null;
-
       // Создаем ключ кэша на основе параметров
       const cacheKey = JSON.stringify(debouncedOptions);
 
@@ -124,15 +143,14 @@ export const useProducts = (
         return;
       }
 
-      // Проверяем, есть ли хотя бы один параметр для запроса
+      // Проверяем, есть ли реальные параметры для поиска/фильтрации
+      // limit и page - это только пагинация, не критерии поиска
       const hasSearchParams =
         debouncedOptions.search ||
         debouncedOptions.categoryId ||
-        debouncedOptions.categorySlug ||
-        debouncedOptions.page ||
-        debouncedOptions.limit;
+        debouncedOptions.categorySlug;
 
-      // Если нет параметров поиска, не делаем запрос
+      // Если нет реальных параметров поиска, не делаем запрос
       if (!hasSearchParams) {
         setProducts([]);
         setPagination(null);
@@ -160,25 +178,11 @@ export const useProducts = (
         if (debouncedOptions.sortOrder)
           params.append('sortOrder', debouncedOptions.sortOrder);
 
-        // Добавляем таймаут для запроса
-        const controller = new AbortController();
-        timeoutId = setTimeout(() => {
-          if (!controller.signal.aborted) {
-            controller.abort();
-          }
-        }, 5000); // 5 секунд таймаут
-
         const response = await fetch(`/api/products/?${params}`, {
-          signal: controller.signal,
           headers: {
             'Content-Type': 'application/json',
           },
         });
-
-        // Очищаем таймаут только если запрос прошел успешно
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
 
         if (!response.ok) {
           if (response.status === 404 && retryCount < maxRetries) {
@@ -215,16 +219,7 @@ export const useProducts = (
       } catch (err) {
         if (!isMounted) return;
 
-        // Очищаем таймаут в случае ошибки
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-
-        if (err instanceof Error && err.name === 'AbortError') {
-          setError('Превышено время ожидания запроса');
-        } else {
-          setError('Ошибка сети при загрузке товаров');
-        }
+        setError('Ошибка сети при загрузке товаров');
         console.error('Products fetch error:', err);
 
         // Устанавливаем пустой массив при ошибке
@@ -241,7 +236,7 @@ export const useProducts = (
     return () => {
       isMounted = false;
     };
-  }, [debouncedOptions, cache]);
+  }, [debouncedOptions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { products, loading, error, pagination };
 };

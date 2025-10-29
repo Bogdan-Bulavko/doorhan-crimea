@@ -17,15 +17,18 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Debounce поискового запроса
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  // Debounce поискового запроса - увеличен до 500ms для снижения нагрузки
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  // Минимальная длина запроса для поиска - начинаем поиск только с 3 символов
+  const MIN_SEARCH_LENGTH = 3;
+  const shouldSearch =
+    debouncedSearchQuery &&
+    debouncedSearchQuery.trim().length >= MIN_SEARCH_LENGTH;
 
   // Получаем результаты поиска только если есть поисковый запрос
   const { products, loading, error } = useProducts({
-    search:
-      debouncedSearchQuery && debouncedSearchQuery.trim().length > 0
-        ? debouncedSearchQuery
-        : undefined,
+    search: shouldSearch ? debouncedSearchQuery.trim() : undefined,
     limit: 8,
   });
 
@@ -94,13 +97,13 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl mx-4"
+            className="absolute top-0 md:top-20 left-0 md:left-1/2 md:transform md:-translate-x-1/2 w-full md:max-w-2xl md:mx-4 h-full md:h-auto md:max-h-[calc(100vh-10rem)] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full md:h-auto">
               {/* Заголовок */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                <h2 className="text-xl font-bold text-[#00205B]">
+              <div className="flex items-center justify-between p-4 md:p-6 border-b border-gray-100 flex-shrink-0">
+                <h2 className="text-lg md:text-xl font-bold text-[#00205B]">
                   Поиск товаров
                 </h2>
                 <button
@@ -112,7 +115,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               </div>
 
               {/* Поле поиска */}
-              <div className="p-6 pb-4">
+              <div className="p-4 md:p-6 pb-4 flex-shrink-0">
                 <div className="relative">
                   <Search
                     size={20}
@@ -124,7 +127,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Введите название товара..."
-                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-[#F6A800] focus:outline-none transition-colors text-lg"
+                    className="w-full pl-12 pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:border-[#F6A800] focus:outline-none transition-colors text-base md:text-lg"
                   />
                   {loading && (
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
@@ -138,32 +141,47 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               </div>
 
               {/* Результаты поиска */}
-              <div className="max-h-96 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto max-h-[calc(100vh-300px)] md:max-h-96">
                 {searchQuery.length === 0 ? (
-                  <div className="p-8 text-center text-gray-500">
+                  <div className="p-6 md:p-8 text-center text-gray-500">
                     <Package size={48} className="mx-auto mb-4 text-gray-300" />
-                    <p className="text-lg font-medium mb-2">Начните поиск</p>
-                    <p className="text-sm">
+                    <p className="text-base md:text-lg font-medium mb-2">
+                      Начните поиск
+                    </p>
+                    <p className="text-xs md:text-sm">
                       Введите название товара для поиска в каталоге
                     </p>
                   </div>
+                ) : searchQuery.trim().length > 0 &&
+                  searchQuery.trim().length < MIN_SEARCH_LENGTH ? (
+                  <div className="p-6 md:p-8 text-center text-gray-500">
+                    <Package size={48} className="mx-auto mb-4 text-gray-300" />
+                    <p className="text-base md:text-lg font-medium mb-2">
+                      Введите минимум {MIN_SEARCH_LENGTH} символа
+                    </p>
+                    <p className="text-xs md:text-sm">
+                      Продолжайте ввод для начала поиска
+                    </p>
+                  </div>
                 ) : error ? (
-                  <div className="p-8 text-center text-red-500">
-                    <p className="text-lg font-medium mb-2">Ошибка поиска</p>
-                    <p className="text-sm">{error}</p>
+                  <div className="p-6 md:p-8 text-center text-red-500">
+                    <p className="text-base md:text-lg font-medium mb-2">
+                      Ошибка поиска
+                    </p>
+                    <p className="text-xs md:text-sm">{error}</p>
                   </div>
                 ) : products.length === 0 && !loading ? (
-                  <div className="p-8 text-center text-gray-500">
+                  <div className="p-6 md:p-8 text-center text-gray-500">
                     <Package size={48} className="mx-auto mb-4 text-gray-300" />
-                    <p className="text-lg font-medium mb-2">
+                    <p className="text-base md:text-lg font-medium mb-2">
                       Товары не найдены
                     </p>
-                    <p className="text-sm">
+                    <p className="text-xs md:text-sm">
                       Попробуйте изменить поисковый запрос
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-2 p-4">
+                  <div className="space-y-2 p-2 md:p-4">
                     {products.map((product) => (
                       <motion.div
                         key={product.id}
@@ -174,10 +192,10 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                         <Link
                           href={`/${product.category?.slug}/${product.slug}`}
                           onClick={handleProductClick}
-                          className="flex items-center p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                          className="flex items-center p-3 md:p-4 hover:bg-gray-50 rounded-xl transition-colors group"
                         >
                           {/* Изображение товара */}
-                          <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 mr-4">
+                          <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden flex-shrink-0 mr-3 md:mr-4">
                             <Image
                               src={getProductImage(product)}
                               alt={product.name}
@@ -192,14 +210,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
                           {/* Информация о товаре */}
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-gray-900 group-hover:text-[#F6A800] transition-colors truncate">
+                            <h3 className="font-medium text-sm md:text-base text-gray-900 group-hover:text-[#F6A800] transition-colors truncate">
                               {product.name}
                             </h3>
-                            <p className="text-sm text-gray-500 truncate">
+                            <p className="text-xs md:text-sm text-gray-500 truncate">
                               {product.category?.name}
                             </p>
                             {product.price > 0 && (
-                              <p className="text-sm font-semibold text-[#00205B]">
+                              <p className="text-xs md:text-sm font-semibold text-[#00205B]">
                                 {product.price.toLocaleString('ru-RU')}{' '}
                                 {product.currency || '₽'}
                               </p>
@@ -220,13 +238,13 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
               {/* Подвал */}
               {searchQuery.length > 0 && products.length > 0 && (
-                <div className="p-4 border-t border-gray-100 bg-gray-50">
+                <div className="p-3 md:p-4 border-t border-gray-100 bg-gray-50 flex-shrink-0">
                   <Link
                     href={`/categories/products?search=${encodeURIComponent(
                       searchQuery
                     )}`}
                     onClick={handleClose}
-                    className="flex items-center justify-center space-x-2 text-[#00205B] hover:text-[#F6A800] font-medium transition-colors"
+                    className="flex items-center justify-center space-x-2 text-sm md:text-base text-[#00205B] hover:text-[#F6A800] font-medium transition-colors"
                   >
                     <span>Посмотреть все результаты</span>
                     <ArrowRight size={16} />

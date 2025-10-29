@@ -112,9 +112,11 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   const { categories, loading: categoriesLoading } = useMainCategories();
 
   // Получаем все товары для подсчета (без фильтрации)
-  const { products: allProducts, loading: allProductsLoading } = useAllProducts(
-    {}
-  );
+  const {
+    products: allProducts,
+    loading: allProductsLoading,
+    totalCount: allProductsTotalCount,
+  } = useAllProducts({});
 
   // Получаем отфильтрованные товары для отображения с пагинацией
   const {
@@ -145,7 +147,7 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   });
 
   // Получаем общее количество отфильтрованных товаров для отображения
-  const { products: filteredProductsForCount } = useAllProducts({
+  const { pagination: filteredPagination } = useAllProducts({
     categorySlug:
       isInitialized && selectedCategory !== 'all'
         ? selectedCategory
@@ -173,10 +175,10 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
       selectedCategory === 'all' &&
       (!debouncedSearchTerm || debouncedSearchTerm.trim() === '')
     ) {
-      return allProducts.length;
+      return allProductsTotalCount;
     }
-    // Иначе показываем количество отфильтрованных товаров
-    return filteredProductsForCount.length;
+    // Иначе показываем количество отфильтрованных товаров из пагинации
+    return filteredPagination?.total || 0;
   };
 
   // Формируем список категорий для селекта с подсчетом товаров
@@ -203,7 +205,7 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
     }, {} as Record<string, number>);
 
     // Общий счетчик всех товаров
-    const totalCount = allProducts.length;
+    const totalCount = allProductsTotalCount;
 
     return [
       { id: 'all', name: 'Все товары', count: totalCount },
@@ -213,7 +215,7 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
         count: categoryCounts[category.slug] || 0,
       })),
     ];
-  }, [categories, allProducts, allProductsLoading]);
+  }, [categories, allProducts, allProductsLoading, allProductsTotalCount]);
 
   // Накопление товаров при загрузке новых страниц
   useEffect(() => {
