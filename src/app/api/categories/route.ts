@@ -44,10 +44,23 @@ export async function GET(req: NextRequest) {
       include: includeClause,
     });
 
+    // Получаем счетчики товаров для каждой категории параллельно
+    const categoriesWithCounts = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await db.product.count({
+          where: { categoryId: category.id },
+        });
+        return {
+          ...category,
+          productCount,
+        };
+      })
+    );
+
     return NextResponse.json({
       success: true,
-      data: categories,
-      count: categories.length,
+      data: categoriesWithCounts,
+      count: categoriesWithCounts.length,
     });
   } catch (error) {
     console.error('Categories API error:', error);

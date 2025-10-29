@@ -111,12 +111,8 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   // Получаем категории из БД
   const { categories, loading: categoriesLoading } = useMainCategories();
 
-  // Получаем все товары для подсчета (без фильтрации)
-  const {
-    products: allProducts,
-    loading: allProductsLoading,
-    totalCount: allProductsTotalCount,
-  } = useAllProducts({});
+  // Получаем общее количество всех товаров
+  const { totalCount: allProductsTotalCount } = useAllProducts({});
 
   // Получаем отфильтрованные товары для отображения с пагинацией
   const {
@@ -183,28 +179,7 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
 
   // Формируем список категорий для селекта с подсчетом товаров
   const categoriesForSelect = useMemo(() => {
-    // Проверяем, что все товары загружены
-    if (allProductsLoading || allProducts.length === 0) {
-      return [
-        { id: 'all', name: 'Все товары', count: 0 },
-        ...categories.map((category) => ({
-          id: category.slug,
-          name: category.name,
-          count: 0,
-        })),
-      ];
-    }
-
-    // Подсчитываем товары для каждой категории
-    const categoryCounts = categories.reduce((acc, category) => {
-      const count = allProducts.filter(
-        (product) => product.category?.slug === category.slug
-      ).length;
-      acc[category.slug] = count;
-      return acc;
-    }, {} as Record<string, number>);
-
-    // Общий счетчик всех товаров
+    // Используем productCount из API категорий (загружается напрямую из БД)
     const totalCount = allProductsTotalCount;
 
     return [
@@ -212,10 +187,10 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
       ...categories.map((category) => ({
         id: category.slug,
         name: category.name,
-        count: categoryCounts[category.slug] || 0,
+        count: category.productCount || 0,
       })),
     ];
-  }, [categories, allProducts, allProductsLoading, allProductsTotalCount]);
+  }, [categories, allProductsTotalCount]);
 
   // Накопление товаров при загрузке новых страниц
   useEffect(() => {
