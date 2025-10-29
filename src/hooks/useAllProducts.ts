@@ -77,12 +77,14 @@ interface UseAllProductsResult {
     total: number;
     pages: number;
   } | null;
+  totalCount: number;
 }
 
 export const useAllProducts = (
   options: UseAllProductsOptions = {}
 ): UseAllProductsResult => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [totalProductsCount, setTotalProductsCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
@@ -91,7 +93,8 @@ export const useAllProducts = (
   const debouncedSearch = useDebounce(options.search || '', 300);
 
   // Кэширование всех товаров
-  const cache = useCache<Product[]>(10 * 60 * 1000); // 10 минут кэш
+  const productsCache = useCache<Product[]>(10 * 60 * 1000); // 10 минут кэш
+  const countCache = useCache<number>(10 * 60 * 1000); // 10 минут кэш
 
   // Загружаем все товары один раз
   useEffect(() => {
@@ -101,9 +104,11 @@ export const useAllProducts = (
       if (!isMounted) return;
 
       // Проверяем кэш
-      const cachedProducts = cache.get('all-products');
+      const cachedProducts = productsCache.get('all-products');
+      const cachedTotalCount = countCache.get('total-products-count');
       if (cachedProducts) {
         setAllProducts(cachedProducts);
+        setTotalProductsCount(cachedTotalCount || cachedProducts.length);
         setInitialLoadComplete(true);
         setLoading(false);
         return;
@@ -129,8 +134,11 @@ export const useAllProducts = (
 
         if (result.success) {
           const products = result.data;
+          const totalCount = result.pagination?.total || products.length;
           setAllProducts(products);
-          cache.set('all-products', products);
+          setTotalProductsCount(totalCount);
+          productsCache.set('all-products', products);
+          countCache.set('total-products-count', totalCount);
           setInitialLoadComplete(true);
         } else {
           setError(result.message || 'Ошибка при загрузке товаров');
@@ -152,7 +160,7 @@ export const useAllProducts = (
     return () => {
       isMounted = false;
     };
-  }, [cache]); // Добавляем cache в зависимости
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Фильтруем и сортируем товары на клиенте
   const filteredProducts = useMemo(() => {
@@ -249,5 +257,6 @@ export const useAllProducts = (
     loading: loading || !initialLoadComplete,
     error,
     pagination,
+    totalCount: totalProductsCount,
   };
 };
