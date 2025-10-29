@@ -26,6 +26,7 @@ interface Category {
   seoTitle?: string;
   seoDescription?: string;
   products?: Product[];
+  productCount?: number;
   createdAt: string;
   updatedAt: string;
 }
