@@ -13,11 +13,19 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import RegionSelector from './RegionSelector';
 import { useSettings } from '@/hooks/useSettings';
+import { useRegion } from '@/hooks/useRegion';
 
 const Footer = () => {
   const { settings } = useSettings();
-  
+  const regionData = useRegion();
+
+  // Используем региональные контакты если есть, иначе настройки из админки
+  const phone = regionData.phone || settings.phone;
+  const address = regionData.address || settings.address;
+  const workingHours = regionData.workingHours || settings.workingHours;
+
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -58,8 +66,8 @@ const Footer = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: settings.phone,
-      href: `tel:${settings.phone.replace(/\D/g, '')}`,
+      content: phone,
+      href: `tel:${phone.replace(/\D/g, '')}`,
     },
     {
       icon: Mail,
@@ -70,13 +78,13 @@ const Footer = () => {
     {
       icon: MapPin,
       title: 'Адрес',
-      content: settings.address,
+      content: address,
       href: '#',
     },
     {
       icon: Clock,
       title: 'Режим работы',
-      content: settings.workingHours,
+      content: workingHours,
       href: '#',
     },
   ];
@@ -86,23 +94,6 @@ const Footer = () => {
     { icon: Instagram, href: '#', label: 'Instagram' },
     { icon: Youtube, href: '#', label: 'YouTube' },
   ];
-
-  const regions = [
-    { name: 'Крым', subdomain: 'localhost' },
-    { name: 'Симферополь', subdomain: 'simferopol.localhost' },
-    { name: 'Ялта', subdomain: 'yalta.localhost' },
-    { name: 'Алушта', subdomain: 'alushta.localhost' },
-    { name: 'Севастополь', subdomain: 'sevastopol.localhost' },
-  ];
-
-  const getCurrentRegion = () => {
-    if (typeof window !== 'undefined') {
-      return window.location.hostname;
-    }
-    return 'localhost';
-  };
-
-  const currentRegion = getCurrentRegion();
 
   return (
     <footer className="bg-[#00205B] text-white">
@@ -133,7 +124,7 @@ const Footer = () => {
               Официальный представитель DoorHan в Крыму. Качественные ворота,
               роллеты и автоматические системы с 1993 года.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mb-6">
               {socialLinks.map((social, index) => (
                 <Link
                   key={index}
@@ -145,6 +136,7 @@ const Footer = () => {
                 </Link>
               ))}
             </div>
+            <RegionSelector variant="footer" />
           </div>
 
           {/* Секции меню */}
@@ -199,32 +191,7 @@ const Footer = () => {
         </div>
       </div>
 
-        {/* Региональные поддомены */}
-        <div className="mt-12 pt-8 border-t border-white/20">
-          <h4 className="text-lg font-semibold mb-4 font-montserrat">
-            Выберите город
-          </h4>
-          <div className="flex flex-wrap gap-3">
-            {regions.map((region) => {
-              const isActive = currentRegion === region.subdomain;
-              return (
-                <a
-                  key={region.subdomain}
-                  href={`http://${region.subdomain}:3000${window.location.pathname}`}
-                  className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                    isActive
-                      ? 'bg-[#F6A800] text-white font-semibold'
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                  }`}
-                >
-                  {region.name}
-                </a>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Нижняя полоса */}
+      {/* Нижняя полоса */}
       <div className="bg-[#00153E] py-8">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

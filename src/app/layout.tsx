@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingCallbackButton from '@/components/FloatingCallbackButton';
 import DynamicMetadata from '@/components/DynamicMetadata';
+
 const openSans = Open_Sans({
   variable: '--font-open-sans',
   subsets: ['latin', 'cyrillic'],
@@ -21,10 +22,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'DoorHan Крым | Ворота и автоматика',
-  description:
-    'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы. Качество и надежность с 1993 года.',
-  keywords: 'DoorHan, ворота, роллеты, автоматика, Крым',
+  metadataBase: new URL('https://doorhan-crimea.ru'),
   authors: [{ name: 'DoorHan Крым' }],
   creator: 'DoorHan Крым',
   publisher: 'DoorHan Крым',
@@ -32,34 +30,6 @@ export const metadata: Metadata = {
     email: false,
     address: false,
     telephone: false,
-  },
-  metadataBase: new URL('https://doorhan-crimea.ru'),
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'DoorHan Крым | Ворота и автоматика',
-    description:
-      'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
-    url: 'https://doorhan-crimea.ru',
-    siteName: 'DoorHan Крым',
-    images: [
-      {
-        url: '/doorhan-crimea/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'DoorHan Крым',
-      },
-    ],
-    locale: 'ru_RU',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'DoorHan Крым | Ворота и автоматика',
-    description:
-      'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
-    images: ['/doorhan-crimea/og-image.jpg'],
   },
   robots: {
     index: true,

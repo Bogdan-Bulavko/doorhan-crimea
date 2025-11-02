@@ -4,14 +4,22 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Shield, Award, Users, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import regions, { type RegionData } from '@/app/metadata/regions';
 
 const HeroSection = () => {
-  const [region, setRegion] = useState('default');
+  const [regionData, setRegionData] = useState<RegionData>(regions.default);
 
   useEffect(() => {
     // Определяем регион только на клиенте после гидратации
     const hostname = window.location.hostname.split('.')[0];
-    setRegion(hostname);
+    let regionKey = 'default';
+    
+    if (hostname === 'simferopol') regionKey = 'simferopol';
+    else if (hostname === 'yalta') regionKey = 'yalta';
+    else if (hostname === 'alushta') regionKey = 'alushta';
+    else if (hostname === 'sevastopol') regionKey = 'sevastopol';
+    
+    setRegionData(regions[regionKey] || regions.default);
   }, []);
 
   const features = [
@@ -20,14 +28,6 @@ const HeroSection = () => {
     { icon: Users, text: 'Опытная команда' },
     { icon: Clock, text: 'Быстрая установка' },
   ];
-
-  const titleCites = {
-    localhost: 'Крыму',
-    simferopol: 'Симферополе',
-    sevastopol: 'Севастополе',
-    alusta: 'Алуште',
-    yalta: 'Ялте',
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -101,10 +101,9 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-4xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 leading-tight"
           >
-            <span className="block">Ворота и роллеты</span>
-            <span className="block text-[#F6A800]">DoorHan</span>
+            <span className="block">{regionData.heroTitle || 'Ворота и роллеты DoorHan'}</span>
             <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
-              в {titleCites[region as keyof typeof titleCites] || 'Крыму'}
+              {regionData.cityNameGenitive || 'в Крыму'}
             </span>
           </motion.h1>
 
@@ -113,8 +112,7 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            Официальный представитель DoorHan в Крыму. Качественные ворота,
-            роллеты и автоматические системы с гарантией качества.
+            {regionData.heroSubtitle || 'Официальный представитель DoorHan в Крыму. Качественные ворота, роллеты и автоматические системы с гарантией качества.'}
           </motion.p>
 
           {/* CTA кнопки */}
