@@ -13,9 +13,16 @@ import {
   Calendar,
 } from 'lucide-react';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { useRegion } from '@/hooks/useRegion';
 
 const ContactsSection = () => {
   const { settings, loading: settingsLoading } = useSiteSettings();
+  const regionData = useRegion();
+
+  // Используем региональные контакты если есть, иначе настройки из админки
+  const phone = regionData.phone || settings?.phone;
+  const address = regionData.address || settings?.address;
+  const workingHours = regionData.workingHours || settings?.workingHours;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -83,9 +90,9 @@ const ContactsSection = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: settings?.phone || '',
+      content: phone || '',
       description: settings?.phoneDescription || '',
-      href: `tel:${settings?.phone?.replace(/\D/g, '') || ''}`,
+      href: `tel:${phone?.replace(/\D/g, '') || ''}`,
       color: 'bg-[#F6A800]',
     },
     {
@@ -99,7 +106,7 @@ const ContactsSection = () => {
     {
       icon: MapPin,
       title: 'Адрес',
-      content: settings?.address || '',
+      content: address || '',
       description: settings?.addressDescription || '',
       href: '#',
       color: 'bg-[#F6A800]',
@@ -107,7 +114,7 @@ const ContactsSection = () => {
     {
       icon: Clock,
       title: 'Режим работы',
-      content: settings?.workingHours || '',
+      content: workingHours || '',
       description: settings?.workingHoursDescription || '',
       href: '#',
       color: 'bg-[#00205B]',
@@ -421,7 +428,7 @@ const ContactsSection = () => {
               <div className="text-center">
                 <MapPin className="w-16 h-16 text-[#F6A800] mx-auto mb-4" />
                 <h4 className="text-xl font-semibold text-[#00205B] mb-2">
-                  {settings?.address || 'Симферополь, ул. Примерная, 1'}
+                  {address || 'Симферополь, ул. Примерная, 1'}
                 </h4>
                 <p className="text-gray-600">
                   {settings?.addressDescription ||
