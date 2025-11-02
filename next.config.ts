@@ -32,6 +32,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [];
   },
+
+  // Настройки для работы с поддоменами
+  async rewrites() {
+    return {
+      beforeFiles: [],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
 };
 
 export default nextConfig;
