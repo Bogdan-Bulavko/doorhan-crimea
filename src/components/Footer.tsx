@@ -87,6 +87,23 @@ const Footer = () => {
     { icon: Youtube, href: '#', label: 'YouTube' },
   ];
 
+  const regions = [
+    { name: 'Крым', subdomain: 'localhost' },
+    { name: 'Симферополь', subdomain: 'simferopol.localhost' },
+    { name: 'Ялта', subdomain: 'yalta.localhost' },
+    { name: 'Алушта', subdomain: 'alushta.localhost' },
+    { name: 'Севастополь', subdomain: 'sevastopol.localhost' },
+  ];
+
+  const getCurrentRegion = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.hostname;
+    }
+    return 'localhost';
+  };
+
+  const currentRegion = getCurrentRegion();
+
   return (
     <footer className="bg-[#00205B] text-white">
       {/* Основной контент футера */}
@@ -182,7 +199,32 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Нижняя полоса */}
+        {/* Региональные поддомены */}
+        <div className="mt-12 pt-8 border-t border-white/20">
+          <h4 className="text-lg font-semibold mb-4 font-montserrat">
+            Выберите город
+          </h4>
+          <div className="flex flex-wrap gap-3">
+            {regions.map((region) => {
+              const isActive = currentRegion === region.subdomain;
+              return (
+                <a
+                  key={region.subdomain}
+                  href={`http://${region.subdomain}:3000${window.location.pathname}`}
+                  className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                    isActive
+                      ? 'bg-[#F6A800] text-white font-semibold'
+                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                  }`}
+                >
+                  {region.name}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Нижняя полоса */}
       <div className="bg-[#00153E] py-8">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
