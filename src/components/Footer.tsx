@@ -15,16 +15,9 @@ import {
 import { motion } from 'framer-motion';
 import RegionSelector from './RegionSelector';
 import { useSettings } from '@/hooks/useSettings';
-import { useRegion } from '@/hooks/useRegion';
 
 const Footer = () => {
   const { settings } = useSettings();
-  const regionData = useRegion();
-
-  // Используем региональные контакты если есть, иначе настройки из админки
-  const phone = regionData.phone || settings.phone;
-  const address = regionData.address || settings.address;
-  const workingHours = regionData.workingHours || settings.workingHours;
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -66,8 +59,8 @@ const Footer = () => {
     {
       icon: Phone,
       title: 'Телефон',
-      content: phone,
-      href: `tel:${phone.replace(/\D/g, '')}`,
+      content: settings.phone,
+      href: `tel:${settings.phone.replace(/\D/g, '')}`,
     },
     {
       icon: Mail,
@@ -78,13 +71,13 @@ const Footer = () => {
     {
       icon: MapPin,
       title: 'Адрес',
-      content: address,
+      content: settings.address,
       href: '#',
     },
     {
       icon: Clock,
       title: 'Режим работы',
-      content: workingHours,
+      content: settings.workingHours,
       href: '#',
     },
   ];
@@ -124,7 +117,7 @@ const Footer = () => {
               Официальный представитель DoorHan в Крыму. Качественные ворота,
               роллеты и автоматические системы с 1993 года.
             </p>
-            <div className="flex space-x-4 mb-6">
+            <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
                 <Link
                   key={index}
@@ -136,7 +129,6 @@ const Footer = () => {
                 </Link>
               ))}
             </div>
-            <RegionSelector variant="footer" />
           </div>
 
           {/* Секции меню */}
@@ -190,6 +182,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Региональные поддомены */}
+      <RegionSelector variant="footer" />
 
       {/* Нижняя полоса */}
       <div className="bg-[#00153E] py-8">

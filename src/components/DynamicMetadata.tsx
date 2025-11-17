@@ -2,66 +2,61 @@
 
 import { useEffect } from 'react';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
-import { useRegion } from '@/hooks/useRegion';
 
 export default function DynamicMetadata() {
   const { settings } = useSiteSettings();
-  const regionData = useRegion();
 
   useEffect(() => {
-    // Приоритет у региональных данных, затем настройки из админки
-    const title = settings?.siteTitle || regionData.title;
-    const description = settings?.siteDescription || regionData.description;
-    const keywords = settings?.siteKeywords || regionData.keywords;
+    if (settings) {
+      // Обновляем title
+      if (settings.siteTitle) {
+        document.title = settings.siteTitle;
+      }
 
-    // Обновляем title
-    if (title) {
-      document.title = title;
-    }
+      // Обновляем meta description
+      if (settings.siteDescription) {
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+          metaDescription.setAttribute('content', settings.siteDescription);
+        }
+      }
 
-    // Обновляем meta description
-    if (description) {
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', description);
+      // Обновляем meta keywords
+      if (settings.siteKeywords) {
+        const metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (metaKeywords) {
+          metaKeywords.setAttribute('content', settings.siteKeywords);
+        } else {
+          const keywordsMeta = document.createElement('meta');
+          keywordsMeta.name = 'keywords';
+          keywordsMeta.content = settings.siteKeywords;
+          document.head.appendChild(keywordsMeta);
+        }
+      }
+
+      // Обновляем Open Graph
+      if (settings.siteTitle) {
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) {
+          ogTitle.setAttribute('content', settings.siteTitle);
+        }
+      }
+
+      if (settings.siteDescription) {
+        const ogDescription = document.querySelector('meta[property="og:description"]');
+        if (ogDescription) {
+          ogDescription.setAttribute('content', settings.siteDescription);
+        }
+      }
+
+      if (settings.siteOgImage) {
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        if (ogImage) {
+          ogImage.setAttribute('content', settings.siteOgImage);
+        }
       }
     }
-
-    // Обновляем meta keywords
-    if (keywords) {
-      const metaKeywords = document.querySelector('meta[name="keywords"]');
-      if (metaKeywords) {
-        metaKeywords.setAttribute('content', keywords);
-      } else {
-        const keywordsMeta = document.createElement('meta');
-        keywordsMeta.name = 'keywords';
-        keywordsMeta.content = keywords;
-        document.head.appendChild(keywordsMeta);
-      }
-    }
-
-    // Обновляем Open Graph
-    if (title) {
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) {
-        ogTitle.setAttribute('content', title);
-      }
-    }
-
-    if (description) {
-      const ogDescription = document.querySelector('meta[property="og:description"]');
-      if (ogDescription) {
-        ogDescription.setAttribute('content', description);
-      }
-    }
-
-    if (settings?.siteOgImage) {
-      const ogImage = document.querySelector('meta[property="og:image"]');
-      if (ogImage) {
-        ogImage.setAttribute('content', settings.siteOgImage);
-      }
-    }
-  }, [settings, regionData]);
+  }, [settings]);
 
   return null;
 }
