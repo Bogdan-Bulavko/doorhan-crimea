@@ -15,9 +15,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import CallbackModal from './CallbackModal';
 import SearchModal from './SearchModal';
-import RegionSelector from './RegionSelector';
 import { useSettings } from '@/hooks/useSettings';
-import { useRegion } from '@/hooks/useRegion';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,12 +23,6 @@ const Header = () => {
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { settings } = useSettings();
-  const regionData = useRegion();
-
-  // Используем региональные контакты если есть, иначе настройки из админки
-  const phone = regionData.phone || settings.phone;
-  const address = regionData.address || settings.address;
-  const workingHours = regionData.workingHours || settings.workingHours;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,13 +57,13 @@ const Header = () => {
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-8">
               <Link
-                href={`tel:${phone.replace(/\D/g, '')}`}
+                href={`tel:${settings.phone.replace(/\D/g, '')}`}
                 className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
               >
                 <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
                   <Phone size={14} />
                 </div>
-                <span className="font-medium">{phone}</span>
+                <span className="font-medium">{settings.phone}</span>
               </Link>
               <Link
                 href="#"
@@ -80,17 +72,13 @@ const Header = () => {
                 <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
                   <MapPin size={14} />
                 </div>
-                <span className="font-medium">{address}</span>
+                <span className="font-medium">{settings.address}</span>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="hidden lg:block">
-                <RegionSelector variant="header" />
-              </div>
-              <div className="hidden lg:block w-px h-4 bg-white/20"></div>
               <div className="text-sm text-gray-300">
                 <span className="text-[#F6A800] font-semibold">Работаем:</span>{' '}
-                {workingHours}
+                {settings.workingHours}
               </div>
               <div className="w-px h-4 bg-white/20"></div>
               <button
@@ -211,27 +199,12 @@ const Header = () => {
             >
               <div className="container mx-auto px-4 py-6 max-w-7xl">
                 <nav className="flex flex-col space-y-2">
-                  {/* Выбор города в мобильном меню */}
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0 }}
-                    className="mb-4 pb-4 border-b border-white/20"
-                  >
-                    <div className="px-4">
-                      <div className="text-xs text-gray-400 mb-2 font-medium">
-                        Выберите город
-                      </div>
-                      <RegionSelector variant="header" />
-                    </div>
-                  </motion.div>
-                  
                   {menuItems.map((item, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (index + 1) * 0.1 }}
+                      transition={{ delay: index * 0.1 }}
                     >
                       <Link
                         href={item.href}
