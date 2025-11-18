@@ -2,9 +2,7 @@ import type { Metadata } from 'next';
 import { Open_Sans, Montserrat } from 'next/font/google';
 import './globals.css';
 
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import FloatingCallbackButton from '@/components/FloatingCallbackButton';
+import ConditionalLayout from '@/components/ConditionalLayout';
 import DynamicMetadata from '@/components/DynamicMetadata';
 import { RegionProvider } from '@/contexts/RegionContext';
 const openSans = Open_Sans({
@@ -96,10 +94,7 @@ export default function RootLayout({
       >
         <RegionProvider>
           <DynamicMetadata />
-          <Header />
-          {children}
-          <Footer />
-          <FloatingCallbackButton />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </RegionProvider>
       </body>
     </html>
