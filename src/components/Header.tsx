@@ -101,9 +101,6 @@ const Header = () => {
 
       {/* Основной header */}
       <motion.header
-        initial={{ y: -150 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
         className={`sticky top-0 z-50 transition-all duration-500 ${
           isScrolled
             ? 'bg-gradient-to-r from-[#00205B] to-[#00153E] shadow-2xl shadow-[#00205B]/20 border-b border-[#F6A800]/20'
