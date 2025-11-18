@@ -3,16 +3,10 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Shield, Award, Users, Clock } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useRegion } from '@/contexts/RegionContext';
 
 const HeroSection = () => {
-  const [region, setRegion] = useState('default');
-
-  useEffect(() => {
-    // Определяем регион только на клиенте после гидратации
-    const hostname = window.location.hostname.split('.')[0];
-    setRegion(hostname);
-  }, []);
+  const { currentRegion, regionalData } = useRegion();
 
   const features = [
     { icon: Shield, text: 'Гарантия качества' },
@@ -21,12 +15,20 @@ const HeroSection = () => {
     { icon: Clock, text: 'Быстрая установка' },
   ];
 
-  const titleCites = {
-    localhost: 'Крыму',
-    simferopol: 'Симферополе',
-    sevastopol: 'Севастополе',
-    alusta: 'Алуште',
-    yalta: 'Ялте',
+  const getCityName = () => {
+    if (regionalData?.officeName) {
+      return regionalData.officeName;
+    }
+    
+    const cityMap: Record<string, string> = {
+      default: 'Крыму',
+      simferopol: 'Симферополе',
+      sevastopol: 'Севастополе',
+      alushta: 'Алуште',
+      yalta: 'Ялте',
+    };
+    
+    return cityMap[currentRegion] || 'Крыму';
   };
 
   const containerVariants = {
@@ -104,7 +106,7 @@ const HeroSection = () => {
             <span className="block">Ворота и роллеты</span>
             <span className="block text-[#F6A800]">DoorHan</span>
             <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
-              в {titleCites[region as keyof typeof titleCites] || 'Крыму'}
+              в {getCityName()}
             </span>
           </motion.h1>
 
@@ -113,8 +115,9 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            Официальный представитель DoorHan в Крыму. Качественные ворота,
-            роллеты и автоматические системы с гарантией качества.
+            {regionalData?.officeName 
+              ? `${regionalData.officeName}. Официальный представитель DoorHan в Крыму. Качественные ворота, роллеты и автоматические системы с гарантией качества.`
+              : 'Официальный представитель DoorHan в Крыму. Качественные ворота, роллеты и автоматические системы с гарантией качества.'}
           </motion.p>
 
           {/* CTA кнопки */}

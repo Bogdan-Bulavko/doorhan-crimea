@@ -54,11 +54,23 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const getMainImage = (product: Product) => {
-    if (product.mainImageUrl) return product.mainImageUrl;
+    // Игнорируем дефолтные изображения из seed.js
+    const defaultImages = ['/window.svg', '/globe.svg'];
+    const hasValidMainImage = product.mainImageUrl && !defaultImages.includes(product.mainImageUrl);
+    
+    if (hasValidMainImage) return product.mainImageUrl;
+    
+    // Ищем основное изображение из таблицы ProductImage
     const mainImage = product.images?.find(img => img.isMain);
-    if (mainImage) return mainImage.imageUrl;
-    const firstImage = product.images?.[0]?.imageUrl;
-    return firstImage || '/images/placeholder.svg';
+    if (mainImage && mainImage.imageUrl && !defaultImages.includes(mainImage.imageUrl)) {
+      return mainImage.imageUrl;
+    }
+    
+    // Берем первое изображение из таблицы
+    const firstImage = product.images?.find(img => img.imageUrl && !defaultImages.includes(img.imageUrl));
+    if (firstImage) return firstImage.imageUrl;
+    
+    return '/images/placeholder.svg';
   };
 
   const formatPrice = (price: number, currency: string = 'RUB') => {
@@ -291,6 +303,7 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
                     )}
 
                     {/* Цена */}
+                    {product.price > 0 && (
                     <div className="mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl font-bold text-gray-900">
@@ -303,6 +316,7 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
                         )}
                       </div>
                     </div>
+                    )}
 
                     {/* Статистика */}
                     <div className="grid grid-cols-2 gap-4 text-sm text-gray-500 mb-4">

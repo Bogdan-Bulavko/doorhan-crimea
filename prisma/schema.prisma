@@ -219,3 +219,22 @@ model AdminLog {
   userAgent String?
   createdAt DateTime @default(now())
 }
+
+model Region {
+  id                    Int      @id @default(autoincrement())
+  code                  String   @unique
+  name                  String
+  phone                 String
+  phoneFormatted        String
+  email                 String
+  address               String
+  addressDescription    String?
+  workingHours          String
+  workingHoursDescription String?
+  mapIframe             String?
+  officeName            String?
+  isActive              Boolean  @default(true)
+  sortOrder             Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}

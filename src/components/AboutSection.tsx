@@ -10,8 +10,10 @@ import {
   Building2,
   Star,
 } from 'lucide-react';
+import { useRegion } from '@/contexts/RegionContext';
 
 const AboutSection = () => {
+  const { regionalData } = useRegion();
   const values = [
     {
       icon: Shield,
@@ -111,11 +113,14 @@ const AboutSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#00205B] font-montserrat mb-6">
-            О компании DoorHan Крым
+            {regionalData?.officeName 
+              ? `О компании ${regionalData.officeName}`
+              : 'О компании DoorHan Крым'}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Мы — официальный представитель DoorHan в Крыму с более чем 30-летним
-            опытом работы
+            {regionalData?.officeName 
+              ? `${regionalData.officeName} — официальный представитель DoorHan в Крыму с более чем 30-летним опытом работы`
+              : 'Мы — официальный представитель DoorHan в Крыму с более чем 30-летним опытом работы'}
           </p>
         </motion.div>
 

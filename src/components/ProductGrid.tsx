@@ -207,11 +207,21 @@ const ProductGrid = ({
                 <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                   <Image
                     src={(() => {
-                      const mainImage = product.mainImageUrl;
+                      // Игнорируем дефолтные изображения из seed.js
+                      const defaultImages = ['/window.svg', '/globe.svg'];
+                      
+                      const mainImage = product.mainImageUrl && !defaultImages.includes(product.mainImageUrl) 
+                        ? product.mainImageUrl 
+                        : null;
+                      
                       const mainFromImages = product.images?.find(
-                        (img) => img.isMain
+                        (img) => img.isMain && img.imageUrl && !defaultImages.includes(img.imageUrl)
                       )?.imageUrl;
-                      const firstImage = product.images?.[0]?.imageUrl;
+                      
+                      const firstImage = product.images?.find(
+                        (img) => img.imageUrl && !defaultImages.includes(img.imageUrl)
+                      )?.imageUrl;
+                      
                       return (
                         mainImage ||
                         mainFromImages ||
@@ -303,18 +313,20 @@ const ProductGrid = ({
 
                   {/* Цена и кнопка */}
                   <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-xl font-bold text-[#00205B]">
-                        {product.price.toLocaleString('ru-RU')}{' '}
-                        {product.currency || '₽'}
-                      </div>
-                      {product.oldPrice && (
-                        <div className="text-sm text-gray-500 line-through">
-                          {product.oldPrice.toLocaleString('ru-RU')}{' '}
+                    {product.price > 0 && (
+                      <div>
+                        <div className="text-xl font-bold text-[#00205B]">
+                          {product.price.toLocaleString('ru-RU')}{' '}
                           {product.currency || '₽'}
                         </div>
-                      )}
-                    </div>
+                        {product.oldPrice && (
+                          <div className="text-sm text-gray-500 line-through">
+                            {product.oldPrice.toLocaleString('ru-RU')}{' '}
+                            {product.currency || '₽'}
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <button className="bg-[#F6A800] hover:bg-[#ffb700] text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105">
                       <ShoppingCart className="w-4 h-4" />
                       <span>В корзину</span>

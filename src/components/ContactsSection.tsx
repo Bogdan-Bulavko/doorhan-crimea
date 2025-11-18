@@ -12,10 +12,10 @@ import {
   MessageCircle,
   Calendar,
 } from 'lucide-react';
-import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { useRegion } from '@/contexts/RegionContext';
 
 const ContactsSection = () => {
-  const { settings, loading: settingsLoading } = useSiteSettings();
+  const { regionalData, loading: regionLoading } = useRegion();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -79,40 +79,40 @@ const ContactsSection = () => {
     }
   };
 
-  const contactInfo = [
+  const contactInfo = regionalData ? [
     {
       icon: Phone,
       title: 'Телефон',
-      content: settings?.phone || '',
-      description: settings?.phoneDescription || '',
-      href: `tel:${settings?.phone?.replace(/\D/g, '') || ''}`,
+      content: regionalData.phoneFormatted || regionalData.phone,
+      description: 'Звонки принимаются ежедневно',
+      href: `tel:${regionalData.phone.replace(/\D/g, '')}`,
       color: 'bg-[#F6A800]',
     },
     {
       icon: Mail,
       title: 'Email',
-      content: settings?.email || '',
-      description: settings?.emailDescription || '',
-      href: `mailto:${settings?.email || ''}`,
+      content: regionalData.email,
+      description: 'Ответим в течение часа',
+      href: `mailto:${regionalData.email}`,
       color: 'bg-[#00205B]',
     },
     {
       icon: MapPin,
       title: 'Адрес',
-      content: settings?.address || '',
-      description: settings?.addressDescription || '',
+      content: regionalData.address,
+      description: regionalData.addressDescription || 'Офис и выставочный зал',
       href: '#',
       color: 'bg-[#F6A800]',
     },
     {
       icon: Clock,
       title: 'Режим работы',
-      content: settings?.workingHours || '',
-      description: settings?.workingHoursDescription || '',
+      content: regionalData.workingHours,
+      description: regionalData.workingHoursDescription || 'Воскресенье - выходной',
       href: '#',
       color: 'bg-[#00205B]',
     },
-  ];
+  ] : [];
 
   const services = [
     {
@@ -151,7 +151,7 @@ const ContactsSection = () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  if (settingsLoading || !settings) {
+  if (regionLoading || !regionalData) {
     return (
       <section id="contacts" className="pt-12 pb-8 md:py-20 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
@@ -411,20 +411,20 @@ const ContactsSection = () => {
           <h3 className="text-2xl font-bold text-[#00205B] font-montserrat text-center mb-8">
             Как нас найти
           </h3>
-          {settings?.mapIframe ? (
+          {regionalData?.mapIframe ? (
             <div
               className="rounded-3xl overflow-hidden shadow-2xl"
-              dangerouslySetInnerHTML={{ __html: settings.mapIframe }}
+              dangerouslySetInnerHTML={{ __html: regionalData.mapIframe }}
             />
           ) : (
             <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl h-96 p-8 flex items-center justify-center">
               <div className="text-center">
                 <MapPin className="w-16 h-16 text-[#F6A800] mx-auto mb-4" />
                 <h4 className="text-xl font-semibold text-[#00205B] mb-2">
-                  {settings?.address || 'Симферополь, ул. Примерная, 1'}
+                  {regionalData?.address || 'Симферополь, ул. Примерная, 1'}
                 </h4>
                 <p className="text-gray-600">
-                  {settings?.addressDescription ||
+                  {regionalData?.addressDescription ||
                     'Офис и выставочный зал DoorHan Крым'}
                 </p>
               </div>

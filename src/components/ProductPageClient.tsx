@@ -218,11 +218,21 @@ export default function ProductPageClient({
                 />
               ) : (
                 <Image
-                  src={
-                    product.images?.[selectedImage]?.url ||
-                    product.mainImageUrl ||
-                    '/images/placeholder.svg'
-                  }
+                  src={(() => {
+                    // Игнорируем дефолтные изображения из seed.js
+                    const defaultImages = ['/window.svg', '/globe.svg'];
+                    const selectedImg = product.images?.[selectedImage]?.url;
+                    const mainImg = product.mainImageUrl;
+                    
+                    if (selectedImg && !defaultImages.includes(selectedImg)) return selectedImg;
+                    if (mainImg && !defaultImages.includes(mainImg)) return mainImg;
+                    
+                    // Ищем первое валидное изображение
+                    const validImage = product.images?.find(img => 
+                      img.url && !defaultImages.includes(img.url)
+                    );
+                    return validImage?.url || '/images/placeholder.svg';
+                  })()}
                   alt={product.name}
                   fill
                   className="object-contain"
@@ -348,6 +358,7 @@ export default function ProductPageClient({
             </div>
 
             {/* Цена */}
+            {product.price > 0 && (
             <div className="flex items-center space-x-4">
               <span className="text-3xl font-bold text-[#00205B]">
                 {product.price.toLocaleString('ru-RU')} {product.currency}
@@ -363,6 +374,7 @@ export default function ProductPageClient({
                 </span>
               )}
             </div>
+            )}
 
             {/* Краткое описание */}
             {product.shortDescription && (

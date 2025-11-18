@@ -1,14 +1,26 @@
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import ProductPageClient from '@/components/ProductPageClient';
+import {
+  generateProductMetadata,
+  getRegionFromHeaders,
+} from '@/lib/metadata-generator';
 
 interface ProductPageProps {
   params: Promise<{ categorySlug: string; productSlug: string }>;
 }
 
+// Делаем страницу динамической для доступа к headers()
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { categorySlug, productSlug } = await params;
+  
+  // Получаем регион из заголовков
+  const headersList = await headers();
+  const region = getRegionFromHeaders(headersList);
   
   // Найти категорию
   const category = await db.category.findFirst({
@@ -47,8 +59,14 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     };
   }
 
-  const title = product.seoTitle || `${product.name} | ${category.name} | DoorHan Крым`;
-  const description = product.seoDescription || product.shortDescription || product.description || `Купить ${product.name} от DoorHan. ${category.name}. Качественные ворота и автоматические системы в Крыму.`;
+  // Генерируем метатеги по шаблону
+  const { title, description } = generateProductMetadata(
+    product.name,
+    product.price ? Number(product.price) : null,
+    region,
+    'DoorHan Крым',
+    product.currency || 'RUB'
+  );
   
   const mainImage = product.images?.[0]?.imageUrl || product.mainImageUrl;
   
@@ -182,19 +200,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
   );
 }
 
-export async function generateStaticParams() {
-  const products = await db.product.findMany({
-    where: { inStock: true },
-    select: {
-      slug: true,
-      category: {
-        select: { slug: true },
-      },
-    },
-  });
-
-  return products.map((product) => ({
-    categorySlug: product.category.slug,
-    productSlug: product.slug,
-  }));
-}
+// Удаляем generateStaticParams, так как страница теперь динамическая

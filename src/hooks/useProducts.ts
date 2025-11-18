@@ -145,12 +145,14 @@ export const useProducts = (
 
       // Проверяем, есть ли реальные параметры для поиска/фильтрации
       // limit и page - это только пагинация, не критерии поиска
+      // Но если передан limit, это означает, что нужно получить товары (например, для главной страницы)
       const hasSearchParams =
         debouncedOptions.search ||
         debouncedOptions.categoryId ||
-        debouncedOptions.categorySlug;
+        debouncedOptions.categorySlug ||
+        debouncedOptions.limit;
 
-      // Если нет реальных параметров поиска, не делаем запрос
+      // Если нет реальных параметров поиска и limit, не делаем запрос
       if (!hasSearchParams) {
         setProducts([]);
         setPagination(null);

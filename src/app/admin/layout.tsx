@@ -28,6 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <Link href="/admin/users" className="hover:text-[#00205B] transition-colors">Пользователи</Link>
                 <Link href="/admin/categories" className="hover:text-[#00205B] transition-colors">Категории</Link>
                 <Link href="/admin/products" className="hover:text-[#00205B] transition-colors">Товары</Link>
+                <Link href="/admin/regions" className="hover:text-[#00205B] transition-colors">Регионы</Link>
                 <Link href="/admin/orders" className="hover:text-[#00205B] transition-colors">Заказы</Link>
                 <Link href="/admin/forms" className="hover:text-[#00205B] transition-colors">Формы</Link>
                 <Link href="/admin/settings" className="hover:text-[#00205B] transition-colors">Настройки</Link>
@@ -42,6 +43,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link href="/admin/users" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Пользователи</Link>
               <Link href="/admin/categories" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Категории</Link>
               <Link href="/admin/products" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Товары</Link>
+              <Link href="/admin/regions" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Регионы</Link>
               <Link href="/admin/orders" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Заказы</Link>
               <Link href="/admin/forms" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Формы</Link>
               <Link href="/admin/settings" className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition-colors">Настройки</Link>

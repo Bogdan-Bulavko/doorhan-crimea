@@ -74,11 +74,17 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
       isMain: boolean;
     }>;
   }) => {
-    if (product.mainImageUrl) return product.mainImageUrl;
-    const mainImage = product.images?.find((img) => img.isMain);
+    // Игнорируем дефолтные изображения из seed.js
+    const defaultImages = ['/window.svg', '/globe.svg'];
+    const hasValidMainImage = product.mainImageUrl && !defaultImages.includes(product.mainImageUrl);
+    
+    if (hasValidMainImage) return product.mainImageUrl;
+    
+    const mainImage = product.images?.find((img) => img.isMain && img.imageUrl && !defaultImages.includes(img.imageUrl));
     if (mainImage) return mainImage.imageUrl;
-    const firstImage = product.images?.[0]?.imageUrl;
-    return firstImage || '/images/placeholder.svg';
+    
+    const firstImage = product.images?.find((img) => img.imageUrl && !defaultImages.includes(img.imageUrl));
+    return firstImage?.imageUrl || '/images/placeholder.svg';
   };
 
   return (

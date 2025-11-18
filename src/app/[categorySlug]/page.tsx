@@ -1,22 +1,42 @@
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import CategoryProducts from '@/components/CategoryProducts';
 import { serializeCategory, serializeProducts } from '@/lib/serialization';
+import {
+  generateCategoryMetadata,
+  getRegionFromHeaders,
+} from '@/lib/metadata-generator';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
 }
 
+// Делаем страницу динамической для доступа к headers()
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const { categorySlug } = await params;
+  
+  // Получаем регион из заголовков
+  const headersList = await headers();
+  const region = getRegionFromHeaders(headersList);
 
   const category = await db.category.findFirst({
     where: {
       slug: categorySlug,
       isActive: true,
+    },
+    include: {
+      products: {
+        where: { inStock: true },
+        select: {
+          price: true,
+        },
+      },
     },
   });
 
@@ -27,11 +47,17 @@ export async function generateMetadata({
     };
   }
 
-  const title = category.seoTitle || `${category.name} | DoorHan Крым`;
-  const description =
-    category.seoDescription ||
-    category.description ||
-    `Каталог товаров категории ${category.name} от DoorHan. Качественные ворота и автоматические системы.`;
+  // Конвертируем Decimal в number для функции генерации метатегов
+  const productsWithPrices = category.products.map((p) => ({
+    price: p.price ? Number(p.price) : null,
+  }));
+
+  // Генерируем метатеги по шаблону
+  const { title, description } = generateCategoryMetadata(
+    category.name,
+    productsWithPrices,
+    region
+  );
 
   return {
     title,
@@ -118,13 +144,4 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   );
 }
 
-export async function generateStaticParams() {
-  const categories = await db.category.findMany({
-    where: { isActive: true },
-    select: { slug: true },
-  });
-
-  return categories.map((category) => ({
-    categorySlug: category.slug,
-  }));
-}
+// Удаляем generateStaticParams, так как страница теперь динамическая

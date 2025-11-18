@@ -201,18 +201,20 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
         )}
 
         {/* Цена */}
-        <div className="mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-gray-900">
-              {formatPrice(product.price)}
-            </span>
-            {product.oldPrice && product.oldPrice > product.price && (
-              <span className="text-lg text-gray-500 line-through">
-                {formatPrice(product.oldPrice)}
+        {product.price > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold text-gray-900">
+                {formatPrice(product.price)}
               </span>
-            )}
+              {product.oldPrice && product.oldPrice > product.price && (
+                <span className="text-lg text-gray-500 line-through">
+                  {formatPrice(product.oldPrice)}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Статистика */}
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-500 mb-4">

@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "export": "next build && next export",
-    "setup-db": "node setup-database.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:seed": "node prisma/seed.js",

@@ -15,14 +15,15 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import CallbackModal from './CallbackModal';
 import SearchModal from './SearchModal';
-import { useSettings } from '@/hooks/useSettings';
+import { useRegion } from '@/contexts/RegionContext';
+import RegionSelector from './RegionSelector';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const { settings } = useSettings();
+  const { regionalData, loading: regionLoading } = useRegion();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,30 +57,36 @@ const Header = () => {
         <div className="container mx-auto px-4 max-w-7xl relative">
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-8">
-              <Link
-                href={`tel:${settings.phone.replace(/\D/g, '')}`}
-                className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
-              >
-                <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
-                  <Phone size={14} />
-                </div>
-                <span className="font-medium">{settings.phone}</span>
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
-              >
-                <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
-                  <MapPin size={14} />
-                </div>
-                <span className="font-medium">{settings.address}</span>
-              </Link>
+              {!regionLoading && regionalData && (
+                <>
+                  <Link
+                    href={`tel:${regionalData.phone.replace(/\D/g, '')}`}
+                    className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
+                  >
+                    <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
+                      <Phone size={14} />
+                    </div>
+                    <span className="font-medium">{regionalData.phoneFormatted || regionalData.phone}</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center space-x-2 hover:text-[#F6A800] transition-all duration-300 group"
+                  >
+                    <div className="p-1 bg-[#F6A800]/20 rounded-full group-hover:bg-[#F6A800]/30 transition-colors">
+                      <MapPin size={14} />
+                    </div>
+                    <span className="font-medium">{regionalData.address}</span>
+                  </Link>
+                </>
+              )}
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-300">
-                <span className="text-[#F6A800] font-semibold">Работаем:</span>{' '}
-                {settings.workingHours}
-              </div>
+              {!regionLoading && regionalData && (
+                <div className="text-sm text-gray-300">
+                  <span className="text-[#F6A800] font-semibold">Работаем:</span>{' '}
+                  {regionalData.workingHours}
+                </div>
+              )}
               <div className="w-px h-4 bg-white/20"></div>
               <button
                 onClick={() => setIsCallbackModalOpen(true)}
@@ -137,6 +144,11 @@ const Header = () => {
 
             {/* Правая часть */}
             <div className="flex items-center space-x-2">
+              {/* Селектор региона */}
+              <div className="hidden lg:block">
+                <RegionSelector variant="header" />
+              </div>
+              
               {/* Поиск */}
               <motion.button
                 onClick={() => setIsSearchModalOpen(true)}
@@ -223,6 +235,9 @@ const Header = () => {
                       transition={{ delay: 0.4 }}
                       className="mb-4"
                     >
+                      <div className="mb-4">
+                        <RegionSelector variant="header" />
+                      </div>
                       <button
                         onClick={() => {
                           setIsMenuOpen(false);

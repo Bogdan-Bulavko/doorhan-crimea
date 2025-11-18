@@ -14,10 +14,10 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import RegionSelector from './RegionSelector';
-import { useSettings } from '@/hooks/useSettings';
+import { useRegion } from '@/contexts/RegionContext';
 
 const Footer = () => {
-  const { settings } = useSettings();
+  const { regionalData, loading: regionLoading } = useRegion();
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -55,32 +55,32 @@ const Footer = () => {
     },
   ];
 
-  const contactInfo = [
+  const contactInfo = regionalData ? [
     {
       icon: Phone,
       title: 'Телефон',
-      content: settings.phone,
-      href: `tel:${settings.phone.replace(/\D/g, '')}`,
+      content: regionalData.phoneFormatted || regionalData.phone,
+      href: `tel:${regionalData.phone.replace(/\D/g, '')}`,
     },
     {
       icon: Mail,
       title: 'Email',
-      content: settings.email,
-      href: `mailto:${settings.email}`,
+      content: regionalData.email,
+      href: `mailto:${regionalData.email}`,
     },
     {
       icon: MapPin,
       title: 'Адрес',
-      content: settings.address,
+      content: regionalData.address,
       href: '#',
     },
     {
       icon: Clock,
       title: 'Режим работы',
-      content: settings.workingHours,
+      content: regionalData.workingHours,
       href: '#',
     },
-  ];
+  ] : [];
 
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
@@ -114,8 +114,9 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
-              Официальный представитель DoorHan в Крыму. Качественные ворота,
-              роллеты и автоматические системы с 1993 года.
+              {regionalData?.officeName 
+                ? `${regionalData.officeName}. Официальный представитель DoorHan в Крыму.`
+                : 'Официальный представитель DoorHan в Крыму. Качественные ворота, роллеты и автоматические системы с 1993 года.'}
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
@@ -154,9 +155,10 @@ const Footer = () => {
         </div>
 
         {/* Контактная информация */}
-        <div className="mt-12 pt-8 border-t border-white/20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {contactInfo.map((contact, index) => (
+        {!regionLoading && contactInfo.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-white/20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {contactInfo.map((contact, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -178,9 +180,10 @@ const Footer = () => {
                   </Link>
                 </div>
               </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Региональные поддомены */}

@@ -1,6 +1,3 @@
-// Обязательно для статического экспорта
-export const dynamic = 'force-static';
-
 import { Metadata } from 'next';
 import HeroSection from '@/components/HeroSection';
 import VideoSection from '@/components/VideoSection';

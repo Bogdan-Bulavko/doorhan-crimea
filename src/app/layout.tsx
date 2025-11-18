@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingCallbackButton from '@/components/FloatingCallbackButton';
 import DynamicMetadata from '@/components/DynamicMetadata';
+import { RegionProvider } from '@/contexts/RegionContext';
 const openSans = Open_Sans({
   variable: '--font-open-sans',
   subsets: ['latin', 'cyrillic'],
@@ -93,11 +94,13 @@ export default function RootLayout({
       <body
         className={`${openSans.variable} ${montserrat.variable} antialiased bg-white text-gray-900`}
       >
-        <DynamicMetadata />
-        <Header />
-        {children}
-        <Footer />
-        <FloatingCallbackButton />
+        <RegionProvider>
+          <DynamicMetadata />
+          <Header />
+          {children}
+          <Footer />
+          <FloatingCallbackButton />
+        </RegionProvider>
       </body>
     </html>
   );

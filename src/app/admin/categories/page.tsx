@@ -28,8 +28,8 @@ export default async function AdminCategoriesPage() {
     ...category,
     products: category.products.map((product) => ({
       ...product,
-      price: product.price.toString(),
-      oldPrice: product.oldPrice?.toString() || null,
+      price: Number(product.price).toString(),
+      oldPrice: product.oldPrice ? Number(product.oldPrice).toString() : null,
     })),
     children: category.children.map((child) => ({
       ...child,
