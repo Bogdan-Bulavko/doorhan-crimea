@@ -10,6 +10,8 @@ export default function NewCategoryPage() {
   const [description, setDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [canonicalUrl, setCanonicalUrl] = useState('');
+  const [h1, setH1] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -21,6 +23,8 @@ export default function NewCategoryPage() {
       description: description || undefined,
       seoTitle: seoTitle || undefined,
       seoDescription: seoDescription || undefined,
+      canonicalUrl: canonicalUrl || undefined,
+      h1: h1 || undefined,
       imageUrl: imageUrl || undefined,
     };
     const res = await fetch('/api/admin/categories', {
@@ -51,12 +55,26 @@ export default function NewCategoryPage() {
           <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div>
+          <label className="block text-sm text-gray-600">H1 Заголовок (если не указан, используется название)</label>
+          <input className="mt-1 w-full border rounded-lg px-3 py-2" value={h1} onChange={(e) => setH1(e.target.value)} placeholder={name} />
+        </div>
+        <div>
           <label className="block text-sm text-gray-600">SEO Title</label>
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} />
         </div>
         <div>
           <label className="block text-sm text-gray-600">SEO Description</label>
           <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Canonical URL (если не указан, генерируется автоматически)</label>
+          <input 
+            className="mt-1 w-full border rounded-lg px-3 py-2" 
+            value={canonicalUrl} 
+            onChange={(e) => setCanonicalUrl(e.target.value)} 
+            placeholder={`Авто: https://doorhan-crimea.ru/${slug}`}
+          />
+          <p className="mt-1 text-xs text-gray-500">Можно указать относительный (/category) или полный URL (https://example.com/category)</p>
         </div>
         <div>
           <label className="block text-sm text-gray-600">Изображение категории</label>

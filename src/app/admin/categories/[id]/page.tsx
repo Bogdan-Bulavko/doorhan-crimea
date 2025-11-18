@@ -18,6 +18,8 @@ export default function EditCategoryPage() {
   const [description, setDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [canonicalUrl, setCanonicalUrl] = useState('');
+  const [h1, setH1] = useState('');
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
@@ -28,13 +30,15 @@ export default function EditCategoryPage() {
         const j = await res.json();
         if (j.success && j.data) {
           const c = j.data as {
-            name: string; slug: string; description?: string; seoTitle?: string; seoDescription?: string; isActive: boolean;
+            name: string; slug: string; description?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; isActive: boolean;
           };
           setName(c.name);
           setSlug(c.slug);
           setDescription(c.description ?? '');
           setSeoTitle(c.seoTitle ?? '');
           setSeoDescription(c.seoDescription ?? '');
+          setCanonicalUrl(c.canonicalUrl ?? '');
+          setH1(c.h1 ?? '');
           setIsActive(Boolean(c.isActive));
         } else {
           setError('Категория не найдена');
@@ -56,6 +60,8 @@ export default function EditCategoryPage() {
       description: description || undefined,
       seoTitle: seoTitle || undefined,
       seoDescription: seoDescription || undefined,
+      canonicalUrl: canonicalUrl || undefined,
+      h1: h1 || undefined,
       isActive,
     };
     const res = await fetch(`/api/admin/categories/${categoryId}`, {
@@ -87,6 +93,10 @@ export default function EditCategoryPage() {
           <label className="block text-sm text-gray-600">Описание</label>
           <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
+        <div>
+          <label className="block text-sm text-gray-600">H1 Заголовок (если не указан, используется название)</label>
+          <input className="mt-1 w-full border rounded-lg px-3 py-2" value={h1} onChange={(e) => setH1(e.target.value)} placeholder={name} />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className="block text-sm text-gray-600">SEO Title</label>
@@ -96,6 +106,16 @@ export default function EditCategoryPage() {
             <label className="block text-sm text-gray-600">SEO Description</label>
             <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
           </div>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Canonical URL (если не указан, генерируется автоматически)</label>
+          <input 
+            className="mt-1 w-full border rounded-lg px-3 py-2" 
+            value={canonicalUrl} 
+            onChange={(e) => setCanonicalUrl(e.target.value)} 
+            placeholder={`Авто: https://doorhan-crimea.ru/${slug}`}
+          />
+          <p className="mt-1 text-xs text-gray-500">Можно указать относительный (/category) или полный URL (https://example.com/category)</p>
         </div>
         <label className="inline-flex items-center gap-2 text-sm text-gray-600">
           <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} /> Активна

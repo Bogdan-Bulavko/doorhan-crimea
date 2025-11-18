@@ -41,6 +41,7 @@ interface Category {
   description?: string;
   imageUrl?: string;
   slug: string;
+  h1?: string;
 }
 
 interface CategoryProductsProps {
@@ -158,7 +159,7 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
             
             <div className="flex-1">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                {category.name}
+                {category.h1 || category.name}
               </h1>
               {category.description && (
                 <p className="text-xl text-white/90 leading-relaxed">

@@ -29,6 +29,8 @@ interface PrismaProduct {
   reviewsCount: number;
   seoTitle?: string | null;
   seoDescription?: string | null;
+  canonicalUrl?: string | null;
+  h1?: string | null;
   images?: Array<{
     id: number;
     imageUrl: string;
@@ -72,6 +74,8 @@ export function serializeProduct(product: PrismaProduct) {
     sku: product.sku || undefined,
     seoTitle: product.seoTitle || undefined,
     seoDescription: product.seoDescription || undefined,
+    canonicalUrl: product.canonicalUrl || undefined,
+    h1: product.h1 || undefined,
     // Сериализуем изображения
     images:
       product.images?.map((img) => ({
@@ -106,6 +110,8 @@ interface PrismaCategory {
   imageUrl?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
+  canonicalUrl?: string | null;
+  h1?: string | null;
   slug: string;
   isActive: boolean;
   products?: PrismaProduct[];
@@ -118,6 +124,8 @@ export function serializeCategory(category: PrismaCategory) {
     imageUrl: category.imageUrl || undefined,
     seoTitle: category.seoTitle || undefined,
     seoDescription: category.seoDescription || undefined,
+    canonicalUrl: category.canonicalUrl || undefined,
+    h1: category.h1 || undefined,
     // Сериализуем продукты в категории, если они есть
     products: category.products
       ? serializeProducts(category.products)

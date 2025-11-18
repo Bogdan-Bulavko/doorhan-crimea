@@ -8,6 +8,7 @@ import {
   generateCategoryMetadata,
   getRegionFromHeaders,
 } from '@/lib/metadata-generator';
+import { generateCanonical } from '@/lib/canonical-utils';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
@@ -59,6 +60,14 @@ export async function generateMetadata({
     region
   );
 
+  // Генерируем canonical URL с учетом поддомена
+  const canonicalUrl = generateCanonical('category', region, {
+    categorySlug,
+    customCanonical: category.canonicalUrl,
+    useFullUrl: true,
+    forceMainDomain: true, // Всегда используем основной домен для canonical
+  });
+
   return {
     title,
     description,
@@ -66,7 +75,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://doorhan-crimea/${categorySlug}`,
+      url: canonicalUrl,
       siteName: 'DoorHan Крым',
       images: category.imageUrl
         ? [
@@ -97,7 +106,7 @@ export async function generateMetadata({
         : ['/doorhan-crimea/og-image.jpg'],
     },
     alternates: {
-      canonical: `https://doorhan-crimea/${categorySlug}`,
+      canonical: canonicalUrl,
     },
   };
 }

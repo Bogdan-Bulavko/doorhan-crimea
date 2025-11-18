@@ -7,6 +7,7 @@ import {
   generateProductMetadata,
   getRegionFromHeaders,
 } from '@/lib/metadata-generator';
+import { generateCanonical } from '@/lib/canonical-utils';
 
 interface ProductPageProps {
   params: Promise<{ categorySlug: string; productSlug: string }>;
@@ -70,6 +71,15 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   
   const mainImage = product.images?.[0]?.imageUrl || product.mainImageUrl;
   
+  // Генерируем canonical URL с учетом поддомена
+  const canonicalUrl = generateCanonical('product', region, {
+    categorySlug,
+    productSlug,
+    customCanonical: product.canonicalUrl,
+    useFullUrl: true,
+    forceMainDomain: true, // Всегда используем основной домен для canonical
+  });
+  
   return {
     title,
     description,
@@ -77,7 +87,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     openGraph: {
       title,
       description,
-      url: `https://doorhan-crimea/${categorySlug}/${productSlug}`,
+      url: canonicalUrl,
       siteName: 'DoorHan Крым',
       images: mainImage ? [
         {
@@ -104,7 +114,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       images: mainImage ? [mainImage] : ['/doorhan-crimea/og-image.jpg'],
     },
     alternates: {
-      canonical: `https://doorhan-crimea/${categorySlug}/${productSlug}`,
+      canonical: canonicalUrl,
     },
   };
 }

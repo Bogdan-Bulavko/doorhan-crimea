@@ -43,6 +43,7 @@ interface ProductPageClientProps {
     sku?: string;
     seoTitle?: string;
     seoDescription?: string;
+    h1?: string;
     category?: {
       id: number;
       name: string;
@@ -335,7 +336,7 @@ export default function ProductPageClient({
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-[#00205B] font-montserrat mb-4">
-                {product.title || product.name}
+                {product.h1 || product.title || product.name}
               </h1>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-1">

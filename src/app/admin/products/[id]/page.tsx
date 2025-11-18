@@ -49,6 +49,8 @@ export default function EditProductPage() {
   const [shortDescription, setShortDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [canonicalUrl, setCanonicalUrl] = useState('');
+  const [h1, setH1] = useState('');
   const [specifications, setSpecifications] = useState<Specification[]>([]);
   const [images, setImages] = useState<ImageData[]>([]);
 
@@ -67,7 +69,7 @@ export default function EditProductPage() {
         if (prodJ.success && prodJ.data) {
           const p = prodJ.data as {
             name: string; slug: string; categoryId: number; price: number; currency: string;
-            title?: string; description?: string; shortDescription?: string; seoTitle?: string; seoDescription?: string;
+            title?: string; description?: string; shortDescription?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string;
             specifications?: Specification[];
             images?: Array<{ id: string; url: string; fileName: string; isMain: boolean; altText?: string; sortOrder?: number }>;
           };
@@ -81,6 +83,8 @@ export default function EditProductPage() {
           setShortDescription(p.shortDescription ?? '');
           setSeoTitle(p.seoTitle ?? '');
           setSeoDescription(p.seoDescription ?? '');
+          setCanonicalUrl(p.canonicalUrl ?? '');
+          setH1(p.h1 ?? '');
           setSpecifications(p.specifications || []);
           
           // Преобразуем изображения из базы данных в формат компонента
@@ -122,6 +126,8 @@ export default function EditProductPage() {
       shortDescription: shortDescription || undefined,
       seoTitle: seoTitle || undefined,
       seoDescription: seoDescription || undefined,
+      canonicalUrl: canonicalUrl || undefined,
+      h1: h1 || undefined,
       specifications: specifications.filter(spec => spec.name.trim() && spec.value.trim()),
       images: images,
     };
@@ -186,6 +192,10 @@ export default function EditProductPage() {
             placeholder="Введите подробное описание товара с поддержкой Markdown и HTML..."
           />
         </div>
+        <div>
+          <label className="block text-sm text-gray-600">H1 Заголовок (если не указан, используется название)</label>
+          <input className="mt-1 w-full border rounded-lg px-3 py-2" value={h1} onChange={(e) => setH1(e.target.value)} placeholder={title || name} />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className="block text-sm text-gray-600">SEO Title</label>
@@ -195,6 +205,16 @@ export default function EditProductPage() {
             <label className="block text-sm text-gray-600">SEO Description</label>
             <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
           </div>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Canonical URL (если не указан, генерируется автоматически)</label>
+          <input 
+            className="mt-1 w-full border rounded-lg px-3 py-2" 
+            value={canonicalUrl} 
+            onChange={(e) => setCanonicalUrl(e.target.value)} 
+            placeholder="Авто: https://doorhan-crimea.ru/[category-slug]/[product-slug]"
+          />
+          <p className="mt-1 text-xs text-gray-500">Можно указать относительный (/category/product) или полный URL (https://example.com/product)</p>
         </div>
       </div>
       
