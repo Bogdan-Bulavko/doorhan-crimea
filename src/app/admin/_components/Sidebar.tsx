@@ -18,6 +18,7 @@ import {
   LogOut,
   Menu,
   X,
+  File,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -43,6 +44,11 @@ const menuItems: MenuItem[] = [
     label: 'Категории',
     href: '/admin/categories',
     icon: <FolderTree className="w-5 h-5" />,
+  },
+  {
+    label: 'Страницы',
+    href: '/admin/pages',
+    icon: <File className="w-5 h-5" />,
   },
   {
     label: 'Заказы',

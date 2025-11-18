@@ -53,12 +53,12 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'createdAt'>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const getMainImage = (product: Product) => {
+  const getMainImage = (product: Product): string => {
     // Игнорируем дефолтные изображения из seed.js
     const defaultImages = ['/window.svg', '/globe.svg'];
     const hasValidMainImage = product.mainImageUrl && !defaultImages.includes(product.mainImageUrl);
     
-    if (hasValidMainImage) return product.mainImageUrl;
+    if (hasValidMainImage && product.mainImageUrl) return product.mainImageUrl;
     
     // Ищем основное изображение из таблицы ProductImage
     const mainImage = product.images?.find(img => img.isMain);
@@ -68,7 +68,7 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
     
     // Берем первое изображение из таблицы
     const firstImage = product.images?.find(img => img.imageUrl && !defaultImages.includes(img.imageUrl));
-    if (firstImage) return firstImage.imageUrl;
+    if (firstImage && firstImage.imageUrl) return firstImage.imageUrl;
     
     return '/images/placeholder.svg';
   };

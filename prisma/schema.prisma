@@ -238,3 +238,16 @@ model Region {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
+
+model Page {
+  id            Int      @id @default(autoincrement())
+  title         String
+  slug          String   @unique
+  content       String
+  seoTitle      String?
+  seoDescription String?
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

@@ -73,18 +73,20 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
       imageUrl: string;
       isMain: boolean;
     }>;
-  }) => {
+  }): string => {
     // Игнорируем дефолтные изображения из seed.js
     const defaultImages = ['/window.svg', '/globe.svg'];
     const hasValidMainImage = product.mainImageUrl && !defaultImages.includes(product.mainImageUrl);
     
-    if (hasValidMainImage) return product.mainImageUrl;
+    if (hasValidMainImage && product.mainImageUrl) return product.mainImageUrl;
     
     const mainImage = product.images?.find((img) => img.isMain && img.imageUrl && !defaultImages.includes(img.imageUrl));
-    if (mainImage) return mainImage.imageUrl;
+    if (mainImage && mainImage.imageUrl) return mainImage.imageUrl;
     
     const firstImage = product.images?.find((img) => img.imageUrl && !defaultImages.includes(img.imageUrl));
-    return firstImage?.imageUrl || '/images/placeholder.svg';
+    if (firstImage && firstImage.imageUrl) return firstImage.imageUrl;
+    
+    return '/images/placeholder.svg';
   };
 
   return (

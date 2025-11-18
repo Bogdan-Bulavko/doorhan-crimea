@@ -57,7 +57,9 @@ const VideoSection = () => {
               className="w-full h-full object-cover"
               controls
               loop
-              preload="metadata"
+              autoPlay
+              muted
+              preload="auto"
             >
               <source src="/video.mp4" type="video/mp4" />
               Ваш браузер не поддерживает видео.
