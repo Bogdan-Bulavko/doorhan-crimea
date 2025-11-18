@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import ProductPageClient from '@/components/ProductPageClient';
+import type { ProductPageClientProps } from '@/components/ProductPageClient';
 import {
   generateProductMetadata,
   getRegionFromHeaders,
@@ -158,7 +159,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   // Конвертируем Decimal в числа для клиентских компонентов
-  const serializedProduct = {
+  const serializedProduct: ProductPageClientProps['product'] = {
     ...product,
     price: Number(product.price),
     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
@@ -174,6 +175,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     sku: product.sku || undefined,
     seoTitle: product.seoTitle || undefined,
     seoDescription: product.seoDescription || undefined,
+    canonicalUrl: product.canonicalUrl || undefined,
+    h1: product.h1 || undefined,
     // Сериализуем изображения
     images: product.images?.map(img => ({
       ...img,
@@ -192,12 +195,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
   };
 
   // Сериализуем категорию
-  const serializedCategory = {
+  const serializedCategory: ProductPageClientProps['category'] = {
     ...category,
     description: category.description || undefined,
     imageUrl: category.imageUrl || undefined,
     seoTitle: category.seoTitle || undefined,
     seoDescription: category.seoDescription || undefined,
+    canonicalUrl: category.canonicalUrl || undefined,
+    h1: category.h1 || undefined,
   };
 
   return (

@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import ProductPageClient from '@/components/ProductPageClient';
+import type { ProductPageClientProps } from '@/components/ProductPageClient';
 
 // Обязательно для статического экспорта
 export const dynamic = 'force-static';
@@ -68,7 +69,7 @@ export default async function PageProduct({
   }
 
   // Сериализуем данные
-  const serializedProduct = {
+  const serializedProduct: ProductPageClientProps['product'] = {
     ...product,
     price: Number(product.price),
     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
@@ -82,6 +83,8 @@ export default async function PageProduct({
     sku: product.sku || undefined,
     seoTitle: product.seoTitle || undefined,
     seoDescription: product.seoDescription || undefined,
+    canonicalUrl: product.canonicalUrl || undefined,
+    h1: product.h1 || undefined,
     images: product.images?.map(img => ({
       ...img,
       altText: img.altText || undefined,
@@ -96,12 +99,14 @@ export default async function PageProduct({
     })) || [],
   };
 
-  const serializedCategory = {
+  const serializedCategory: ProductPageClientProps['category'] = {
     ...product.category,
     description: product.category.description || undefined,
     imageUrl: product.category.imageUrl || undefined,
     seoTitle: product.category.seoTitle || undefined,
     seoDescription: product.category.seoDescription || undefined,
+    canonicalUrl: product.category.canonicalUrl || undefined,
+    h1: product.category.h1 || undefined,
   };
 
   return (

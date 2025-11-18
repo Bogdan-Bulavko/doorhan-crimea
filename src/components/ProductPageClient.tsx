@@ -21,7 +21,7 @@ import CallbackModal from './CallbackModal';
 import SimpleMarkdownRenderer from './SimpleMarkdownRenderer';
 import SEOOptimizer from './SEOOptimizer';
 
-interface ProductPageClientProps {
+export interface ProductPageClientProps {
   product: {
     id: number;
     name: string;
@@ -43,6 +43,7 @@ interface ProductPageClientProps {
     sku?: string;
     seoTitle?: string;
     seoDescription?: string;
+    canonicalUrl?: string;
     h1?: string;
     category?: {
       id: number;
@@ -80,6 +81,10 @@ interface ProductPageClientProps {
     slug: string;
     description?: string;
     imageUrl?: string;
+    seoTitle?: string;
+    seoDescription?: string;
+    h1?: string;
+    canonicalUrl?: string;
   };
 }
 

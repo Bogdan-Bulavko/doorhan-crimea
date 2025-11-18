@@ -90,7 +90,8 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname ?? '';
   const [openMenus, setOpenMenus] = useState<string[]>(() => {
     // Автоматически открываем меню, если текущий путь входит в него
     const activeMenu = menuItems.find(item => 

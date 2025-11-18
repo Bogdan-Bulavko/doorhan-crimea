@@ -6,9 +6,9 @@ import ProductsList from '@/components/ProductsList';
 
 function ProductsPageContent() {
   const searchParams = useSearchParams();
-  const search = searchParams.get('search');
+  const search = searchParams?.get('search') ?? '';
 
-  return <ProductsList initialSearch={search || ''} />;
+  return <ProductsList initialSearch={search} />;
 }
 
 export default function ProductsPage() {
