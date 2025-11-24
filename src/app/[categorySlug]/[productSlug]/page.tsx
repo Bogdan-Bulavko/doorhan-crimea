@@ -62,13 +62,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   // Генерируем метатеги по шаблону
-  const { title, description } = generateProductMetadata(
+  const generatedMeta = generateProductMetadata(
     product.name,
     product.price ? Number(product.price) : null,
     region,
     'DoorHan Крым',
     product.currency || 'RUB'
   );
+  const title = product.seoTitle?.trim() || generatedMeta.title;
+  const description = product.seoDescription?.trim() || generatedMeta.description;
+  const robots = product.robotsMeta?.trim() || 'index, follow';
   
   const mainImage = product.images?.[0]?.imageUrl || product.mainImageUrl;
   
@@ -84,6 +87,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   return {
     title,
     description,
+    robots,
     keywords: `${product.name}, ${category.name}, DoorHan, ворота, автоматика, Крым`,
     openGraph: {
       title,
@@ -211,6 +215,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         product={serializedProduct}
         category={serializedCategory}
       />
+      {product.schemaMarkup && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: product.schemaMarkup }}
+        />
+      )}
     </main>
   );
 }

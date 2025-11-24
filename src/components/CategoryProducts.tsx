@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowLeft, Grid, List, Star, Package } from 'lucide-react';
 import { useState } from 'react';
 import BreadCrumbs from './BreadCrumbs';
+import RequestQuoteModal from './RequestQuoteModal';
 
 interface Product {
   id: number;
@@ -55,6 +56,7 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'createdAt'>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   const getMainImage = (product: Product): string => {
     // Игнорируем дефолтные изображения из seed.js
@@ -91,6 +93,12 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
     if (!product.inStock) badges.push({ label: 'Нет в наличии', color: 'bg-red-100 text-red-800' });
     return badges;
   };
+
+  // Блок "Актуальная стоимость" временно скрыт, поэтому minPrice не используется
+  // const priceValues = products
+  //   .filter((product) => typeof product.price === 'number' && product.price > 0)
+  //   .map((product) => product.price);
+  // const minPrice = priceValues.length ? Math.min(...priceValues) : null;
 
   const sortedProducts = [...products].sort((a, b) => {
     let aValue, bValue;
@@ -187,6 +195,55 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
           </div>
         </section>
       )}
+
+      {/* Дополнительные блоки: цена + мотивация */}
+      <section className="bg-[#001C45] text-white py-10">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Блок "Актуальная стоимость" - скрыт */}
+            {/* <div className="bg-white text-[#00205B] rounded-3xl p-6 shadow-xl hidden">
+              <h2 className="text-2xl font-bold mb-4">Актуальная стоимость</h2>
+              <p className="text-gray-600 mb-4">
+                Мы рассчитываем цену под ваш объект и учитываем местные условия доставки и монтаж.
+              </p>
+              <div className="bg-[#F6A800]/10 border border-[#F6A800]/30 rounded-2xl p-5 mb-4">
+                <p className="text-sm text-gray-500">Минимальная стоимость комплекта</p>
+                <p className="text-3xl font-semibold mt-2">
+                  {minPrice ? formatPrice(minPrice, products[0]?.currency) : 'По запросу'}
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Точная смета зависит от комплектации и города установки
+                </p>
+              </div>
+              <p className="text-sm text-gray-600">
+                Отправьте параметры ворот — подготовим коммерческое предложение в течение рабочего дня.
+              </p>
+            </div> */}
+            <div className="rounded-3xl border border-white/20 p-6 flex flex-col justify-between bg-gradient-to-br from-white/10 to-white/5">
+              <div>
+                <h2 className="text-2xl font-bold mb-3">Планируете заказ?</h2>
+                <p className="text-white/80 mb-4">
+                  Поможем выбрать комплектацию, предложим оптимальные сроки и закрепим менеджера в вашем городе.
+                </p>
+                <ul className="space-y-3 text-sm text-white/80">
+                  <li>• Персональный расчёт стоимости</li>
+                  <li>• Бесплатный выезд замерщика в пределах города</li>
+                  <li>• Гарантия DoorHan и сервис в течение 5 лет</li>
+                </ul>
+              </div>
+              <div className="mt-6">
+                <button
+                  onClick={() => setIsQuoteModalOpen(true)}
+                  className="inline-flex items-center gap-2 bg-white text-[#00205B] px-5 py-3 rounded-2xl font-semibold hover:bg-[#F6A800] hover:text-white transition-colors"
+                >
+                  Запросить расчёт
+                  <ArrowLeft className="rotate-180 h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Панель управления */}
       <section className="bg-white border-b py-6">
@@ -378,6 +435,12 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
           </div>
         </section>
       )}
+
+      {/* Модальное окно запроса расчёта */}
+      <RequestQuoteModal
+        isOpen={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+      />
     </div>
   );
 };

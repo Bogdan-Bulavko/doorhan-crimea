@@ -169,16 +169,18 @@ const HeroSection = () => {
           className="text-center text-white max-w-6xl mx-auto"
         >
           {/* Заголовок */}
-          <motion.h1
-            variants={itemVariants}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 leading-tight"
-          >
-            <span className="block">Ворота и роллеты</span>
-            <span className="block text-[#F6A800]">DoorHan</span>
-            <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
-              в {getCityName()}
-            </span>
-          </motion.h1>
+          <div className="hero-title-wrapper">
+            <motion.h1
+              variants={itemVariants}
+              className="text-4xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 leading-tight"
+            >
+              <span className="block">Ворота и роллеты</span>
+              <span className="block text-[#F6A800]">DoorHan</span>
+              <span className="block text-2xl md:text-3xl lg:text-4xl font-normal mt-4">
+                в {getCityName()}
+              </span>
+            </motion.h1>
+          </div>
 
           {/* Подзаголовок */}
           <motion.p
@@ -197,7 +199,7 @@ const HeroSection = () => {
               href="/categories"
               className="group bg-[#F6A800] hover:bg-[#ffb700] text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2"
             >
-              <span>Посмотреть продукцию</span>
+              <span>Посмотреть ассортимент</span>
               <ArrowRight
                 className="group-hover:translate-x-1 transition-transform"
                 size={20}

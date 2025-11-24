@@ -54,11 +54,14 @@ export async function generateMetadata({
   }));
 
   // Генерируем метатеги по шаблону
-  const { title, description } = generateCategoryMetadata(
+  const generatedMeta = generateCategoryMetadata(
     category.name,
     productsWithPrices,
     region
   );
+  const title = category.seoTitle?.trim() || generatedMeta.title;
+  const description = category.seoDescription?.trim() || generatedMeta.description;
+  const robots = category.robotsMeta?.trim() || 'index, follow';
 
   // Генерируем canonical URL с учетом поддомена
   const canonicalUrl = generateCanonical('category', region, {
@@ -71,6 +74,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    robots,
     keywords: `${category.name}, DoorHan, ворота, автоматика, Крым`,
     openGraph: {
       title,
@@ -149,6 +153,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         category={serializedCategory}
         products={serializedProducts}
       />
+      {category.schemaMarkup && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: category.schemaMarkup }}
+        />
+      )}
     </main>
   );
 }

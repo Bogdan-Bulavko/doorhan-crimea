@@ -1,8 +1,11 @@
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import SimpleMarkdownRenderer from '@/components/SimpleMarkdownRenderer';
 import BreadCrumbs from '@/components/BreadCrumbs';
+import { generateCanonical } from '@/lib/canonical-utils';
+import { getRegionFromHeaders } from '@/lib/metadata-generator';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -14,6 +17,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const headersList = await headers();
+  const region = getRegionFromHeaders(headersList);
 
   const page = await db.page.findFirst({
     where: {
@@ -29,28 +34,37 @@ export async function generateMetadata({
     };
   }
 
-  const title = page.seoTitle || page.title;
-  const description = page.seoDescription || page.content.substring(0, 160);
+  const baseTitle = page.seoTitle?.trim() || page.title;
+  const description = page.seoDescription?.trim() || page.content.substring(0, 160);
+  const robots = page.robotsMeta?.trim() || 'index, follow';
+  const canonicalUrl = generateCanonical('page', region, {
+    pageSlug: slug,
+    customCanonical: page.canonicalUrl,
+    useFullUrl: true,
+    forceMainDomain: true,
+  });
+  const fullTitle = `${baseTitle} | DoorHan Крым`;
 
   return {
-    title: `${title} | DoorHan Крым`,
+    title: fullTitle,
     description,
+    robots,
     keywords: `${page.title}, DoorHan, Крым`,
     openGraph: {
-      title,
+      title: fullTitle,
       description,
-      url: `https://doorhan-crimea.ru/pages/${slug}`,
+      url: canonicalUrl,
       siteName: 'DoorHan Крым',
       locale: 'ru_RU',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: fullTitle,
       description,
     },
     alternates: {
-      canonical: `https://doorhan-crimea.ru/pages/${slug}`,
+      canonical: canonicalUrl,
     },
   };
 }
@@ -86,6 +100,12 @@ export default async function PagePage({ params }: PageProps) {
           <div className="prose prose-lg max-w-none">
             <SimpleMarkdownRenderer content={page.content} />
           </div>
+          {page.schemaMarkup && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: page.schemaMarkup }}
+            />
+          )}
         </article>
       </div>
     </main>

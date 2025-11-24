@@ -13,9 +13,9 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import RegionSelector from './RegionSelector';
 import { useRegion } from '@/contexts/RegionContext';
 import { useMenus } from '@/hooks/useMenus';
+import WriteUsForm from './WriteUsForm';
 
 const Footer = () => {
   const { regionalData, loading: regionLoading } = useRegion();
@@ -197,12 +197,10 @@ const Footer = () => {
         )}
       </div>
 
-      {/* Региональные поддомены */}
-      <div className="border-t border-white/20 py-6 sm:py-8">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="flex flex-col items-center justify-center max-w-md mx-auto">
-            <RegionSelector variant="footer" />
-          </div>
+      {/* Блок "Напишите нам" */}
+      <div className="border-t border-white/20 py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+          <WriteUsForm />
         </div>
       </div>
 
@@ -216,18 +214,27 @@ const Footer = () => {
             <div className="flex flex-wrap gap-4 text-sm justify-center md:justify-end">
               <Link
                 href="/pages/personal-data"
+                target="_blank"
+                rel="nofollow noopener"
+                data-noindex="true"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 Политика обработки персональных данных
               </Link>
               <Link
                 href="/pages/politika-cookie-i-servisa-yandex-metrika"
+                target="_blank"
+                rel="nofollow noopener"
+                data-noindex="true"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 Политика cookie
               </Link>
               <Link
                 href="/pages/polzovatelskoe-soglashenie"
+                target="_blank"
+                rel="nofollow noopener"
+                data-noindex="true"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 Пользовательское соглашение

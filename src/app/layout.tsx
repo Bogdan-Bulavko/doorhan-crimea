@@ -7,6 +7,8 @@ import ConditionalLayout from '@/components/ConditionalLayout';
 import DynamicMetadata from '@/components/DynamicMetadata';
 import { RegionProvider } from '@/contexts/RegionContext';
 import regions from '@/app/metadata/regions';
+import { getSiteSettings } from '@/lib/site-settings';
+import { generateCanonical } from '@/lib/canonical-utils';
 
 const openSans = Open_Sans({
   variable: '--font-open-sans',
@@ -64,6 +66,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const region = SUPPORTED_REGIONS.includes(subdomain) ? subdomain : 'default';
   const regionData = regions[region as keyof typeof regions] || regions.default;
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'zavod-doorhan.ru';
+  const siteSettings = await getSiteSettings();
+  const homeTitle = siteSettings.homeSeoTitle?.trim();
+  const homeDescription = siteSettings.homeSeoDescription?.trim();
+  const homeRobots = siteSettings.homeRobotsMeta?.trim();
+  const homeCanonical = siteSettings.homeCanonicalUrl?.trim();
   
   // Определяем базовый URL
   let baseUrl: string;
@@ -77,63 +84,64 @@ export async function generateMetadata(): Promise<Metadata> {
       : `https://${region}.${baseDomain}`;
   }
 
+  const canonical = generateCanonical('home', region, {
+    customCanonical: homeCanonical || undefined,
+    useFullUrl: true,
+    forceMainDomain: true,
+  });
+  const metadataTitle = homeTitle || regionData.title;
+  const metadataDescription = homeDescription || regionData.description;
+
   return {
-    title: regionData.title,
-    description: regionData.description,
+    title: metadataTitle,
+    description: metadataDescription,
     keywords: regionData.keywords,
-  authors: [{ name: 'DoorHan Крым' }],
-  creator: 'DoorHan Крым',
-  publisher: 'DoorHan Крым',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-    metadataBase: new URL(baseUrl),
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-      title: regionData.title,
-      description: regionData.description,
-      url: baseUrl,
-    siteName: 'DoorHan Крым',
-    images: [
-      {
-        url: '/doorhan-crimea/og-image.jpg',
-        width: 1200,
-        height: 630,
-          alt: regionData.title,
-      },
-    ],
-    locale: 'ru_RU',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-      title: regionData.title,
-      description: regionData.description,
-    images: ['/doorhan-crimea/og-image.jpg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+    authors: [{ name: 'DoorHan Крым' }],
+    creator: 'DoorHan Крым',
+    publisher: 'DoorHan Крым',
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
     },
-  },
-};
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title: metadataTitle,
+      description: metadataDescription,
+      url: canonical,
+      siteName: 'DoorHan Крым',
+      images: [
+        {
+          url: '/doorhan-crimea/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: metadataTitle,
+        },
+      ],
+      locale: 'ru_RU',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metadataTitle,
+      description: metadataDescription,
+      images: ['/doorhan-crimea/og-image.jpg'],
+    },
+    robots: homeRobots || 'index, follow',
+  };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteSettings = await getSiteSettings();
+  const globalSchemaMarkup = siteSettings.globalSchemaMarkup?.trim();
+
   return (
     <html lang="ru" className="scroll-smooth" data-scroll-behavior="smooth">
       <head>
@@ -144,6 +152,13 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#00205B" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {globalSchemaMarkup && (
+          <script
+            id="global-schema-markup"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: globalSchemaMarkup }}
+          />
+        )}
       </head>
       <body
         className={`${openSans.variable} ${montserrat.variable} antialiased bg-white text-gray-900`}
