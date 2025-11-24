@@ -362,6 +362,27 @@ const ContactsSection = () => {
                   />
                 </div>
 
+                {/* Чекбокс согласия */}
+                <div className="flex items-start space-x-2">
+                  <input
+                    type="checkbox"
+                    id="privacyConsentContact"
+                    required
+                    className="mt-1 w-4 h-4 text-[#F6A800] border-white/30 rounded focus:ring-[#F6A800] bg-white/10"
+                  />
+                  <label htmlFor="privacyConsentContact" className="text-sm text-gray-200">
+                    Даю согласие на{' '}
+                    <a
+                      href="/pages/politika-obrabotki-personalnyh-dannyh"
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="text-[#F6A800] underline hover:text-[#ffb700]"
+                    >
+                      обработку персональных данных
+                    </a>
+                  </label>
+                </div>
+
                 {submitMessage && (
                   <div
                     className={`p-4 rounded-xl text-center ${
@@ -391,10 +412,6 @@ const ContactsSection = () => {
                     </>
                   )}
                 </button>
-
-                <p className="text-xs text-gray-300 text-center">
-                  Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-                </p>
               </form>
             )}
           </motion.div>

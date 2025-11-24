@@ -30,6 +30,21 @@ interface SettingsData {
   categoriesDescription: string;
   categoriesKeywords: string;
   
+  // SEO для домашней страницы
+  homeSeoTitle: string;
+  homeSeoDescription: string;
+  homeH1: string;
+  homeCanonicalUrl: string;
+  homeRobotsMeta: string;
+  homeSchemaMarkup: string;
+  
+  // Сквозная микроразметка
+  globalSchemaMarkup: string;
+  
+  // Кастомные CSS и JS
+  customCss: string;
+  customJs: string;
+  
   // Карта
   mapIframe: string;
 }
@@ -61,6 +76,21 @@ export default function SettingsPage() {
     categoriesTitle: 'Категории товаров DoorHan',
     categoriesDescription: 'Выберите категорию товаров DoorHan: ворота, автоматика, рольставни',
     categoriesKeywords: 'категории, DoorHan, ворота, автоматика, рольставни',
+    
+    // SEO для домашней страницы
+    homeSeoTitle: '',
+    homeSeoDescription: '',
+    homeH1: '',
+    homeCanonicalUrl: '',
+    homeRobotsMeta: 'index, follow',
+    homeSchemaMarkup: '',
+    
+    // Сквозная микроразметка
+    globalSchemaMarkup: '',
+    
+    // Кастомные CSS и JS
+    customCss: '',
+    customJs: '',
     
     // Карта
     mapIframe: '',
@@ -394,6 +424,150 @@ export default function SettingsPage() {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
                 placeholder="категории, DoorHan, ворота, автоматика, рольставни"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* SEO для домашней страницы */}
+        <div className="rounded-xl border bg-white p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO для домашней страницы</h2>
+          <div className="grid gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                SEO Title
+              </label>
+              <input
+                type="text"
+                value={settings.homeSeoTitle}
+                onChange={(e) => handleChange('homeSeoTitle', e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
+                placeholder="Заголовок для главной страницы"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                SEO Description
+              </label>
+              <textarea
+                value={settings.homeSeoDescription}
+                onChange={(e) => handleChange('homeSeoDescription', e.target.value)}
+                rows={3}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
+                placeholder="Описание для главной страницы"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                H1 заголовок
+              </label>
+              <input
+                type="text"
+                value={settings.homeH1}
+                onChange={(e) => handleChange('homeH1', e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
+                placeholder="H1 для главной страницы"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Canonical URL
+              </label>
+              <input
+                type="text"
+                value={settings.homeCanonicalUrl}
+                onChange={(e) => handleChange('homeCanonicalUrl', e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
+                placeholder="https://example.com/ или оставьте пустым для автогенерации"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Robots Meta
+              </label>
+              <select
+                value={settings.homeRobotsMeta}
+                onChange={(e) => handleChange('homeRobotsMeta', e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
+              >
+                <option value="index, follow">index, follow</option>
+                <option value="noindex, follow">noindex, follow</option>
+                <option value="index, nofollow">index, nofollow</option>
+                <option value="noindex, nofollow">noindex, nofollow</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Schema Markup (JSON-LD)
+              </label>
+              <textarea
+                value={settings.homeSchemaMarkup}
+                onChange={(e) => handleChange('homeSchemaMarkup', e.target.value)}
+                rows={6}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent font-mono text-sm"
+                placeholder='{"@context":"https://schema.org","@type":"Organization",...}'
+              />
+              <p className="text-sm text-gray-500 mt-2">
+                JSON-LD разметка для главной страницы. Будет выведена в &lt;head&gt;.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Сквозная микроразметка */}
+        <div className="rounded-xl border bg-white p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Сквозная микроразметка</h2>
+          <div className="grid gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Global Schema Markup (JSON-LD)
+              </label>
+              <textarea
+                value={settings.globalSchemaMarkup}
+                onChange={(e) => handleChange('globalSchemaMarkup', e.target.value)}
+                rows={6}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent font-mono text-sm"
+                placeholder='{"@context":"https://schema.org","@type":"Organization",...}'
+              />
+              <p className="text-sm text-gray-500 mt-2">
+                JSON-LD разметка, которая будет выводиться на всех страницах сайта (например, Organization).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Кастомные CSS и JS */}
+        <div className="rounded-xl border bg-white p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Кастомные CSS и JS</h2>
+          <div className="grid gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Custom CSS
+              </label>
+              <textarea
+                value={settings.customCss}
+                onChange={(e) => handleChange('customCss', e.target.value)}
+                rows={10}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent font-mono text-sm"
+                placeholder="/* Ваш кастомный CSS код */"
+              />
+              <p className="text-sm text-gray-500 mt-2">
+                Кастомный CSS код будет добавлен в &lt;head&gt; страницы.
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Custom JavaScript
+              </label>
+              <textarea
+                value={settings.customJs}
+                onChange={(e) => handleChange('customJs', e.target.value)}
+                rows={10}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent font-mono text-sm"
+                placeholder="// Ваш кастомный JavaScript код"
+              />
+              <p className="text-sm text-gray-500 mt-2">
+                Кастомный JavaScript код будет добавлен перед закрывающим тегом &lt;/body&gt;.
+              </p>
             </div>
           </div>
         </div>

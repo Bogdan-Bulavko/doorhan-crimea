@@ -29,6 +29,21 @@ const settingsSchema = z.object({
   categoriesDescription: z.string().optional(),
   categoriesKeywords: z.string().optional(),
   
+  // SEO для домашней страницы
+  homeSeoTitle: z.string().optional(),
+  homeSeoDescription: z.string().optional(),
+  homeH1: z.string().optional(),
+  homeCanonicalUrl: z.string().optional(),
+  homeRobotsMeta: z.string().optional(),
+  homeSchemaMarkup: z.string().optional(),
+  
+  // Сквозная микроразметка
+  globalSchemaMarkup: z.string().optional(),
+  
+  // Кастомные CSS и JS
+  customCss: z.string().optional(),
+  customJs: z.string().optional(),
+  
   // Карта
   mapIframe: z.string().optional(),
 });
@@ -93,6 +108,21 @@ export async function PUT(req: NextRequest) {
       { key: 'categoriesTitle', value: data.categoriesTitle || '' },
       { key: 'categoriesDescription', value: data.categoriesDescription || '' },
       { key: 'categoriesKeywords', value: data.categoriesKeywords || '' },
+      
+      // SEO для домашней страницы
+      { key: 'homeSeoTitle', value: data.homeSeoTitle || '' },
+      { key: 'homeSeoDescription', value: data.homeSeoDescription || '' },
+      { key: 'homeH1', value: data.homeH1 || '' },
+      { key: 'homeCanonicalUrl', value: data.homeCanonicalUrl || '' },
+      { key: 'homeRobotsMeta', value: data.homeRobotsMeta || 'index, follow' },
+      { key: 'homeSchemaMarkup', value: data.homeSchemaMarkup || '' },
+      
+      // Сквозная микроразметка
+      { key: 'globalSchemaMarkup', value: data.globalSchemaMarkup || '' },
+      
+      // Кастомные CSS и JS
+      { key: 'customCss', value: data.customCss || '' },
+      { key: 'customJs', value: data.customJs || '' },
       
       // Карта
       { key: 'mapIframe', value: data.mapIframe || '' },

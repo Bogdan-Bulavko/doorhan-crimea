@@ -196,18 +196,24 @@ const Footer = () => {
             <div className="text-sm text-gray-300 text-center md:text-left">
               © 2024 DoorHan Крым. Все права защищены.
             </div>
-            <div className="flex space-x-6 text-sm">
+            <div className="flex flex-wrap gap-4 text-sm justify-center md:justify-end">
               <Link
-                href="#privacy"
+                href="/pages/politika-obrabotki-personalnyh-dannyh"
                 className="text-gray-300 hover:text-white transition-colors"
               >
-                Политика конфиденциальности
+                Политика обработки персональных данных
               </Link>
               <Link
-                href="#terms"
+                href="/pages/politika-cookie-i-servisa-yandex-metrika"
                 className="text-gray-300 hover:text-white transition-colors"
               >
-                Условия использования
+                Политика cookie
+              </Link>
+              <Link
+                href="/pages/polzovatelskoe-soglashenie"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                Пользовательское соглашение
               </Link>
             </div>
           </div>

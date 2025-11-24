@@ -235,6 +235,27 @@ const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
                     />
                   </div>
 
+                  {/* Чекбокс согласия */}
+                  <div className="flex items-start space-x-2">
+                    <input
+                      type="checkbox"
+                      id="privacyConsent"
+                      required
+                      className="mt-1 w-4 h-4 text-[#F6A800] border-gray-300 rounded focus:ring-[#F6A800]"
+                    />
+                    <label htmlFor="privacyConsent" className="text-sm text-gray-700">
+                      Даю согласие на{' '}
+                      <a
+                        href="/pages/politika-obrabotki-personalnyh-dannyh"
+                        target="_blank"
+                        rel="nofollow noopener noreferrer"
+                        className="text-[#F6A800] underline hover:text-[#ffb700]"
+                      >
+                        обработку персональных данных
+                      </a>
+                    </label>
+                  </div>
+
                   {/* Сообщения об ошибках/успехе */}
                   {submitMessage && (
                     <div

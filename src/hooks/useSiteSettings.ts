@@ -29,6 +29,10 @@ export interface SiteSettings {
   
   // Карта
   mapIframe: string;
+  
+  // Кастомные CSS и JS
+  customCss?: string | null;
+  customJs?: string | null;
 }
 
 export function useSiteSettings() {

@@ -67,6 +67,8 @@ model Category {
   seoDescription String?
   canonicalUrl   String?
   h1             String?
+  robotsMeta     String?    @default("index, follow")
+  schemaMarkup   String?
   products       Product[]
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
@@ -97,6 +99,8 @@ model Product {
   seoDescription   String?
   canonicalUrl     String?
   h1               String?
+  robotsMeta       String?                @default("index, follow")
+  schemaMarkup     String?
   specifications   ProductSpecification[]
   colors           ProductColor[]
   images           ProductImage[]
@@ -225,35 +229,37 @@ model AdminLog {
 }
 
 model Region {
-  id                    Int      @id @default(autoincrement())
-  code                  String   @unique
-  name                  String
-  phone                 String
-  phoneFormatted        String
-  email                 String
-  address               String
-  addressDescription    String?
-  workingHours          String
+  id                      Int      @id @default(autoincrement())
+  code                    String   @unique
+  name                    String
+  phone                   String
+  phoneFormatted          String
+  email                   String
+  address                 String
+  addressDescription      String?
+  workingHours            String
   workingHoursDescription String?
-  mapIframe             String?
-  officeName            String?
-  isActive              Boolean  @default(true)
-  sortOrder             Int      @default(0)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  mapIframe               String?
+  officeName              String?
+  isActive                Boolean  @default(true)
+  sortOrder               Int      @default(0)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 }
 
 model Page {
-  id            Int      @id @default(autoincrement())
-  title         String
-  slug          String   @unique
-  content       String
-  seoTitle      String?
+  id             Int      @id @default(autoincrement())
+  title          String
+  slug           String   @unique
+  content        String
+  seoTitle       String?
   seoDescription String?
-  canonicalUrl  String?
-  h1            String?
-  isActive      Boolean  @default(true)
-  sortOrder     Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  canonicalUrl   String?
+  h1             String?
+  robotsMeta     String?  @default("index, follow")
+  schemaMarkup   String?
+  isActive       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
