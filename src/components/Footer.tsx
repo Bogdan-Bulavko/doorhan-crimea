@@ -198,7 +198,7 @@ const Footer = () => {
             </div>
             <div className="flex flex-wrap gap-4 text-sm justify-center md:justify-end">
               <Link
-                href="/pages/politika-obrabotki-personalnyh-dannyh"
+                href="/pages/personal-data"
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 Политика обработки персональных данных

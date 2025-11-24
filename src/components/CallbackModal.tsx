@@ -246,7 +246,7 @@ const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
                     <label htmlFor="privacyConsent" className="text-sm text-gray-700">
                       Даю согласие на{' '}
                       <a
-                        href="/pages/politika-obrabotki-personalnyh-dannyh"
+                        href="/pages/personal-data"
                         target="_blank"
                         rel="nofollow noopener noreferrer"
                         className="text-[#F6A800] underline hover:text-[#ffb700]"
