@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { revalidateTag } from 'next/cache';
 
 const regionUpdateSchema = z.object({
   code: z.string().min(1).optional(),
@@ -131,6 +132,9 @@ export async function PUT(
       },
     });
 
+    // Инвалидируем кэш регионов
+    revalidateTag('regions');
+
     return NextResponse.json({
       success: true,
       message: 'Регион успешно обновлен',
@@ -206,6 +210,9 @@ export async function DELETE(
     await db.region.delete({
       where: { id },
     });
+
+    // Инвалидируем кэш регионов
+    revalidateTag('regions');
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { revalidateTag } from 'next/cache';
 
 const regionSchema = z.object({
   code: z.string().min(1),
@@ -64,6 +65,9 @@ export async function POST(req: NextRequest) {
         sortOrder: data.sortOrder ?? 0,
       },
     });
+
+    // Инвалидируем кэш регионов
+    revalidateTag('regions');
 
     return NextResponse.json({
       success: true,
