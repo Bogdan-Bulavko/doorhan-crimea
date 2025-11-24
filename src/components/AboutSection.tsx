@@ -13,7 +13,46 @@ import {
 import { useRegion } from '@/contexts/RegionContext';
 
 const AboutSection = () => {
-  const { regionalData } = useRegion();
+  const { regionalData, currentRegion } = useRegion();
+
+  const getCityNamePrepositional = () => {
+    // Маппинг городов в предложном падеже (для "в {город}")
+    const cityMap: Record<string, string> = {
+      default: 'Симферополе',
+      simferopol: 'Симферополе',
+      kerch: 'Керчи',
+      evpatoria: 'Евпатории',
+      yalta: 'Ялте',
+      feodosia: 'Феодосии',
+      sevastopol: 'Севастополе',
+      alushta: 'Алуште',
+      dzhankoy: 'Джанкое',
+      bakhchisaray: 'Бахчисарае',
+      krasnoperekopsk: 'Красноперекопске',
+      saki: 'Саках',
+      armyansk: 'Армянске',
+      sudak: 'Судаке',
+      belogorsk: 'Белогорске',
+      inkerman: 'Инкермане',
+      balaklava: 'Балаклаве',
+      'shchelkino': 'Щёлкино',
+      'stary-krym': 'Старом Крыму',
+      alupka: 'Алупке',
+      gurzuf: 'Гурзуфе',
+      simeiz: 'Симеизе',
+      foros: 'Форосе',
+      koktebel: 'Коктебеле',
+      livadia: 'Ливадии',
+      massandra: 'Массандре',
+      nikita: 'Никите',
+      gaspra: 'Гаспре',
+      miskhor: 'Мисхоре',
+      partenit: 'Партените',
+      kacha: 'Каче',
+    };
+    
+    return cityMap[currentRegion] || 'Симферополе';
+  };
   const values = [
     {
       icon: Shield,
@@ -113,14 +152,10 @@ const AboutSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#00205B] font-montserrat mb-6">
-            {regionalData?.officeName 
-              ? `О компании ${regionalData.officeName}`
-              : 'О компании DoorHan Крым'}
+            О компании DoorHan в {getCityNamePrepositional()}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            {regionalData?.officeName 
-              ? `${regionalData.officeName} — официальный представитель DoorHan в Крыму с более чем 30-летним опытом работы`
-              : 'Мы — официальный представитель DoorHan в Крыму с более чем 30-летним опытом работы'}
+            {`Мы — официальный представитель DoorHan в ${getCityNamePrepositional()} с более чем 30-летним опытом работы`}
           </p>
         </motion.div>
 

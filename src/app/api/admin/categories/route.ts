@@ -15,6 +15,8 @@ const categorySchema = z.object({
   sortOrder: z.number().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  contentTop: z.string().optional().nullable(),
+  contentBottom: z.string().optional().nullable(),
 });
 
 export async function GET() {

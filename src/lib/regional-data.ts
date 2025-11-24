@@ -64,7 +64,7 @@ const fallbackContacts: Record<string, RegionalContactData> = {
     addressDescription: 'Офис и выставочный зал',
     workingHours: 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00',
     workingHoursDescription: 'Воскресенье - выходной',
-    officeName: 'Главный офис',
+    officeName: 'Симферополь',
   },
 };
 
@@ -166,6 +166,40 @@ export async function getRegionalContacts(region: string): Promise<RegionalConta
   return fallbackData;
 }
 
+// Список всех поддерживаемых регионов
+const SUPPORTED_REGIONS = [
+  'simferopol',
+  'kerch',
+  'evpatoria',
+  'yalta',
+  'feodosia',
+  'sevastopol',
+  'alushta',
+  'dzhankoy',
+  'bakhchisaray',
+  'krasnoperekopsk',
+  'saki',
+  'armyansk',
+  'sudak',
+  'belogorsk',
+  'inkerman',
+  'balaklava',
+  'shchelkino',
+  'stary-krym',
+  'alupka',
+  'gurzuf',
+  'simeiz',
+  'foros',
+  'koktebel',
+  'livadia',
+  'massandra',
+  'nikita',
+  'gaspra',
+  'miskhor',
+  'partenit',
+  'kacha',
+];
+
 /**
  * Получает регион из заголовков запроса (клиентская сторона)
  */
@@ -175,11 +209,7 @@ export function getRegionFromClient(): string {
   const host = window.location.host;
   const subdomain = host.split('.')[0];
   
-  if (subdomain === 'simferopol') return 'simferopol';
-  if (subdomain === 'yalta') return 'yalta';
-  if (subdomain === 'alushta') return 'alushta';
-  if (subdomain === 'sevastopol') return 'sevastopol';
-  
-  return 'default';
+  // Проверяем, является ли поддомен одним из поддерживаемых регионов
+  return SUPPORTED_REGIONS.includes(subdomain) ? subdomain : 'default';
 }
 

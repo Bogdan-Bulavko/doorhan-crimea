@@ -33,6 +33,7 @@ export default function MenusPage() {
 
   useEffect(() => {
     loadMenus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadMenus = async () => {

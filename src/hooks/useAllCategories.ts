@@ -25,6 +25,8 @@ interface Category {
   sortOrder: number;
   seoTitle?: string;
   seoDescription?: string;
+  contentTop?: string | null;
+  contentBottom?: string | null;
   products?: Product[];
   productCount?: number;
   createdAt: string;

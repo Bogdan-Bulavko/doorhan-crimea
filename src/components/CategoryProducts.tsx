@@ -42,6 +42,8 @@ interface Category {
   imageUrl?: string;
   slug: string;
   h1?: string;
+  contentTop?: string;
+  contentBottom?: string;
 }
 
 interface CategoryProductsProps {
@@ -170,6 +172,21 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
           </div>
         </div>
       </section>
+
+      {/* ContentTop - контент сверху страницы категории */}
+      {category.contentTop && category.contentTop.trim() !== '' && (
+        <section className="bg-white py-8">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="max-w-none [&_p]:mb-4 [&_p]:text-gray-700 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#00205B] [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#00205B] [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:mb-4 [&_li]:mb-2 [&_a]:text-[#F6A800] [&_a]:hover:underline [&_strong]:font-semibold"
+              dangerouslySetInnerHTML={{ __html: category.contentTop }}
+            />
+          </div>
+        </section>
+      )}
 
       {/* Панель управления */}
       <section className="bg-white border-b py-6">
@@ -345,6 +362,22 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
           )}
         </div>
       </section>
+
+      {/* ContentBottom - контент снизу страницы категории */}
+      {category.contentBottom && category.contentBottom.trim() !== '' && (
+        <section className="bg-white py-8 border-t">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="max-w-none [&_p]:mb-4 [&_p]:text-gray-700 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#00205B] [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#00205B] [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:mb-4 [&_li]:mb-2 [&_a]:text-[#F6A800] [&_a]:hover:underline [&_strong]:font-semibold"
+              dangerouslySetInnerHTML={{ __html: category.contentBottom }}
+            />
+          </div>
+        </section>
+      )}
     </div>
   );
 };

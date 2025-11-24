@@ -19,7 +19,18 @@ export default function EditMenuItemPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [menuItems, setMenuItems] = useState<any[]>([]);
+  interface MenuItemData {
+    id: number;
+    title: string;
+    href: string;
+    parentId: number | null;
+    isActive: boolean;
+    sortOrder: number;
+    target: string;
+    icon: string | null;
+  }
+  
+  const [menuItems, setMenuItems] = useState<MenuItemData[]>([]);
   const [title, setTitle] = useState('');
   const [href, setHref] = useState('');
   const [parentId, setParentId] = useState<number | null>(null);
@@ -33,6 +44,7 @@ export default function EditMenuItemPage() {
       loadMenuItem();
       loadMenuItems();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuId, itemId]);
 
   const loadMenuItem = async () => {
@@ -43,7 +55,7 @@ export default function EditMenuItemPage() {
       const result = await response.json();
 
       if (result.success) {
-        const item = result.data.find((i: any) => i.id === itemId);
+        const item = result.data.find((i: MenuItemData) => i.id === itemId);
         if (item) {
           setTitle(item.title);
           setHref(item.href);

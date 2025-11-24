@@ -25,7 +25,7 @@ const Header = () => {
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { regionalData, loading: regionLoading } = useRegion();
-  const { getMenuByName, loading: menusLoading } = useMenus();
+  const { getMenuByName } = useMenus();
 
   useEffect(() => {
     const handleScroll = () => {

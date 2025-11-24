@@ -25,6 +25,7 @@ export default function EditMenuPage() {
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuId]);
 
   const loadMenu = async () => {

@@ -24,6 +24,8 @@ export default function EditCategoryPage() {
   const [h1, setH1] = useState('');
   const [robotsMeta, setRobotsMeta] = useState('index, follow');
   const [schemaMarkup, setSchemaMarkup] = useState('');
+  const [contentTop, setContentTop] = useState('');
+  const [contentBottom, setContentBottom] = useState('');
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function EditCategoryPage() {
         const j = await res.json();
         if (j.success && j.data) {
           const c = j.data as {
-            name: string; slug: string; description?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; robotsMeta?: string; schemaMarkup?: string; isActive: boolean;
+            name: string; slug: string; description?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; robotsMeta?: string; schemaMarkup?: string; contentTop?: string | null; contentBottom?: string | null; isActive: boolean;
           };
           setName(c.name);
           setSlug(c.slug);
@@ -45,6 +47,8 @@ export default function EditCategoryPage() {
           setH1(c.h1 ?? '');
           setRobotsMeta(c.robotsMeta ?? 'index, follow');
           setSchemaMarkup(c.schemaMarkup ?? '');
+          setContentTop(c.contentTop ?? '');
+          setContentBottom(c.contentBottom ?? '');
           setIsActive(Boolean(c.isActive));
         } else {
           setError('Категория не найдена');
@@ -70,6 +74,8 @@ export default function EditCategoryPage() {
       h1: h1 || undefined,
       robotsMeta: robotsMeta || undefined,
       schemaMarkup: schemaMarkup || undefined,
+      contentTop: contentTop || null,
+      contentBottom: contentBottom || null,
       isActive,
     };
     const res = await fetch(`/api/admin/categories/${categoryId}`, {
@@ -149,6 +155,28 @@ export default function EditCategoryPage() {
             placeholder='{"@context": "https://schema.org", "@type": "Product", ...}'
           />
           <p className="mt-1 text-xs text-gray-500">JSON-LD разметка для структурированных данных (опционально)</p>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Контент сверху страницы (HTML)</label>
+          <textarea 
+            className="mt-1 w-full border rounded-lg px-3 py-2 font-mono text-sm" 
+            value={contentTop} 
+            onChange={(e) => setContentTop(e.target.value)} 
+            rows={8}
+            placeholder='<p>Дополнительный контент, который будет отображаться вверху страницы категории</p>'
+          />
+          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения вверху страницы категории (опционально)</p>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Контент снизу страницы (HTML)</label>
+          <textarea 
+            className="mt-1 w-full border rounded-lg px-3 py-2 font-mono text-sm" 
+            value={contentBottom} 
+            onChange={(e) => setContentBottom(e.target.value)} 
+            rows={8}
+            placeholder='<p>Дополнительный контент, который будет отображаться внизу страницы категории</p>'
+          />
+          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения внизу страницы категории (опционально)</p>
         </div>
         <label className="inline-flex items-center gap-2 text-sm text-gray-600">
           <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} /> Активна

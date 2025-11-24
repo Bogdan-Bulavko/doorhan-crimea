@@ -112,6 +112,12 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
 
   // Получаем категории из БД
   const { categories, loading: categoriesLoading } = useMainCategories();
+  
+  // Получаем информацию о выбранной категории для отображения контента
+  const selectedCategoryData = useMemo(() => {
+    if (selectedCategory === 'all' || !isInitialized) return null;
+    return categories.find(cat => cat.slug === selectedCategory);
+  }, [categories, selectedCategory, isInitialized]);
 
   // Получаем общее количество всех товаров
   const { totalCount: allProductsTotalCount } = useAllProducts({});
@@ -232,12 +238,23 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-[#00205B] font-montserrat mb-4">
-            Каталог товаров
+            {selectedCategoryData?.name || 'Каталог товаров'}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Выберите подходящие ворота, роллеты и автоматику DoorHan
+            {selectedCategoryData?.description || 'Выберите подходящие ворота, роллеты и автоматику DoorHan'}
           </p>
         </motion.div>
+
+        {/* ContentTop - контент сверху страницы категории */}
+        {selectedCategoryData?.contentTop && selectedCategoryData.contentTop.trim() !== '' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="mb-8 max-w-none [&_p]:mb-4 [&_p]:text-gray-700 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#00205B] [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#00205B] [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:mb-4 [&_li]:mb-2 [&_a]:text-[#F6A800] [&_a]:hover:underline [&_strong]:font-semibold"
+            dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentTop }}
+          />
+        )}
 
         {/* Фильтры и поиск */}
         <motion.div
@@ -312,6 +329,18 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
           loading={productsLoading}
           error={productsError}
         />
+
+        {/* ContentBottom - контент снизу страницы категории */}
+        {selectedCategoryData?.contentBottom && selectedCategoryData.contentBottom.trim() !== '' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mt-12 mb-8 max-w-none [&_p]:mb-4 [&_p]:text-gray-700 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#00205B] [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#00205B] [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:mb-4 [&_li]:mb-2 [&_a]:text-[#F6A800] [&_a]:hover:underline [&_strong]:font-semibold"
+            dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentBottom }}
+          />
+        )}
 
         {/* Кнопка "Загрузить еще" */}
         {pagination && pagination.pages > currentPage && (

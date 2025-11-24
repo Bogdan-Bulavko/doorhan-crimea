@@ -1,17 +1,47 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Список всех поддерживаемых регионов
+const SUPPORTED_REGIONS = [
+  'simferopol',
+  'kerch',
+  'evpatoria',
+  'yalta',
+  'feodosia',
+  'sevastopol',
+  'alushta',
+  'dzhankoy',
+  'bakhchisaray',
+  'krasnoperekopsk',
+  'saki',
+  'armyansk',
+  'sudak',
+  'belogorsk',
+  'inkerman',
+  'balaklava',
+  'shchelkino',
+  'stary-krym',
+  'alupka',
+  'gurzuf',
+  'simeiz',
+  'foros',
+  'koktebel',
+  'livadia',
+  'massandra',
+  'nikita',
+  'gaspra',
+  'miskhor',
+  'partenit',
+  'kacha',
+];
+
 export function middleware(request: NextRequest) {
   const host = request.headers.get('host') || '';
 
   const subdomain = host.split('.')[0];
 
-  let region = 'default';
-
-  if (subdomain === 'simferopol') region = 'simferopol';
-  else if (subdomain === 'yalta') region = 'yalta';
-  else if (subdomain === 'alushta') region = 'alushta';
-  else if (subdomain === 'sevastopol') region = 'sevastopol';
+  // Проверяем, является ли поддомен одним из поддерживаемых регионов
+  const region = SUPPORTED_REGIONS.includes(subdomain) ? subdomain : 'default';
 
   // Прокидываем регион во входящие заголовки запроса, чтобы headers() в app мог его прочитать
   const requestHeaders = new Headers(request.headers);

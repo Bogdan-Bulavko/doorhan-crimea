@@ -16,19 +16,89 @@ const HeroSection = () => {
   ];
 
   const getCityName = () => {
+    // Используем название города из БД, если доступно
     if (regionalData?.officeName) {
+      // Маппинг для склонения названий городов в предложный падеж
+      const cityName = regionalData.officeName.toLowerCase();
+      const declensionMap: Record<string, string> = {
+        'симферополь': 'Симферополе',
+        'керчь': 'Керчи',
+        'евпатория': 'Евпатории',
+        'ялта': 'Ялте',
+        'феодосия': 'Феодосии',
+        'севастополь': 'Севастополе',
+        'алушта': 'Алуште',
+        'джанкой': 'Джанкое',
+        'бахчисарай': 'Бахчисарае',
+        'красноперекопск': 'Красноперекопске',
+        'саки': 'Саках',
+        'армянск': 'Армянске',
+        'судак': 'Судаке',
+        'белогорск': 'Белогорске',
+        'инкерман': 'Инкермане',
+        'балаклава': 'Балаклаве',
+        'щёлкино': 'Щёлкино',
+        'старый крым': 'Старом Крыму',
+        'алупка': 'Алупке',
+        'гурзуф': 'Гурзуфе',
+        'симеиз': 'Симеизе',
+        'форос': 'Форосе',
+        'коктебель': 'Коктебеле',
+        'ливадия': 'Ливадии',
+        'массандра': 'Массандре',
+        'никита': 'Никите',
+        'гаспра': 'Гаспре',
+        'мисхор': 'Мисхоре',
+        'партенит': 'Партените',
+        'кача': 'Каче',
+      };
+      
+      // Пробуем найти склонение
+      const declension = declensionMap[cityName];
+      if (declension) {
+        return declension;
+      }
+      
+      // Если склонение не найдено, возвращаем оригинальное название
       return regionalData.officeName;
     }
     
+    // Fallback на маппинг по региону
     const cityMap: Record<string, string> = {
-      default: 'Крыму',
+      default: 'Симферополе',
       simferopol: 'Симферополе',
+      kerch: 'Керчи',
+      evpatoria: 'Евпатории',
+      yalta: 'Ялте',
+      feodosia: 'Феодосии',
       sevastopol: 'Севастополе',
       alushta: 'Алуште',
-      yalta: 'Ялте',
+      dzhankoy: 'Джанкое',
+      bakhchisaray: 'Бахчисарае',
+      krasnoperekopsk: 'Красноперекопске',
+      saki: 'Саках',
+      armyansk: 'Армянске',
+      sudak: 'Судаке',
+      belogorsk: 'Белогорске',
+      inkerman: 'Инкермане',
+      balaklava: 'Балаклаве',
+      'shchelkino': 'Щёлкино',
+      'stary-krym': 'Старом Крыму',
+      alupka: 'Алупке',
+      gurzuf: 'Гурзуфе',
+      simeiz: 'Симеизе',
+      foros: 'Форосе',
+      koktebel: 'Коктебеле',
+      livadia: 'Ливадии',
+      massandra: 'Массандре',
+      nikita: 'Никите',
+      gaspra: 'Гаспре',
+      miskhor: 'Мисхоре',
+      partenit: 'Партените',
+      kacha: 'Каче',
     };
     
-    return cityMap[currentRegion] || 'Крыму';
+    return cityMap[currentRegion] || 'Симферополе';
   };
 
   const containerVariants = {
@@ -115,9 +185,7 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            {regionalData?.officeName 
-              ? `${regionalData.officeName}. Официальный представитель DoorHan в Крыму. Качественные ворота, роллеты и автоматические системы с гарантией качества.`
-              : 'Официальный представитель DoorHan в Крыму. Качественные ворота, роллеты и автоматические системы с гарантией качества.'}
+            {`Мы официальный представитель DoorHan в ${getCityName()}. Качественные ворота, роллеты и автоматические системы с гарантией качества.`}
           </motion.p>
 
           {/* CTA кнопки */}

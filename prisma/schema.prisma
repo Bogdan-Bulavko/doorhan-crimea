@@ -69,6 +69,8 @@ model Category {
   h1             String?
   robotsMeta     String?    @default("index, follow")
   schemaMarkup   String?
+  contentTop     String?    // HTML контент для отображения вверху страницы категории
+  contentBottom  String?    // HTML контент для отображения внизу страницы категории
   products       Product[]
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
@@ -288,4 +290,26 @@ model MenuItem {
   icon      String? // Название иконки (опционально)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+}
+
+model Article {
+  id             Int      @id @default(autoincrement())
+  title          String
+  slug           String   @unique
+  content        String
+  excerpt        String?  // Краткое описание статьи
+  featuredImageUrl String? // Изображение статьи
+  author         String?  // Автор статьи
+  tags           String?  // Теги через запятую или JSON
+  seoTitle       String?
+  seoDescription String?
+  canonicalUrl   String?
+  h1             String?
+  robotsMeta     String?  @default("index, follow")
+  schemaMarkup   String?
+  isActive       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  publishedAt    DateTime? // Дата публикации
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

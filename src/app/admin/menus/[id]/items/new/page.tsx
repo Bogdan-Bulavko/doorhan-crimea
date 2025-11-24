@@ -15,7 +15,18 @@ export default function NewMenuItemPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [menuItems, setMenuItems] = useState<any[]>([]);
+  interface MenuItemData {
+    id: number;
+    title: string;
+    href: string;
+    parentId: number | null;
+    isActive: boolean;
+    sortOrder: number;
+    target: string;
+    icon: string | null;
+  }
+  
+  const [menuItems, setMenuItems] = useState<MenuItemData[]>([]);
   const [title, setTitle] = useState('');
   const [href, setHref] = useState('');
   const [parentId, setParentId] = useState<number | null>(null);
@@ -30,6 +41,7 @@ export default function NewMenuItemPage() {
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuId]);
 
   const loadMenuItems = async () => {

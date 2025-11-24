@@ -112,6 +112,8 @@ interface PrismaCategory {
   seoDescription?: string | null;
   canonicalUrl?: string | null;
   h1?: string | null;
+  contentTop?: string | null;
+  contentBottom?: string | null;
   slug: string;
   isActive: boolean;
   products?: PrismaProduct[];
@@ -126,6 +128,8 @@ export function serializeCategory(category: PrismaCategory) {
     seoDescription: category.seoDescription || undefined,
     canonicalUrl: category.canonicalUrl ?? undefined,
     h1: category.h1 ?? undefined,
+    contentTop: category.contentTop || undefined,
+    contentBottom: category.contentBottom || undefined,
     // Сериализуем продукты в категории, если они есть
     products: category.products
       ? serializeProducts(category.products)

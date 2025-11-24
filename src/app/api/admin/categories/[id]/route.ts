@@ -94,7 +94,7 @@ export async function PUT(
     }
 
     const body = await req.json();
-    const { name, slug, description, seoTitle, seoDescription, canonicalUrl, h1, robotsMeta, schemaMarkup, isActive } =
+    const { name, slug, description, seoTitle, seoDescription, canonicalUrl, h1, robotsMeta, schemaMarkup, isActive, contentTop, contentBottom } =
       body;
 
     // Проверяем, существует ли категория
@@ -142,6 +142,8 @@ export async function PUT(
         h1: h1 || null,
         robotsMeta: robotsMeta || null,
         schemaMarkup: schemaMarkup || null,
+        contentTop: contentTop || null,
+        contentBottom: contentBottom || null,
         isActive: Boolean(isActive),
       },
     });

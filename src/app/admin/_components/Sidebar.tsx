@@ -20,6 +20,7 @@ import {
   X,
   File,
   List,
+  BookOpen,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -50,6 +51,11 @@ const menuItems: MenuItem[] = [
     label: 'Страницы',
     href: '/admin/pages',
     icon: <File className="w-5 h-5" />,
+  },
+  {
+    label: 'Статьи',
+    href: '/admin/articles',
+    icon: <BookOpen className="w-5 h-5" />,
   },
   {
     label: 'Заказы',

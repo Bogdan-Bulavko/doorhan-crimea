@@ -28,16 +28,25 @@ export function useMenus() {
     const fetchMenus = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await fetch('/api/menus', {
-          next: { revalidate: 300 }, // 5 минут для Next.js кэша
-          cache: 'force-cache',
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          cache: 'no-store', // Не кэшируем на клиенте, используем серверный кэш
         });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const result = await response.json();
         
         if (result.success) {
-          setMenus(result.data);
+          setMenus(result.data || []);
         } else {
-          setError('Ошибка при загрузке меню');
+          setError(result.message || 'Ошибка при загрузке меню');
         }
       } catch (err) {
         console.error('Error loading menus:', err);

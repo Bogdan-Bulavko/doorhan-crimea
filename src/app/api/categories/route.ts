@@ -51,8 +51,33 @@ export async function GET(req: NextRequest) {
           where: { categoryId: category.id },
         });
         return {
-          ...category,
+          id: category.id,
+          name: category.name,
+          description: category.description,
+          imageUrl: category.imageUrl,
+          iconName: category.iconName,
+          color: category.color,
+          hoverColor: category.hoverColor,
+          slug: category.slug,
+          parentId: category.parentId,
+          isActive: category.isActive,
+          sortOrder: category.sortOrder,
+          seoTitle: category.seoTitle,
+          seoDescription: category.seoDescription,
+          canonicalUrl: category.canonicalUrl,
+          h1: category.h1,
+          robotsMeta: category.robotsMeta,
+          schemaMarkup: category.schemaMarkup,
+          contentTop: category.contentTop,
+          contentBottom: category.contentBottom,
           productCount,
+          createdAt: category.createdAt.toISOString(),
+          updatedAt: category.updatedAt.toISOString(),
+          children: category.children?.map(child => ({
+            ...child,
+            createdAt: child.createdAt.toISOString(),
+            updatedAt: child.updatedAt.toISOString(),
+          })) || [],
         };
       })
     );

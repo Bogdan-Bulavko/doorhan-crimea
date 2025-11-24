@@ -15,6 +15,8 @@ export default function NewCategoryPage() {
   const [canonicalUrl, setCanonicalUrl] = useState('');
   const [h1, setH1] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [contentTop, setContentTop] = useState('');
+  const [contentBottom, setContentBottom] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const submit = async () => {
@@ -28,6 +30,8 @@ export default function NewCategoryPage() {
       canonicalUrl: canonicalUrl || undefined,
       h1: h1 || undefined,
       imageUrl: imageUrl || undefined,
+      contentTop: contentTop || null,
+      contentBottom: contentBottom || null,
     };
     const res = await fetch('/api/admin/categories', {
       method: 'POST',
@@ -104,6 +108,28 @@ export default function NewCategoryPage() {
               </div>
             )}
           </div>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Контент сверху страницы (HTML)</label>
+          <textarea 
+            className="mt-1 w-full border rounded-lg px-3 py-2 font-mono text-sm" 
+            value={contentTop} 
+            onChange={(e) => setContentTop(e.target.value)} 
+            rows={8}
+            placeholder='<p>Дополнительный контент, который будет отображаться вверху страницы категории</p>'
+          />
+          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения вверху страницы категории (опционально)</p>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Контент снизу страницы (HTML)</label>
+          <textarea 
+            className="mt-1 w-full border rounded-lg px-3 py-2 font-mono text-sm" 
+            value={contentBottom} 
+            onChange={(e) => setContentBottom(e.target.value)} 
+            rows={8}
+            placeholder='<p>Дополнительный контент, который будет отображаться внизу страницы категории</p>'
+          />
+          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения внизу страницы категории (опционально)</p>
         </div>
       </div>
       <div className="flex gap-2">

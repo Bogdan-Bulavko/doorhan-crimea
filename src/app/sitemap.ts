@@ -2,6 +2,40 @@ import type { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 import { headers } from 'next/headers';
 
+// Список всех поддерживаемых регионов
+const SUPPORTED_REGIONS = [
+  'simferopol',
+  'kerch',
+  'evpatoria',
+  'yalta',
+  'feodosia',
+  'sevastopol',
+  'alushta',
+  'dzhankoy',
+  'bakhchisaray',
+  'krasnoperekopsk',
+  'saki',
+  'armyansk',
+  'sudak',
+  'belogorsk',
+  'inkerman',
+  'balaklava',
+  'shchelkino',
+  'stary-krym',
+  'alupka',
+  'gurzuf',
+  'simeiz',
+  'foros',
+  'koktebel',
+  'livadia',
+  'massandra',
+  'nikita',
+  'gaspra',
+  'miskhor',
+  'partenit',
+  'kacha',
+];
+
 // Делаем динамическим для поддержки разных доменов
 export const dynamic = 'force-dynamic';
 
@@ -11,12 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   // Определяем регион из поддомена
   const subdomain = host.split('.')[0];
-  let region = 'default';
-  
-  if (subdomain === 'simferopol') region = 'simferopol';
-  else if (subdomain === 'yalta') region = 'yalta';
-  else if (subdomain === 'alushta') region = 'alushta';
-  else if (subdomain === 'sevastopol') region = 'sevastopol';
+  const region = SUPPORTED_REGIONS.includes(subdomain) ? subdomain : 'default';
   
   // Получаем базовый домен из env
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'zavod-doorhan.ru';
@@ -62,6 +91,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { slug: true, updatedAt: true },
   });
 
+  // Получаем все активные статьи
+  const articles = await db.article.findMany({
+    where: { isActive: true },
+    select: { slug: true, updatedAt: true, publishedAt: true },
+  });
+
   const staticPages = [
     {
       url: baseUrl,
@@ -80,6 +115,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/articles`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
     },
   ];
 
@@ -107,5 +148,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticPages, ...categoryPages, ...productPages, ...infoPages];
+  // Добавляем статьи
+  const articlePages = articles.map((article) => ({
+    url: `${baseUrl}/articles/${article.slug}`,
+    lastModified: article.updatedAt,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...categoryPages, ...productPages, ...infoPages, ...articlePages];
 }

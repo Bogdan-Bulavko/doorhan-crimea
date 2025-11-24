@@ -46,7 +46,29 @@ scripts/
 # database exports (excluded from git)
 database-export.json
 database-dump.sql
+*.db
+old_dev.db
+prisma/*.db
+prisma/old_dev.db
 
+# documentation and reports (excluded from git)
+*.md
+!README.md
+
+# local development files
+hosts-entries.txt
 .env
 .env.local
 dev.db
+
+# temporary files
+*.log
+*.tmp
+*.temp
+
+# migration script (internal tool)
+migrate.js
+migrate.log
+migrate-error.log
+MIGRATE_README.md
+migrate.config.example.js
