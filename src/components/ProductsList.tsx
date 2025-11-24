@@ -7,6 +7,7 @@ import { ArrowLeft, Search } from 'lucide-react';
 
 import BreadCrumbs from './BreadCrumbs';
 import ProductGrid from './ProductGrid';
+import CallbackModal from './CallbackModal';
 import { useAllProducts } from '@/hooks/useAllProducts';
 import { useMainCategories } from '@/hooks/useAllCategories';
 
@@ -68,6 +69,7 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearch);
   const [sortBy, setSortBy] = useState('name');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [allDisplayedProducts, setAllDisplayedProducts] = useState<Product[]>(
     []
@@ -336,13 +338,37 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
           </motion.div>
         )}
 
-        {/* CTA секция */}
+        {/* Блок консультации */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           className="text-center mt-16"
+        >
+          <div className="bg-gradient-to-br from-[#F6A800] to-[#ffb700] rounded-3xl p-8 md:p-12 text-white shadow-xl">
+            <h3 className="text-2xl md:text-3xl font-bold font-montserrat mb-4">
+              Нужна консультация?
+            </h3>
+            <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+              Наши специалисты помогут подобрать оптимальное решение для вашего объекта
+            </p>
+            <button
+              onClick={() => setIsCallbackModalOpen(true)}
+              className="bg-[#00205B] hover:bg-[#00153E] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105 mx-auto"
+            >
+              <span>Получить консультацию</span>
+            </button>
+          </div>
+        </motion.div>
+
+        {/* CTA секция */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center mt-8"
         >
           <div className="bg-gradient-to-r from-[#00205B] to-[#00153E] rounded-3xl p-8 md:p-16 text-white">
             <h3 className="text-2xl md:text-3xl font-bold font-montserrat mb-4">
@@ -369,6 +395,12 @@ const ProductsList = ({ initialSearch = '' }: ProductsListProps) => {
             </div>
           </div>
         </motion.div>
+
+        {/* Модальное окно заказа звонка */}
+        <CallbackModal
+          isOpen={isCallbackModalOpen}
+          onClose={() => setIsCallbackModalOpen(false)}
+        />
       </div>
     </section>
   );

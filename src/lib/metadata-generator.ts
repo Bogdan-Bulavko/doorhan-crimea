@@ -6,6 +6,76 @@
 // Кэш для склонений (улучшение #1: кэширование)
 const declensionCache = new Map<string, string>();
 
+// Кэш для метатегов товаров (улучшение #5: кэширование метатегов)
+interface ProductMetadataCacheKey {
+  productName: string;
+  price: number | null;
+  region: string;
+  companyName: string;
+  currency: string;
+}
+
+interface CategoryMetadataCacheKey {
+  categoryName: string;
+  minPrice: number | null;
+  region: string;
+  companyName: string;
+  currency: string;
+}
+
+interface MetadataCacheValue {
+  title: string;
+  description: string;
+  timestamp: number;
+}
+
+const productMetadataCache = new Map<string, MetadataCacheValue>();
+const categoryMetadataCache = new Map<string, MetadataCacheValue>();
+
+// Время жизни кэша: 1 час (3600000 мс)
+const CACHE_TTL = 60 * 60 * 1000;
+
+/**
+ * Генерирует ключ кэша для метатегов товара
+ */
+function getProductMetadataCacheKey(key: ProductMetadataCacheKey): string {
+  return `product:${key.productName}:${key.price}:${key.region}:${key.companyName}:${key.currency}`;
+}
+
+/**
+ * Генерирует ключ кэша для метатегов категории
+ */
+function getCategoryMetadataCacheKey(key: CategoryMetadataCacheKey): string {
+  return `category:${key.categoryName}:${key.minPrice}:${key.region}:${key.companyName}:${key.currency}`;
+}
+
+/**
+ * Проверяет, действителен ли кэш
+ */
+function isCacheValid(cacheValue: MetadataCacheValue): boolean {
+  return Date.now() - cacheValue.timestamp < CACHE_TTL;
+}
+
+/**
+ * Очищает устаревшие записи из кэша
+ */
+function cleanExpiredCache<T extends Map<string, MetadataCacheValue>>(cache: T): void {
+  const now = Date.now();
+  for (const [key, value] of cache.entries()) {
+    if (now - value.timestamp >= CACHE_TTL) {
+      cache.delete(key);
+    }
+  }
+}
+
+// Периодическая очистка кэша (каждые 30 минут)
+if (typeof setInterval !== 'undefined') {
+  setInterval(() => {
+    cleanExpiredCache(productMetadataCache);
+    cleanExpiredCache(categoryMetadataCache);
+  }, 30 * 60 * 1000);
+}
+
 // Словарь городов в дательном падеже
 const cityDativeCase: Record<string, string> = {
   default: 'Крыму',
@@ -282,6 +352,7 @@ export function getMinPrice(
 
 /**
  * Основная функция генерации метатегов для товара
+ * Улучшение #5: добавлено кэширование результатов
  */
 export function generateProductMetadata(
   productName: string,
@@ -297,6 +368,23 @@ export function generateProductMetadata(
   // Определяем минимальную цену (учитывая варианты)
   const minPrice = getMinPrice(price, variantPrices);
 
+  // Проверяем кэш
+  const cacheKey = getProductMetadataCacheKey({
+    productName,
+    price: minPrice,
+    region,
+    companyName,
+    currency,
+  });
+
+  const cached = productMetadataCache.get(cacheKey);
+  if (cached && isCacheValid(cached)) {
+    return {
+      title: cached.title,
+      description: cached.description,
+    };
+  }
+
   // Генерируем title
   const title = generateProductTitle(productName, region, companyName);
 
@@ -307,7 +395,16 @@ export function generateProductMetadata(
       : generateProductDescriptionWithoutPrice(productName, region);
 
   // Оптимизируем для SEO
-  return optimizeMetaTags(title, description);
+  const result = optimizeMetaTags(title, description);
+
+  // Сохраняем в кэш
+  productMetadataCache.set(cacheKey, {
+    title: result.title,
+    description: result.description,
+    timestamp: Date.now(),
+  });
+
+  return result;
 }
 
 /**
@@ -407,6 +504,7 @@ export function getMinPriceFromProducts(
 
 /**
  * Основная функция генерации метатегов для категории
+ * Улучшение #5: добавлено кэширование результатов
  */
 export function generateCategoryMetadata(
   categoryName: string,
@@ -421,6 +519,23 @@ export function generateCategoryMetadata(
   // Определяем минимальную цену среди товаров категории
   const minPrice = getMinPriceFromProducts(products);
 
+  // Проверяем кэш
+  const cacheKey = getCategoryMetadataCacheKey({
+    categoryName,
+    minPrice,
+    region,
+    companyName,
+    currency,
+  });
+
+  const cached = categoryMetadataCache.get(cacheKey);
+  if (cached && isCacheValid(cached)) {
+    return {
+      title: cached.title,
+      description: cached.description,
+    };
+  }
+
   // Генерируем title
   const title = generateCategoryTitle(categoryName, region, companyName);
 
@@ -431,6 +546,15 @@ export function generateCategoryMetadata(
       : generateCategoryDescriptionWithoutPrice(categoryName, region);
 
   // Оптимизируем для SEO
-  return optimizeMetaTags(title, description);
+  const result = optimizeMetaTags(title, description);
+
+  // Сохраняем в кэш
+  categoryMetadataCache.set(cacheKey, {
+    title: result.title,
+    description: result.description,
+    timestamp: Date.now(),
+  });
+
+  return result;
 }
 
