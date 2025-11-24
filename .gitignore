@@ -66,8 +66,7 @@ dev.db
 *.tmp
 *.temp
 
-# migration script (internal tool)
-migrate.js
+# migration script logs
 migrate.log
 migrate-error.log
 MIGRATE_README.md
