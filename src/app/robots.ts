@@ -1,6 +1,40 @@
 import type { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
 
+// Список всех поддерживаемых регионов
+const SUPPORTED_REGIONS = [
+  'simferopol',
+  'kerch',
+  'evpatoria',
+  'yalta',
+  'feodosia',
+  'sevastopol',
+  'alushta',
+  'dzhankoy',
+  'bakhchisaray',
+  'krasnoperekopsk',
+  'saki',
+  'armyansk',
+  'sudak',
+  'belogorsk',
+  'inkerman',
+  'balaklava',
+  'shchelkino',
+  'stary-krym',
+  'alupka',
+  'gurzuf',
+  'simeiz',
+  'foros',
+  'koktebel',
+  'livadia',
+  'massandra',
+  'nikita',
+  'gaspra',
+  'miskhor',
+  'partenit',
+  'kacha',
+];
+
 export const dynamic = 'force-dynamic';
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
@@ -9,12 +43,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   
   // Определяем регион из поддомена
   const subdomain = host.split('.')[0];
-  let region = 'default';
-  
-  if (subdomain === 'simferopol') region = 'simferopol';
-  else if (subdomain === 'yalta') region = 'yalta';
-  else if (subdomain === 'alushta') region = 'alushta';
-  else if (subdomain === 'sevastopol') region = 'sevastopol';
+  const region = SUPPORTED_REGIONS.includes(subdomain) ? subdomain : 'default';
   
   // Получаем базовый домен из env
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'zavod-doorhan.ru';
