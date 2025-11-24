@@ -17,6 +17,7 @@ import CallbackModal from './CallbackModal';
 import SearchModal from './SearchModal';
 import { useRegion } from '@/contexts/RegionContext';
 import RegionSelector from './RegionSelector';
+import { useMenus } from '@/hooks/useMenus';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,6 +25,7 @@ const Header = () => {
   const [isCallbackModalOpen, setIsCallbackModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { regionalData, loading: regionLoading } = useRegion();
+  const { getMenuByName, loading: menusLoading } = useMenus();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +40,13 @@ const Header = () => {
     }
   }, []);
 
-  const menuItems = [
+  // Загружаем меню из БД
+  const headerMenu = getMenuByName('header');
+  const menuItems = headerMenu?.items.map(item => ({
+    name: item.title,
+    href: item.href,
+  })) || [
+    // Fallback на статические данные
     { name: 'Главная', href: '/' },
     { name: 'Категории', href: '/categories' },
     { name: 'О компании', href: '/#about' },

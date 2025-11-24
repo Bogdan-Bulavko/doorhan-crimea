@@ -263,3 +263,29 @@ model Page {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model Menu {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique // 'header' или 'footer'
+  description String?
+  items       MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model MenuItem {
+  id        Int        @id @default(autoincrement())
+  menuId    Int
+  menu      Menu       @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  title     String // Название пункта меню
+  href      String // URL или якорь
+  parentId  Int? // Для вложенных меню (секции в футере)
+  parent    MenuItem?  @relation("MenuItemChildren", fields: [parentId], references: [id])
+  children  MenuItem[] @relation("MenuItemChildren")
+  isActive  Boolean    @default(true)
+  sortOrder Int        @default(0)
+  target    String?    @default("_self") // _self, _blank, _parent, _top
+  icon      String? // Название иконки (опционально)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}

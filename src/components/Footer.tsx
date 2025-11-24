@@ -15,9 +15,11 @@ import {
 import { motion } from 'framer-motion';
 import RegionSelector from './RegionSelector';
 import { useRegion } from '@/contexts/RegionContext';
+import { useMenus } from '@/hooks/useMenus';
 
 const Footer = () => {
   const { regionalData, loading: regionLoading } = useRegion();
+  const { getMenuByName } = useMenus();
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -25,7 +27,16 @@ const Footer = () => {
     }
   };
 
-  const footerSections = [
+  // Загружаем меню из БД
+  const footerMenu = getMenuByName('footer');
+  const footerSections = footerMenu?.items.map(section => ({
+    title: section.title,
+    links: section.children?.map(child => ({
+      name: child.title,
+      href: child.href,
+    })) || [],
+  })) || [
+    // Fallback на статические данные
     {
       title: 'Продукция',
       links: [
@@ -91,8 +102,8 @@ const Footer = () => {
   return (
     <footer className="bg-[#00205B] text-white">
       {/* Основной контент футера */}
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 max-w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
           {/* Логотип и описание */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center space-x-3 mb-6">
@@ -156,8 +167,8 @@ const Footer = () => {
 
         {/* Контактная информация */}
         {!regionLoading && contactInfo.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-white/20">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {contactInfo.map((contact, index) => (
               <motion.div
                 key={index}
@@ -187,11 +198,17 @@ const Footer = () => {
       </div>
 
       {/* Региональные поддомены */}
-      <RegionSelector variant="footer" />
+      <div className="border-t border-white/20 py-6 sm:py-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="flex flex-col items-center justify-center max-w-md mx-auto">
+            <RegionSelector variant="footer" />
+          </div>
+        </div>
+      </div>
 
       {/* Нижняя полоса */}
-      <div className="bg-[#00153E] py-8">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <div className="bg-[#00153E] py-6 sm:py-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm text-gray-300 text-center md:text-left">
               © 2024 DoorHan Крым. Все права защищены.

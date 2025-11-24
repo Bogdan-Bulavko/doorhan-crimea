@@ -51,6 +51,8 @@ export default function EditProductPage() {
   const [seoDescription, setSeoDescription] = useState('');
   const [canonicalUrl, setCanonicalUrl] = useState('');
   const [h1, setH1] = useState('');
+  const [robotsMeta, setRobotsMeta] = useState('index, follow');
+  const [schemaMarkup, setSchemaMarkup] = useState('');
   const [specifications, setSpecifications] = useState<Specification[]>([]);
   const [images, setImages] = useState<ImageData[]>([]);
 
@@ -69,7 +71,7 @@ export default function EditProductPage() {
         if (prodJ.success && prodJ.data) {
           const p = prodJ.data as {
             name: string; slug: string; categoryId: number; price: number; currency: string;
-            title?: string; description?: string; shortDescription?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string;
+            title?: string; description?: string; shortDescription?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; robotsMeta?: string; schemaMarkup?: string;
             specifications?: Specification[];
             images?: Array<{ id: string; url: string; fileName: string; isMain: boolean; altText?: string; sortOrder?: number }>;
           };
@@ -85,6 +87,8 @@ export default function EditProductPage() {
           setSeoDescription(p.seoDescription ?? '');
           setCanonicalUrl(p.canonicalUrl ?? '');
           setH1(p.h1 ?? '');
+          setRobotsMeta(p.robotsMeta ?? 'index, follow');
+          setSchemaMarkup(p.schemaMarkup ?? '');
           setSpecifications(p.specifications || []);
           
           // Преобразуем изображения из базы данных в формат компонента
@@ -128,6 +132,8 @@ export default function EditProductPage() {
       seoDescription: seoDescription || undefined,
       canonicalUrl: canonicalUrl || undefined,
       h1: h1 || undefined,
+      robotsMeta: robotsMeta || undefined,
+      schemaMarkup: schemaMarkup || undefined,
       specifications: specifications.filter(spec => spec.name.trim() && spec.value.trim()),
       images: images,
     };

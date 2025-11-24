@@ -11,6 +11,7 @@
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:seed": "node prisma/seed.js",
+    "prisma:seed-menus": "node prisma/seed-menus.js",
     "prisma:studio": "prisma studio"
   },
   "prisma": {

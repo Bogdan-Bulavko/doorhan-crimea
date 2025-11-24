@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAlert } from '@/contexts/AlertContext';
+import { getAvailableVariables } from '@/lib/template-variables';
+import { Info } from 'lucide-react';
 
 interface SettingsData {
   // Основные контакты
@@ -289,7 +291,20 @@ export default function SettingsPage() {
 
         {/* Глобальные SEO настройки */}
         <div className="rounded-xl border bg-white p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Глобальные SEO настройки</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Глобальные SEO настройки</h2>
+            <div className="group relative">
+              <Info className="w-5 h-5 text-gray-400 cursor-help" />
+              <div className="absolute right-0 top-6 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <p className="font-semibold mb-2">Доступные переменные:</p>
+                {getAvailableVariables().map((v, i) => (
+                  <p key={i} className="mb-1">
+                    <code className="bg-gray-800 px-1 rounded">{v.variable}</code> - {v.description}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -300,8 +315,11 @@ export default function SettingsPage() {
                 value={settings.siteTitle}
                 onChange={(e) => handleChange('siteTitle', e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="DoorHan Крым - Ворота и автоматика"
+                placeholder="DoorHan [город] - Ворота и автоматика"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: DoorHan [город] - Ворота и автоматика
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -312,8 +330,11 @@ export default function SettingsPage() {
                 onChange={(e) => handleChange('siteDescription', e.target.value)}
                 rows={3}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Официальный представитель DoorHan в Крыму..."
+                placeholder="Официальный представитель DoorHan в [город_в_предложном]..."
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Официальный представитель DoorHan в [город_в_предложном]. Ворота, роллеты, автоматические системы.
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -344,7 +365,20 @@ export default function SettingsPage() {
 
         {/* SEO для страниц каталога */}
         <div className="rounded-xl border bg-white p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO для страниц каталога</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">SEO для страниц каталога</h2>
+            <div className="group relative">
+              <Info className="w-5 h-5 text-gray-400 cursor-help" />
+              <div className="absolute right-0 top-6 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <p className="font-semibold mb-2">Доступные переменные:</p>
+                {getAvailableVariables().map((v, i) => (
+                  <p key={i} className="mb-1">
+                    <code className="bg-gray-800 px-1 rounded">{v.variable}</code> - {v.description}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -355,8 +389,11 @@ export default function SettingsPage() {
                 value={settings.catalogTitle}
                 onChange={(e) => handleChange('catalogTitle', e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Каталог товаров DoorHan"
+                placeholder="Каталог товаров DoorHan в [город_в_предложном]"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Каталог товаров DoorHan в [город_в_предложном]
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -367,8 +404,11 @@ export default function SettingsPage() {
                 onChange={(e) => handleChange('catalogDescription', e.target.value)}
                 rows={3}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Полный каталог ворот, автоматики и аксессуаров DoorHan в Крыму"
+                placeholder="Полный каталог ворот, автоматики и аксессуаров DoorHan в [город_в_предложном]"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Полный каталог ворот, автоматики и аксессуаров DoorHan в [город_в_предложном]
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -387,7 +427,20 @@ export default function SettingsPage() {
 
         {/* SEO для страницы категорий */}
         <div className="rounded-xl border bg-white p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO для страницы категорий</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">SEO для страницы категорий</h2>
+            <div className="group relative">
+              <Info className="w-5 h-5 text-gray-400 cursor-help" />
+              <div className="absolute right-0 top-6 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <p className="font-semibold mb-2">Доступные переменные:</p>
+                {getAvailableVariables().map((v, i) => (
+                  <p key={i} className="mb-1">
+                    <code className="bg-gray-800 px-1 rounded">{v.variable}</code> - {v.description}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -398,8 +451,11 @@ export default function SettingsPage() {
                 value={settings.categoriesTitle}
                 onChange={(e) => handleChange('categoriesTitle', e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Категории товаров DoorHan"
+                placeholder="Категории товаров DoorHan в [город_в_предложном]"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Категории товаров DoorHan в [город_в_предложном]
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -410,8 +466,11 @@ export default function SettingsPage() {
                 onChange={(e) => handleChange('categoriesDescription', e.target.value)}
                 rows={3}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Выберите категорию товаров DoorHan: ворота, автоматика, рольставни"
+                placeholder="Выберите категорию товаров DoorHan в [город_в_предложном]: ворота, автоматика, рольставни"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Выберите категорию товаров DoorHan в [город_в_предложном]: ворота, автоматика, рольставни
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -430,7 +489,20 @@ export default function SettingsPage() {
 
         {/* SEO для домашней страницы */}
         <div className="rounded-xl border bg-white p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO для домашней страницы</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">SEO для домашней страницы</h2>
+            <div className="group relative">
+              <Info className="w-5 h-5 text-gray-400 cursor-help" />
+              <div className="absolute right-0 top-6 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <p className="font-semibold mb-2">Доступные переменные:</p>
+                {getAvailableVariables().map((v, i) => (
+                  <p key={i} className="mb-1">
+                    <code className="bg-gray-800 px-1 rounded">{v.variable}</code> - {v.description}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -441,8 +513,11 @@ export default function SettingsPage() {
                 value={settings.homeSeoTitle}
                 onChange={(e) => handleChange('homeSeoTitle', e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Заголовок для главной страницы"
+                placeholder="DoorHan [город] - Ворота и автоматика"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: DoorHan [город] - Ворота и автоматика
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -453,8 +528,11 @@ export default function SettingsPage() {
                 onChange={(e) => handleChange('homeSeoDescription', e.target.value)}
                 rows={3}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="Описание для главной страницы"
+                placeholder="Официальный представитель DoorHan в [город_в_предложном]. Ворота, роллеты, автоматические системы."
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Официальный представитель DoorHan в [город_в_предложном]. Ворота, роллеты, автоматические системы.
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -465,8 +543,11 @@ export default function SettingsPage() {
                 value={settings.homeH1}
                 onChange={(e) => handleChange('homeH1', e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent"
-                placeholder="H1 для главной страницы"
+                placeholder="Ворота и автоматика DoorHan в [город_в_предложном]"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Пример: Ворота и автоматика DoorHan в [город_в_предложном]
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

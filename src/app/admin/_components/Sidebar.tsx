@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   File,
+  List,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -74,6 +75,11 @@ const menuItems: MenuItem[] = [
         label: 'Регионы',
         href: '/admin/regions',
         icon: <MapPin className="w-4 h-4" />,
+      },
+      {
+        label: 'Меню',
+        href: '/admin/menus',
+        icon: <List className="w-4 h-4" />,
       },
     ],
   },

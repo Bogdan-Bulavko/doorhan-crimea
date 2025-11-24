@@ -50,6 +50,10 @@ const productUpdateSchema = z.object({
   isFeatured: z.boolean().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  canonicalUrl: z.string().optional(),
+  h1: z.string().optional(),
+  robotsMeta: z.string().optional(),
+  schemaMarkup: z.string().optional(),
   specifications: z.array(specificationSchema).optional(),
   images: z.array(imageSchema).optional(),
 });

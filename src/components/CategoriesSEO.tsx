@@ -5,21 +5,21 @@ import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useRegion } from '@/contexts/RegionContext';
 import { replaceCityVariables } from '@/lib/template-variables';
 
-export default function DynamicMetadata() {
+export default function CategoriesSEO() {
   const { settings } = useSiteSettings();
   const { currentRegion } = useRegion();
 
   useEffect(() => {
     if (settings && currentRegion) {
-      // Обновляем title с заменой переменных
-      if (settings.siteTitle) {
-        const title = replaceCityVariables(settings.siteTitle, currentRegion);
+      // Обновляем title для страницы категорий с заменой переменных
+      if (settings.categoriesTitle) {
+        const title = replaceCityVariables(settings.categoriesTitle, currentRegion);
         document.title = title;
       }
 
       // Обновляем meta description с заменой переменных
-      if (settings.siteDescription) {
-        const description = replaceCityVariables(settings.siteDescription, currentRegion);
+      if (settings.categoriesDescription) {
+        const description = replaceCityVariables(settings.categoriesDescription, currentRegion);
         const metaDescription = document.querySelector('meta[name="description"]');
         if (metaDescription) {
           metaDescription.setAttribute('content', description);
@@ -27,8 +27,8 @@ export default function DynamicMetadata() {
       }
 
       // Обновляем meta keywords с заменой переменных
-      if (settings.siteKeywords) {
-        const keywords = replaceCityVariables(settings.siteKeywords, currentRegion);
+      if (settings.categoriesKeywords) {
+        const keywords = replaceCityVariables(settings.categoriesKeywords, currentRegion);
         const metaKeywords = document.querySelector('meta[name="keywords"]');
         if (metaKeywords) {
           metaKeywords.setAttribute('content', keywords);
@@ -41,26 +41,19 @@ export default function DynamicMetadata() {
       }
 
       // Обновляем Open Graph с заменой переменных
-      if (settings.siteTitle) {
-        const ogTitle = replaceCityVariables(settings.siteTitle, currentRegion);
+      if (settings.categoriesTitle) {
+        const ogTitle = replaceCityVariables(settings.categoriesTitle, currentRegion);
         const ogTitleMeta = document.querySelector('meta[property="og:title"]');
         if (ogTitleMeta) {
           ogTitleMeta.setAttribute('content', ogTitle);
         }
       }
 
-      if (settings.siteDescription) {
-        const ogDescription = replaceCityVariables(settings.siteDescription, currentRegion);
+      if (settings.categoriesDescription) {
+        const ogDescription = replaceCityVariables(settings.categoriesDescription, currentRegion);
         const ogDescriptionMeta = document.querySelector('meta[property="og:description"]');
         if (ogDescriptionMeta) {
           ogDescriptionMeta.setAttribute('content', ogDescription);
-        }
-      }
-
-      if (settings.siteOgImage) {
-        const ogImage = document.querySelector('meta[property="og:image"]');
-        if (ogImage) {
-          ogImage.setAttribute('content', settings.siteOgImage);
         }
       }
     }
@@ -68,3 +61,4 @@ export default function DynamicMetadata() {
 
   return null;
 }
+
