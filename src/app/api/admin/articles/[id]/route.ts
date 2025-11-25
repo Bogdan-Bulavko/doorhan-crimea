@@ -142,6 +142,16 @@ export async function PUT(
       },
     });
 
+    // Инвалидируем кэш для страницы статьи
+    const { revalidatePath } = await import('next/cache');
+    revalidatePath(`/articles/${slug}`, 'page');
+    // Если slug изменился, инвалидируем и старый путь
+    if (slug !== existingArticle.slug) {
+      revalidatePath(`/articles/${existingArticle.slug}`, 'page');
+    }
+    // Инвалидируем список статей
+    revalidatePath('/articles', 'page');
+
     return NextResponse.json({
       success: true,
       message: 'Статья успешно обновлена',
@@ -196,6 +206,11 @@ export async function DELETE(
     await db.article.delete({
       where: { id: articleId },
     });
+
+    // Инвалидируем кэш
+    const { revalidatePath } = await import('next/cache');
+    revalidatePath(`/articles/${article.slug}`, 'page');
+    revalidatePath('/articles', 'page');
 
     return NextResponse.json({
       success: true,

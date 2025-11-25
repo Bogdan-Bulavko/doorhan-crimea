@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(
   req: NextRequest,
@@ -117,6 +118,15 @@ export async function PUT(
       },
     });
 
+    // Инвалидируем кэш для страницы
+    revalidatePath(`/pages/${slug}`, 'page');
+    // Если slug изменился, инвалидируем и старый путь
+    if (slug !== existingPage.slug) {
+      revalidatePath(`/pages/${existingPage.slug}`, 'page');
+    }
+    // Инвалидируем список страниц
+    revalidatePath('/pages', 'page');
+
     return NextResponse.json({
       success: true,
       message: 'Страница успешно обновлена',
@@ -171,6 +181,10 @@ export async function DELETE(
     await db.page.delete({
       where: { id: pageId },
     });
+
+    // Инвалидируем кэш
+    revalidatePath(`/pages/${page.slug}`, 'page');
+    revalidatePath('/pages', 'page');
 
     return NextResponse.json({
       success: true,

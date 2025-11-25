@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: idStr } = await params;
@@ -105,6 +106,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       },
     });
     
+    // Инвалидируем кэш для страницы товара
+    revalidatePath(`/${product.category.slug}/${product.slug}`, 'page');
+    // Инвалидируем страницу категории (список товаров)
+    revalidatePath(`/${product.category.slug}`, 'page');
+    
     return NextResponse.json({ success: true, data: product });
   } catch (error) {
     console.error('Product update error:', error);
@@ -124,6 +130,7 @@ export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id:
     const product = await db.product.findUnique({
       where: { id },
       include: {
+        category: true,
         images: true,
         specifications: true,
         colors: true,
@@ -144,10 +151,19 @@ export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id:
       orderItemsCount: product.orderItems.length,
     });
     
+    // Сохраняем данные для revalidation перед удалением
+    const categorySlug = product.category.slug;
+    const productSlug = product.slug;
+    
     // Удаляем товар (каскадное удаление обработает связанные записи)
     await db.product.delete({ where: { id } });
     
     console.log('✅ Товар успешно удален');
+    
+    // Инвалидируем кэш
+    revalidatePath(`/${categorySlug}/${productSlug}`, 'page');
+    revalidatePath(`/${categorySlug}`, 'page');
+    
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('❌ Ошибка при удалении товара:', error);

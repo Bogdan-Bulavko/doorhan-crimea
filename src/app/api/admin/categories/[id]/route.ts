@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(
   req: NextRequest,
@@ -148,6 +149,15 @@ export async function PUT(
       },
     });
 
+    // Инвалидируем кэш для страницы категории
+    revalidatePath(`/${slug}`, 'page');
+    // Если slug изменился, инвалидируем и старый путь
+    if (slug !== existingCategory.slug) {
+      revalidatePath(`/${existingCategory.slug}`, 'page');
+    }
+    // Инвалидируем страницу каталога
+    revalidatePath('/categories', 'page');
+
     return NextResponse.json({
       success: true,
       message: 'Категория успешно обновлена',
@@ -230,6 +240,10 @@ export async function DELETE(
     await db.category.delete({
       where: { id: categoryId },
     });
+
+    // Инвалидируем кэш
+    revalidatePath(`/${category.slug}`, 'page');
+    revalidatePath('/categories', 'page');
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { revalidateTag, revalidatePath } from 'next/cache';
 
 const settingsSchema = z.object({
   // Основные контакты
@@ -138,6 +139,11 @@ export async function PUT(req: NextRequest) {
         })
       )
     );
+
+    // Инвалидируем кэш настроек сайта
+    revalidateTag('site-settings');
+    // Инвалидируем главную страницу (использует настройки)
+    revalidatePath('/', 'page');
 
     return NextResponse.json({
       success: true,
