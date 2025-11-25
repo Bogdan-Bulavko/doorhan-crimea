@@ -85,46 +85,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   });
 
-  // Получаем все активные страницы
-  const pages = await db.page.findMany({
-    where: { isActive: true },
-    select: { slug: true, updatedAt: true },
-  });
+  // Для поддоменов включаем только главную, категории и товары
+  // Для основного домена включаем все страницы
+  const isSubdomain = region !== 'default' && !host.includes('localhost');
 
-  // Получаем все активные статьи
-  const articles = await db.article.findMany({
-    where: { isActive: true },
-    select: { slug: true, updatedAt: true, publishedAt: true },
-  });
+  // Формируем статические страницы в зависимости от типа домена
+  const staticPages: MetadataRoute.Sitemap = isSubdomain
+    ? [
+        {
+          url: baseUrl,
+          lastModified: new Date(),
+          changeFrequency: 'yearly' as const,
+          priority: 1,
+        },
+      ]
+    : [
+        {
+          url: baseUrl,
+          lastModified: new Date(),
+          changeFrequency: 'yearly' as const,
+          priority: 1,
+        },
+        {
+          url: `${baseUrl}/categories`,
+          lastModified: new Date(),
+          changeFrequency: 'monthly' as const,
+          priority: 0.8,
+        },
+        {
+          url: `${baseUrl}/pages`,
+          lastModified: new Date(),
+          changeFrequency: 'monthly' as const,
+          priority: 0.7,
+        },
+        {
+          url: `${baseUrl}/articles`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.8,
+        },
+      ];
 
-  const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/categories`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/pages`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/articles`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-  ];
-
-  // Добавляем страницы категорий
+  // Добавляем страницы категорий (для всех доменов)
   const categoryPages = categories.map((category) => ({
     url: `${baseUrl}/${category.slug}`,
     lastModified: new Date(),
@@ -132,7 +134,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Добавляем страницы товаров
+  // Добавляем страницы товаров (для всех доменов)
   const productPages = products.map((product) => ({
     url: `${baseUrl}/${product.category.slug}/${product.slug}`,
     lastModified: new Date(),
@@ -140,21 +142,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // Добавляем информационные страницы
-  const infoPages = pages.map((page) => ({
-    url: `${baseUrl}/pages/${page.slug}`,
-    lastModified: page.updatedAt,
-    changeFrequency: 'monthly' as const,
-    priority: 0.5,
-  }));
+  // Информационные страницы и статьи только для основного домена
+  let infoPages: MetadataRoute.Sitemap = [];
+  let articlePages: MetadataRoute.Sitemap = [];
 
-  // Добавляем статьи
-  const articlePages = articles.map((article) => ({
-    url: `${baseUrl}/articles/${article.slug}`,
-    lastModified: article.updatedAt,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  if (!isSubdomain) {
+    // Получаем все активные страницы
+    const pages = await db.page.findMany({
+      where: { isActive: true },
+      select: { slug: true, updatedAt: true },
+    });
+
+    // Получаем все активные статьи
+    const articles = await db.article.findMany({
+      where: { isActive: true },
+      select: { slug: true, updatedAt: true, publishedAt: true },
+    });
+
+    infoPages = pages.map((page) => ({
+      url: `${baseUrl}/pages/${page.slug}`,
+      lastModified: page.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    }));
+
+    articlePages = articles.map((article) => ({
+      url: `${baseUrl}/articles/${article.slug}`,
+      lastModified: article.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }));
+  }
 
   return [...staticPages, ...categoryPages, ...productPages, ...infoPages, ...articlePages];
 }

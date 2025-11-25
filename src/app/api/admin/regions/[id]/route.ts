@@ -15,6 +15,7 @@ const regionUpdateSchema = z.object({
   workingHoursDescription: z.string().optional(),
   mapIframe: z.string().optional(),
   officeName: z.string().optional(),
+  schemaMarkup: z.string().optional(),
   isActive: z.boolean().optional(),
   sortOrder: z.number().optional(),
 });
@@ -129,6 +130,7 @@ export async function PUT(
         workingHoursDescription: data.workingHoursDescription === '' ? null : data.workingHoursDescription,
         mapIframe: data.mapIframe === '' ? null : data.mapIframe,
         officeName: data.officeName === '' ? null : data.officeName,
+        schemaMarkup: data.schemaMarkup === '' ? null : data.schemaMarkup,
       },
     });
 

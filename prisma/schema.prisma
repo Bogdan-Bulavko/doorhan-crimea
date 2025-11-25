@@ -243,6 +243,7 @@ model Region {
   workingHoursDescription String?
   mapIframe               String?
   officeName              String?
+  schemaMarkup            String?  // JSON-LD микроразметка для главной страницы региона
   isActive                Boolean  @default(true)
   sortOrder               Int      @default(0)
   createdAt               DateTime @default(now())

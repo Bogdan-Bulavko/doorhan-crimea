@@ -26,6 +26,7 @@ export default function EditRegionPage() {
     workingHoursDescription: '',
     mapIframe: '',
     officeName: '',
+    schemaMarkup: '',
     isActive: true,
     sortOrder: 0,
   });
@@ -50,6 +51,7 @@ export default function EditRegionPage() {
             workingHoursDescription: r.workingHoursDescription || '',
             mapIframe: r.mapIframe || '',
             officeName: r.officeName || '',
+            schemaMarkup: r.schemaMarkup || '',
             isActive: Boolean(r.isActive),
             sortOrder: r.sortOrder || 0,
           });
@@ -91,6 +93,7 @@ export default function EditRegionPage() {
         workingHoursDescription: formData.workingHoursDescription || undefined,
         mapIframe: formData.mapIframe || undefined,
         officeName: formData.officeName || undefined,
+        schemaMarkup: formData.schemaMarkup || undefined,
       };
 
       const res = await fetch(`/api/admin/regions/${regionId}`, {
@@ -284,6 +287,23 @@ export default function EditRegionPage() {
             value={formData.mapIframe}
             onChange={handleChange}
             rows={3}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            JSON-LD микроразметка для главной страницы региона
+          </label>
+          <p className="text-xs text-gray-500 mb-2">
+            Введите JSON-LD микроразметку, которая будет выводиться на главной странице этого региона
+          </p>
+          <textarea
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#00205B] focus:border-transparent font-mono text-sm"
+            name="schemaMarkup"
+            value={formData.schemaMarkup}
+            onChange={handleChange}
+            rows={8}
+            placeholder='{"@context": "https://schema.org", "@type": "Organization", ...}'
           />
         </div>
 
