@@ -10,12 +10,12 @@ export default function CategoriesSEO() {
   const { currentRegion } = useRegion();
 
   useEffect(() => {
-    if (settings && currentRegion) {
+    // Применяем ТОЛЬКО если в настройках заполнены categoriesTitle/Description
+    // Иначе используем SSR метатеги из generateMetadata()
+    if (settings && currentRegion && settings.categoriesTitle) {
       // Обновляем title для страницы категорий с заменой переменных
-      if (settings.categoriesTitle) {
-        const title = replaceCityVariables(settings.categoriesTitle, currentRegion);
-        document.title = title;
-      }
+      const title = replaceCityVariables(settings.categoriesTitle, currentRegion);
+      document.title = title;
 
       // Обновляем meta description с заменой переменных
       if (settings.categoriesDescription) {
@@ -41,12 +41,10 @@ export default function CategoriesSEO() {
       }
 
       // Обновляем Open Graph с заменой переменных
-      if (settings.categoriesTitle) {
-        const ogTitle = replaceCityVariables(settings.categoriesTitle, currentRegion);
-        const ogTitleMeta = document.querySelector('meta[property="og:title"]');
-        if (ogTitleMeta) {
-          ogTitleMeta.setAttribute('content', ogTitle);
-        }
+      const ogTitle = replaceCityVariables(settings.categoriesTitle, currentRegion);
+      const ogTitleMeta = document.querySelector('meta[property="og:title"]');
+      if (ogTitleMeta) {
+        ogTitleMeta.setAttribute('content', ogTitle);
       }
 
       if (settings.categoriesDescription) {

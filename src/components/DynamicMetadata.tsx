@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { useRegion } from '@/contexts/RegionContext';
 import { replaceCityVariables } from '@/lib/template-variables';
@@ -8,9 +9,14 @@ import { replaceCityVariables } from '@/lib/template-variables';
 export default function DynamicMetadata() {
   const { settings } = useSiteSettings();
   const { currentRegion } = useRegion();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (settings && currentRegion) {
+    // Применяем DynamicMetadata ТОЛЬКО на главной странице
+    // Для остальных страниц используем SSR метатеги из generateMetadata()
+    const isHomePage = pathname === '/';
+    
+    if (settings && currentRegion && isHomePage) {
       // Обновляем title с заменой переменных
       if (settings.siteTitle) {
         const title = replaceCityVariables(settings.siteTitle, currentRegion);
@@ -64,7 +70,7 @@ export default function DynamicMetadata() {
         }
       }
     }
-  }, [settings, currentRegion]);
+  }, [settings, currentRegion, pathname]);
 
   return null;
 }
