@@ -143,10 +143,17 @@ export async function POST(req: NextRequest) {
     // Извлекаем характеристики, цвета и изображения из данных
     const { specifications, colors, images, ...productData } = data;
     
+    // Преобразуем пустые строки в null для SEO полей (для автоматической генерации)
+    const cleanedProductData = {
+      ...productData,
+      seoTitle: productData.seoTitle?.trim() || null,
+      seoDescription: productData.seoDescription?.trim() || null,
+    };
+    
     // Создаем товар
     const product = await db.product.create({
       data: {
-        ...productData,
+        ...cleanedProductData,
         slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
         specifications: {
           create: specifications.map(spec => ({

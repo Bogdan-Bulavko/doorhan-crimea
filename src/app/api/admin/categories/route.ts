@@ -31,7 +31,18 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = categorySchema.parse(body);
-    const category = await db.category.create({ data });
+    
+    // Преобразуем пустые строки в null для SEO полей (для автоматической генерации)
+    const cleanedData = {
+      ...data,
+      description: data.description?.trim() || null,
+      seoTitle: data.seoTitle?.trim() || null,
+      seoDescription: data.seoDescription?.trim() || null,
+      contentTop: data.contentTop?.trim() || null,
+      contentBottom: data.contentBottom?.trim() || null,
+    };
+    
+    const category = await db.category.create({ data: cleanedData });
     return NextResponse.json({ success: true, data: category });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

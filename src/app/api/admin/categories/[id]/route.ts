@@ -130,21 +130,21 @@ export async function PUT(
       }
     }
 
-    // Обновляем категорию
+    // Обновляем категорию (преобразуем пустые строки в null для автоматической генерации)
     const updatedCategory = await db.category.update({
       where: { id: categoryId },
       data: {
         name,
         slug,
-        description: description || null,
-        seoTitle: seoTitle || null,
-        seoDescription: seoDescription || null,
-        canonicalUrl: canonicalUrl || null,
-        h1: h1 || null,
-        robotsMeta: robotsMeta || null,
-        schemaMarkup: schemaMarkup || null,
-        contentTop: contentTop || null,
-        contentBottom: contentBottom || null,
+        description: description?.trim() || null,
+        seoTitle: seoTitle?.trim() || null,
+        seoDescription: seoDescription?.trim() || null,
+        canonicalUrl: canonicalUrl?.trim() || null,
+        h1: h1?.trim() || null,
+        robotsMeta: robotsMeta?.trim() || null,
+        schemaMarkup: schemaMarkup?.trim() || null,
+        contentTop: contentTop?.trim() || null,
+        contentBottom: contentBottom?.trim() || null,
         isActive: Boolean(isActive),
       },
     });

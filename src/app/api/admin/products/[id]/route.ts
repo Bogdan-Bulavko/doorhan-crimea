@@ -73,11 +73,22 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const mainImage = images?.find(img => img.isMain);
     const mainImageUrl = mainImage?.url || productData.mainImageUrl;
     
+    // Преобразуем пустые строки в null для SEO полей (для автоматической генерации)
+    const cleanedProductData = {
+      ...productData,
+      seoTitle: productData.seoTitle?.trim() || null,
+      seoDescription: productData.seoDescription?.trim() || null,
+      canonicalUrl: productData.canonicalUrl?.trim() || null,
+      h1: productData.h1?.trim() || null,
+      robotsMeta: productData.robotsMeta?.trim() || null,
+      schemaMarkup: productData.schemaMarkup?.trim() || null,
+    };
+    
     // Обновляем товар с характеристиками и изображениями
     const product = await db.product.update({
       where: { id },
       data: {
-        ...productData,
+        ...cleanedProductData,
         mainImageUrl,
         specifications: specifications ? {
           deleteMany: {}, // Удаляем все существующие характеристики
