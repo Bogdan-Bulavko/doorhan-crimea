@@ -104,15 +104,15 @@ export async function PUT(
       }
     }
 
-    // Обновляем страницу
+    // Обновляем страницу (преобразуем пустые строки в null для автоматической генерации)
     const updatedPage = await db.page.update({
       where: { id: pageId },
       data: {
         title,
         slug,
-        content: content || null,
-        seoTitle: seoTitle || null,
-        seoDescription: seoDescription || null,
+        content: content?.trim() || null,
+        seoTitle: seoTitle?.trim() || null,
+        seoDescription: seoDescription?.trim() || null,
         isActive: Boolean(isActive),
         sortOrder: sortOrder ?? 0,
       },

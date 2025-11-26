@@ -119,23 +119,23 @@ export async function PUT(
       }
     }
 
-    // Обновляем статью
+    // Обновляем статью (преобразуем пустые строки в null для автоматической генерации)
     const updatedArticle = await db.article.update({
       where: { id: articleId },
       data: {
         title,
         slug,
-        content: content || null,
-        excerpt: excerpt || null,
-        featuredImageUrl: featuredImageUrl || null,
-        author: author || null,
-        tags: tags || null,
-        seoTitle: seoTitle || null,
-        seoDescription: seoDescription || null,
-        canonicalUrl: canonicalUrl || null,
-        h1: h1 || null,
-        robotsMeta: robotsMeta || 'index, follow',
-        schemaMarkup: schemaMarkup || null,
+        content: content?.trim() || null,
+        excerpt: excerpt?.trim() || null,
+        featuredImageUrl: featuredImageUrl?.trim() || null,
+        author: author?.trim() || null,
+        tags: tags?.trim() || null,
+        seoTitle: seoTitle?.trim() || null,
+        seoDescription: seoDescription?.trim() || null,
+        canonicalUrl: canonicalUrl?.trim() || null,
+        h1: h1?.trim() || null,
+        robotsMeta: robotsMeta?.trim() || 'index, follow',
+        schemaMarkup: schemaMarkup?.trim() || null,
         isActive: Boolean(isActive),
         sortOrder: sortOrder ?? 0,
         publishedAt: publishedAt ? new Date(publishedAt) : existingArticle.publishedAt || new Date(),

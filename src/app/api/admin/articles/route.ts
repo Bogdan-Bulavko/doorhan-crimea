@@ -59,21 +59,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Преобразуем пустые строки в null для автоматической генерации SEO
     const article = await db.article.create({
       data: {
         title: data.title,
         slug: data.slug,
         content: data.content,
-        excerpt: data.excerpt || null,
-        featuredImageUrl: data.featuredImageUrl || null,
-        author: data.author || null,
-        tags: data.tags || null,
-        seoTitle: data.seoTitle || null,
-        seoDescription: data.seoDescription || null,
-        canonicalUrl: data.canonicalUrl || null,
-        h1: data.h1 || null,
-        robotsMeta: data.robotsMeta || 'index, follow',
-        schemaMarkup: data.schemaMarkup || null,
+        excerpt: data.excerpt?.trim() || null,
+        featuredImageUrl: data.featuredImageUrl?.trim() || null,
+        author: data.author?.trim() || null,
+        tags: data.tags?.trim() || null,
+        seoTitle: data.seoTitle?.trim() || null,
+        seoDescription: data.seoDescription?.trim() || null,
+        canonicalUrl: data.canonicalUrl?.trim() || null,
+        h1: data.h1?.trim() || null,
+        robotsMeta: data.robotsMeta?.trim() || 'index, follow',
+        schemaMarkup: data.schemaMarkup?.trim() || null,
         isActive: data.isActive ?? true,
         sortOrder: data.sortOrder ?? 0,
         publishedAt: data.publishedAt ? new Date(data.publishedAt) : new Date(),

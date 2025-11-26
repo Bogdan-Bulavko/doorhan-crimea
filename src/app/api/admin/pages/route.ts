@@ -50,13 +50,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Преобразуем пустые строки в null для автоматической генерации SEO
     const page = await db.page.create({
       data: {
         title: data.title,
         slug: data.slug,
         content: data.content,
-        seoTitle: data.seoTitle || null,
-        seoDescription: data.seoDescription || null,
+        seoTitle: data.seoTitle?.trim() || null,
+        seoDescription: data.seoDescription?.trim() || null,
         isActive: data.isActive ?? true,
         sortOrder: data.sortOrder ?? 0,
       },
