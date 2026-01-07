@@ -18,6 +18,7 @@ interface PrismaProduct {
   slug: string;
   sku?: string | null;
   price: unknown; // Decimal
+  minPrice?: unknown | null; // Decimal
   oldPrice?: unknown | null; // Decimal
   currency: string;
   inStock: boolean;
@@ -62,6 +63,7 @@ export function serializeProduct(product: PrismaProduct) {
   return {
     ...product,
     price: Number(product.price),
+    minPrice: product.minPrice ? Number(product.minPrice) : undefined,
     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
     rating: Number(product.rating),
     createdAt: product.createdAt.toISOString(),

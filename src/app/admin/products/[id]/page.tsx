@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProductSpecifications from '../../_components/ProductSpecifications';
 import ImageUpload from '../../_components/ImageUpload';
+import ShortcodesInfo from '../../_components/ShortcodesInfo';
+import RegionsList from '../../_components/RegionsList';
 
 type Category = { id: number; name: string };
 
@@ -154,6 +156,8 @@ export default function EditProductPage() {
     <div className="grid gap-6">
       <h1 className="text-2xl font-bold text-[#00205B]">Редактировать товар #{productId}</h1>
       <div className="rounded-xl border bg-white p-4 grid gap-3">
+        <RegionsList />
+        <ShortcodesInfo context="product" />
         <div>
           <label className="block text-sm text-gray-600">Название</label>
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={name} onChange={(e) => setName(e.target.value)} />
@@ -184,6 +188,7 @@ export default function EditProductPage() {
         <div>
           <label className="block text-sm text-gray-600">Краткое описание</label>
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} />
+          <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [product_price_from], [city] и др.</p>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -197,19 +202,23 @@ export default function EditProductPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#F6A800] focus:border-transparent disabled:bg-gray-100"
             placeholder="Введите подробное описание товара с поддержкой Markdown и HTML..."
           />
+          <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [product_price_from], [city], [phone_formatted] и др.</p>
         </div>
         <div>
           <label className="block text-sm text-gray-600">H1 Заголовок (если не указан, используется название)</label>
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={h1} onChange={(e) => setH1(e.target.value)} placeholder={title || name} />
+          <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [city], [site_name] и др.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className="block text-sm text-gray-600">SEO Title</label>
             <input className="mt-1 w-full border rounded-lg px-3 py-2" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [city], [site_name] и др.</p>
           </div>
           <div>
             <label className="block text-sm text-gray-600">SEO Description</label>
             <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [city], [phone_formatted] и др.</p>
           </div>
         </div>
         <div>

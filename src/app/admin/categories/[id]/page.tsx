@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import ShortcodesInfo from '../../_components/ShortcodesInfo';
+import RegionsList from '../../_components/RegionsList';
 
 export default function EditCategoryPage() {
   const router = useRouter();
@@ -24,9 +26,27 @@ export default function EditCategoryPage() {
   const [h1, setH1] = useState('');
   const [robotsMeta, setRobotsMeta] = useState('index, follow');
   const [schemaMarkup, setSchemaMarkup] = useState('');
+  const [parentId, setParentId] = useState<number | null>(null);
   const [contentTop, setContentTop] = useState('');
   const [contentBottom, setContentBottom] = useState('');
   const [isActive, setIsActive] = useState(true);
+  const [categories, setCategories] = useState<Array<{ id: number; name: string; slug: string; parentId: number | null }>>([]);
+
+  // Загружаем список категорий для выбора родительской
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const res = await fetch('/api/admin/categories');
+        const j = await res.json();
+        if (j.success && j.data) {
+          setCategories(j.data);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки категорий:', error);
+      }
+    };
+    loadCategories();
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -36,7 +56,7 @@ export default function EditCategoryPage() {
         const j = await res.json();
         if (j.success && j.data) {
           const c = j.data as {
-            name: string; slug: string; description?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; robotsMeta?: string; schemaMarkup?: string; contentTop?: string | null; contentBottom?: string | null; isActive: boolean;
+            name: string; slug: string; description?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; robotsMeta?: string; schemaMarkup?: string; parentId?: number | null; contentTop?: string | null; contentBottom?: string | null; isActive: boolean;
           };
           setName(c.name);
           setSlug(c.slug);
@@ -47,6 +67,7 @@ export default function EditCategoryPage() {
           setH1(c.h1 ?? '');
           setRobotsMeta(c.robotsMeta ?? 'index, follow');
           setSchemaMarkup(c.schemaMarkup ?? '');
+          setParentId(c.parentId ?? null);
           setContentTop(c.contentTop ?? '');
           setContentBottom(c.contentBottom ?? '');
           setIsActive(Boolean(c.isActive));
@@ -74,6 +95,7 @@ export default function EditCategoryPage() {
       h1: h1 || undefined,
       robotsMeta: robotsMeta || undefined,
       schemaMarkup: schemaMarkup || undefined,
+      parentId: parentId || null,
       contentTop: contentTop || null,
       contentBottom: contentBottom || null,
       isActive,
@@ -95,6 +117,8 @@ export default function EditCategoryPage() {
     <div className="grid gap-6">
       <h1 className="text-2xl font-bold text-[#00205B]">Редактировать категорию #{categoryId}</h1>
       <div className="rounded-xl border bg-white p-4 grid gap-3">
+        <RegionsList defaultCollapsed={true} />
+        <ShortcodesInfo context="category" />
         <div>
           <label className="block text-sm text-gray-600">Название</label>
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={name} onChange={(e) => setName(e.target.value)} />
@@ -106,19 +130,41 @@ export default function EditCategoryPage() {
         <div>
           <label className="block text-sm text-gray-600">Описание</label>
           <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [city], [category_name], [site_name] и др.</p>
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Родительская категория (для создания подкатегории)</label>
+          <select 
+            className="mt-1 w-full border rounded-lg px-3 py-2" 
+            value={parentId || ''} 
+            onChange={(e) => setParentId(e.target.value ? Number(e.target.value) : null)}
+          >
+            <option value="">Нет (основная категория)</option>
+            {categories
+              .filter(c => c.id !== categoryId) // Исключаем текущую категорию
+              .map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name} ({category.slug})
+                </option>
+              ))}
+          </select>
+          <p className="mt-1 text-xs text-gray-500">Выберите родительскую категорию для создания подкатегории</p>
         </div>
         <div>
           <label className="block text-sm text-gray-600">H1 Заголовок (если не указан, используется название)</label>
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={h1} onChange={(e) => setH1(e.target.value)} placeholder={name} />
+          <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [city], [category_name], [site_name] и др.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className="block text-sm text-gray-600">SEO Title</label>
             <input className="mt-1 w-full border rounded-lg px-3 py-2" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [city], [category_name], [site_name] и др.</p>
           </div>
           <div>
             <label className="block text-sm text-gray-600">SEO Description</label>
             <textarea className="mt-1 w-full border rounded-lg px-3 py-2" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [city], [category_name], [site_name] и др.</p>
           </div>
         </div>
         <div>
@@ -165,7 +211,7 @@ export default function EditCategoryPage() {
             rows={8}
             placeholder='<p>Дополнительный контент, который будет отображаться вверху страницы категории</p>'
           />
-          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения вверху страницы категории (опционально)</p>
+          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения вверху страницы категории. Можно использовать шорткоды: [city], [category_name], [site_name] и др.</p>
         </div>
         <div>
           <label className="block text-sm text-gray-600">Контент снизу страницы (HTML)</label>
@@ -176,7 +222,7 @@ export default function EditCategoryPage() {
             rows={8}
             placeholder='<p>Дополнительный контент, который будет отображаться внизу страницы категории</p>'
           />
-          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения внизу страницы категории (опционально)</p>
+          <p className="mt-1 text-xs text-gray-500">HTML контент для отображения внизу страницы категории. Можно использовать шорткоды: [city], [category_name], [site_name] и др.</p>
         </div>
         <label className="inline-flex items-center gap-2 text-sm text-gray-600">
           <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} /> Активна

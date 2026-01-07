@@ -8,7 +8,9 @@ const productCreateSchema = z.object({
   description: z.string().optional(),
   shortDescription: z.string().optional(),
   categoryId: z.number().int().positive('Выберите категорию'),
+  categoryIds: z.array(z.number().int().positive()).optional(), // Many-to-many категории
   price: z.number().min(0, 'Цена не может быть отрицательной'),
+  minPrice: z.number().min(0).optional().nullable(), // Минимальная цена "от XXXX"
   oldPrice: z.number().optional(),
   currency: z.string().default('RUB'),
   inStock: z.boolean().default(true),
@@ -21,6 +23,7 @@ const productCreateSchema = z.object({
   sku: z.string().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  canonicalUrl: z.string().optional().nullable(), // Canonical URL для товара
   specifications: z.array(z.object({
     name: z.string().min(1, 'Название характеристики обязательно'),
     value: z.string().min(1, 'Значение характеристики обязательно'),
@@ -140,14 +143,16 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = productCreateSchema.parse(body);
     
-    // Извлекаем характеристики, цвета и изображения из данных
-    const { specifications, colors, images, ...productData } = data;
+    // Извлекаем характеристики, цвета, изображения и категории из данных
+    const { specifications, colors, images, categoryIds, ...productData } = data;
     
     // Преобразуем пустые строки в null для SEO полей (для автоматической генерации)
     const cleanedProductData = {
       ...productData,
+      minPrice: productData.minPrice || null,
       seoTitle: productData.seoTitle?.trim() || null,
       seoDescription: productData.seoDescription?.trim() || null,
+      canonicalUrl: productData.canonicalUrl?.trim() || null,
     };
     
     // Создаем товар
@@ -180,9 +185,22 @@ export async function POST(req: NextRequest) {
             sortOrder: img.sortOrder,
           })),
         },
+        // Создаем связи с категориями (many-to-many)
+        categories: categoryIds && categoryIds.length > 0 ? {
+          create: categoryIds.map((categoryId, index) => ({
+            categoryId,
+            isPrimary: index === 0 && categoryId === productData.categoryId, // Первая категория = основная
+            sortOrder: index,
+          })),
+        } : undefined,
       },
       include: {
         category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         images: true,
         specifications: true,
         colors: true,
@@ -193,6 +211,7 @@ export async function POST(req: NextRequest) {
     const serializedProduct = {
       ...product,
       price: Number(product.price),
+      minPrice: product.minPrice ? Number(product.minPrice) : null,
       oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
       rating: Number(product.rating),
       createdAt: product.createdAt.toISOString(),

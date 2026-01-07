@@ -29,6 +29,7 @@ export interface ProductPageClientProps {
     description?: string;
     shortDescription?: string;
     price: number;
+    minPrice?: number | null;
     oldPrice?: number | null;
     currency: string;
     inStock: boolean;

@@ -6,6 +6,7 @@ import SimpleMarkdownRenderer from '@/components/SimpleMarkdownRenderer';
 import BreadCrumbs from '@/components/BreadCrumbs';
 import { generateCanonical } from '@/lib/canonical-utils';
 import { getRegionFromHeaders } from '@/lib/metadata-generator';
+import { processShortcodes, getRegionData, type ShortcodeContext } from '@/lib/shortcodes';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -34,8 +35,17 @@ export async function generateMetadata({
     };
   }
 
-  const baseTitle = page.seoTitle?.trim() || page.title;
-  const description = page.seoDescription?.trim() || page.content.substring(0, 160);
+  // Получаем региональные данные для шорткодов
+  const regionData = await getRegionData(region);
+  const shortcodeContext: ShortcodeContext = {
+    region: regionData || undefined,
+  };
+
+  // Обрабатываем шорткоды в SEO полях
+  const rawTitle = page.seoTitle?.trim() || page.title;
+  const rawDescription = page.seoDescription?.trim() || page.content.substring(0, 160);
+  const title = processShortcodes(rawTitle, shortcodeContext);
+  const description = processShortcodes(rawDescription, shortcodeContext);
   const robots = page.robotsMeta?.trim() || 'index, follow';
   const canonicalUrl = generateCanonical('page', region, {
     pageSlug: slug,
@@ -43,7 +53,7 @@ export async function generateMetadata({
     useFullUrl: true,
     forceMainDomain: true,
   });
-  const fullTitle = `${baseTitle} | DoorHan Крым`;
+  const fullTitle = `${title} | DoorHan Крым`;
 
   return {
     title: fullTitle,
@@ -83,6 +93,21 @@ export default async function PagePage({ params }: PageProps) {
     notFound();
   }
 
+  // Получаем региональные данные для шорткодов
+  const headersList = await headers();
+  const region = getRegionFromHeaders(headersList);
+  const regionData = await getRegionData(region);
+  const shortcodeContext: ShortcodeContext = {
+    region: regionData || undefined,
+  };
+
+  // Обрабатываем шорткоды в контенте и заголовках
+  const processedContent = processShortcodes(page.content, shortcodeContext);
+  const processedH1 = processShortcodes(page.h1 || page.title, shortcodeContext);
+  const processedSchemaMarkup = page.schemaMarkup 
+    ? processShortcodes(page.schemaMarkup, shortcodeContext)
+    : null;
+
   const breadcrumbs = [
     { label: 'Главная', href: '/' },
     { label: 'Страницы', href: '/pages' },
@@ -95,15 +120,15 @@ export default async function PagePage({ params }: PageProps) {
         <BreadCrumbs items={breadcrumbs} />
         <article className="mt-8">
           <h1 className="text-4xl font-bold text-[#00205B] mb-6">
-            {page.title}
+            {processedH1}
           </h1>
           <div className="prose prose-lg max-w-none">
-            <SimpleMarkdownRenderer content={page.content} />
+            <SimpleMarkdownRenderer content={processedContent} />
           </div>
-          {page.schemaMarkup && (
+          {processedSchemaMarkup && (
             <script
               type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: page.schemaMarkup }}
+              dangerouslySetInnerHTML={{ __html: processedSchemaMarkup }}
             />
           )}
         </article>

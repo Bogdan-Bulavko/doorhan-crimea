@@ -15,6 +15,10 @@ const categorySchema = z.object({
   sortOrder: z.number().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  canonicalUrl: z.string().optional(),
+  h1: z.string().optional(),
+  robotsMeta: z.string().optional(),
+  schemaMarkup: z.string().optional(),
   contentTop: z.string().optional().nullable(),
   contentBottom: z.string().optional().nullable(),
 });
@@ -32,12 +36,33 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = categorySchema.parse(body);
     
+    // Проверяем циклические зависимости (если устанавливаем parentId)
+    if (data.parentId) {
+      const potentialParent = await db.category.findUnique({
+        where: { id: data.parentId },
+      });
+      
+      if (!potentialParent) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Родительская категория не найдена',
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Преобразуем пустые строки в null для SEO полей (для автоматической генерации)
     const cleanedData = {
       ...data,
       description: data.description?.trim() || null,
       seoTitle: data.seoTitle?.trim() || null,
       seoDescription: data.seoDescription?.trim() || null,
+      canonicalUrl: data.canonicalUrl?.trim() || null,
+      h1: data.h1?.trim() || null,
+      robotsMeta: data.robotsMeta?.trim() || 'index, follow',
+      schemaMarkup: data.schemaMarkup?.trim() || null,
       contentTop: data.contentTop?.trim() || null,
       contentBottom: data.contentBottom?.trim() || null,
     };

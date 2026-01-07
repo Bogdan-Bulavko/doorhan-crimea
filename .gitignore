@@ -54,6 +54,9 @@ prisma/old_dev.db
 # documentation and reports (excluded from git)
 *.md
 !README.md
+# Keep only essential documentation if needed
+# SHORTCODES-LIST.md
+# SHORTCODES-CHECK.md
 
 # local development files
 hosts-entries.txt

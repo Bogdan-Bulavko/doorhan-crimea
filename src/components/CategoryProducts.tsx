@@ -15,6 +15,7 @@ interface Product {
   description?: string;
   shortDescription?: string;
   price: number;
+  minPrice?: number | null;
   oldPrice?: number;
   currency: string;
   inStock: boolean;
@@ -47,12 +48,28 @@ interface Category {
   contentBottom?: string;
 }
 
+interface Subcategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  imageUrl?: string | null;
+}
+
+interface ParentCategory {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 interface CategoryProductsProps {
   category: Category;
   products: Product[];
+  subcategories?: Subcategory[];
+  parentCategory?: ParentCategory | null;
 }
 
-const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
+const CategoryProducts = ({ category, products, subcategories = [], parentCategory }: CategoryProductsProps) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'createdAt'>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -136,6 +153,9 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
             items={[
               { label: 'Главная', href: '/' },
               { label: 'Категории', href: '/categories' },
+              ...(parentCategory ? [
+                { label: parentCategory.name, href: `/${parentCategory.slug}` }
+              ] : []),
               { label: category.name, href: `/${category.slug}` }
             ]}
           />
@@ -192,6 +212,49 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
               className="max-w-none [&_p]:mb-4 [&_p]:text-gray-700 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#00205B] [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#00205B] [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:mb-4 [&_li]:mb-2 [&_a]:text-[#F6A800] [&_a]:hover:underline [&_strong]:font-semibold"
               dangerouslySetInnerHTML={{ __html: category.contentTop }}
             />
+          </div>
+        </section>
+      )}
+
+      {/* Подкатегории */}
+      {subcategories && subcategories.length > 0 && (
+        <section className="bg-white py-8 border-b">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold text-[#00205B] mb-6">Подкатегории</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {subcategories.map((subcategory) => {
+                const subcategoryPath = parentCategory 
+                  ? `/${parentCategory.slug}/${subcategory.slug}`
+                  : `/${category.slug}/${subcategory.slug}`;
+                
+                return (
+                  <Link
+                    key={subcategory.id}
+                    href={subcategoryPath}
+                    className="group bg-gray-50 rounded-xl p-6 hover:bg-[#00205B] hover:text-white transition-all duration-300 border border-gray-200 hover:border-[#00205B]"
+                  >
+                    {subcategory.imageUrl && (
+                      <div className="relative w-full aspect-[4/3] mb-4 rounded-lg overflow-hidden">
+                        <Image
+                          src={subcategory.imageUrl}
+                          alt={subcategory.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <h3 className="font-semibold text-lg mb-2 group-hover:text-white">
+                      {subcategory.name}
+                    </h3>
+                    {subcategory.description && (
+                      <p className="text-sm text-gray-600 group-hover:text-white/80 line-clamp-2">
+                        {subcategory.description}
+                      </p>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </section>
       )}
@@ -382,7 +445,9 @@ const CategoryProducts = ({ category, products }: CategoryProductsProps) => {
                     <div className="mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl font-bold text-gray-900">
-                          {formatPrice(product.price, product.currency)}
+                          {'minPrice' in product && product.minPrice
+                            ? `от ${formatPrice(product.minPrice, product.currency)}`
+                            : formatPrice(product.price, product.currency)}
                         </span>
                         {product.oldPrice && product.oldPrice > product.price && (
                           <span className="text-lg text-gray-500 line-through">

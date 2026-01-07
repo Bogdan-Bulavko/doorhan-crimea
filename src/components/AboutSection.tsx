@@ -13,7 +13,7 @@ import {
 import { useRegion } from '@/contexts/RegionContext';
 
 const AboutSection = () => {
-  const { regionalData, currentRegion } = useRegion();
+  const { currentRegion } = useRegion();
 
   const getCityNamePrepositional = () => {
     // Маппинг городов в предложном падеже (для "в {город}")

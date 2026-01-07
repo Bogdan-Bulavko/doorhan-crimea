@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
           children: category.children?.map(child => ({
             ...child,
             createdAt: child.createdAt.toISOString(),
-            updatedAt: child.updatedAt.toISOString(),
+            updatedAt: 'updatedAt' in child && child.updatedAt ? child.updatedAt.toISOString() : new Date().toISOString(),
           })) || [],
         };
       })

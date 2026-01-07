@@ -72,6 +72,7 @@ export default async function PageProduct({
   const serializedProduct: ProductPageClientProps['product'] = {
     ...product,
     price: Number(product.price),
+    minPrice: product.minPrice ? Number(product.minPrice) : undefined,
     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
     rating: Number(product.rating),
     createdAt: product.createdAt.toISOString(),

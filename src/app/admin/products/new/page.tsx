@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useFormValidation, FormField } from '../../_components/FormValidation';
 import ProductSpecifications from '../../_components/ProductSpecifications';
 import ImageUpload from '../../_components/ImageUpload';
+import ShortcodesInfo from '../../_components/ShortcodesInfo';
+import RegionsList from '../../_components/RegionsList';
 import { z } from 'zod';
 
 type Category = { id: number; name: string };
@@ -111,6 +113,7 @@ export default function NewProductPage() {
       price: Number(price),
       currency,
       title: title || undefined,
+      h1: title || undefined, // Используем title как h1 если указан
       description: description || undefined,
       shortDescription: shortDescription || undefined,
       seoTitle: seoTitle || undefined,
@@ -144,6 +147,8 @@ export default function NewProductPage() {
 
       {step === 1 && (
         <div className="rounded-xl border bg-white p-4 grid gap-3">
+          <RegionsList />
+          <ShortcodesInfo context="product" />
           <FormField label="Название" error={getFieldError('name')} required>
             <input
               className={`mt-1 w-full border rounded-lg px-3 py-2 ${
@@ -230,6 +235,7 @@ export default function NewProductPage() {
               value={shortDescription}
               onChange={(e) => setShortDescription(e.target.value)}
             />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [product_price_from], [city] и др.</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -243,6 +249,7 @@ export default function NewProductPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#F6A800] focus:border-transparent disabled:bg-gray-100"
               placeholder="Введите подробное описание товара с поддержкой Markdown и HTML..."
             />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [product_price_from], [city], [phone_formatted] и др.</p>
           </div>
         </div>
       )}
@@ -269,22 +276,36 @@ export default function NewProductPage() {
       {step === 5 && (
         <div className="rounded-xl border bg-white p-4 grid gap-3">
           <div>
-            <label className="block text-sm text-gray-600">SEO Title</label>
+            <label className="block text-sm text-gray-600">H1 Заголовок (если не указан, используется название)</label>
             <input
               className="mt-1 w-full border rounded-lg px-3 py-2"
-              value={seoTitle}
-              onChange={(e) => setSeoTitle(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={name}
             />
+            <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [city], [site_name] и др.</p>
           </div>
-          <div>
-            <label className="block text-sm text-gray-600">
-              SEO Description
-            </label>
-            <textarea
-              className="mt-1 w-full border rounded-lg px-3 py-2"
-              value={seoDescription}
-              onChange={(e) => setSeoDescription(e.target.value)}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm text-gray-600">SEO Title</label>
+              <input
+                className="mt-1 w-full border rounded-lg px-3 py-2"
+                value={seoTitle}
+                onChange={(e) => setSeoTitle(e.target.value)}
+              />
+              <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [city], [site_name] и др.</p>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600">
+                SEO Description
+              </label>
+              <textarea
+                className="mt-1 w-full border rounded-lg px-3 py-2"
+                value={seoDescription}
+                onChange={(e) => setSeoDescription(e.target.value)}
+              />
+              <p className="mt-1 text-xs text-gray-500">Можно использовать шорткоды: [product_name], [city], [phone_formatted] и др.</p>
+            </div>
           </div>
         </div>
       )}

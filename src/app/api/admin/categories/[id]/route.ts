@@ -95,7 +95,7 @@ export async function PUT(
     }
 
     const body = await req.json();
-    const { name, slug, description, seoTitle, seoDescription, canonicalUrl, h1, robotsMeta, schemaMarkup, isActive, contentTop, contentBottom } =
+    const { name, slug, description, seoTitle, seoDescription, canonicalUrl, h1, robotsMeta, schemaMarkup, parentId, isActive, contentTop, contentBottom } =
       body;
 
     // Проверяем, существует ли категория
@@ -130,6 +130,53 @@ export async function PUT(
       }
     }
 
+    // Проверяем, что категория не пытается стать родителем самой себя
+    if (parentId === categoryId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Категория не может быть родителем самой себя',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Проверяем циклические зависимости (если устанавливаем parentId)
+    if (parentId) {
+      const potentialParent = await db.category.findUnique({
+        where: { id: parentId },
+        include: { parent: true },
+      });
+      
+      if (!potentialParent) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Родительская категория не найдена',
+          },
+          { status: 400 }
+        );
+      }
+
+      // Проверяем, что родитель не является потомком текущей категории
+      let checkParent: typeof potentialParent | null = potentialParent;
+      while (checkParent?.parentId) {
+        if (checkParent.parentId === categoryId) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: 'Нельзя создать циклическую зависимость между категориями',
+            },
+            { status: 400 }
+          );
+        }
+        checkParent = await db.category.findUnique({
+          where: { id: checkParent.parentId },
+          include: { parent: true },
+        });
+      }
+    }
+
     // Обновляем категорию (преобразуем пустые строки в null для автоматической генерации)
     const updatedCategory = await db.category.update({
       where: { id: categoryId },
@@ -143,6 +190,7 @@ export async function PUT(
         h1: h1?.trim() || null,
         robotsMeta: robotsMeta?.trim() || null,
         schemaMarkup: schemaMarkup?.trim() || null,
+        parentId: parentId || null,
         contentTop: contentTop?.trim() || null,
         contentBottom: contentBottom?.trim() || null,
         isActive: Boolean(isActive),

@@ -69,7 +69,7 @@ export async function PUT(
     }
 
     const body = await req.json();
-    const { title, slug, content, seoTitle, seoDescription, isActive, sortOrder } =
+    const { title, slug, content, seoTitle, seoDescription, canonicalUrl, h1, robotsMeta, schemaMarkup, isActive, sortOrder } =
       body;
 
     // Проверяем, существует ли страница
@@ -113,6 +113,10 @@ export async function PUT(
         content: content?.trim() || null,
         seoTitle: seoTitle?.trim() || null,
         seoDescription: seoDescription?.trim() || null,
+        canonicalUrl: canonicalUrl?.trim() || null,
+        h1: h1?.trim() || null,
+        robotsMeta: robotsMeta?.trim() || 'index, follow',
+        schemaMarkup: schemaMarkup?.trim() || null,
         isActive: Boolean(isActive),
         sortOrder: sortOrder ?? 0,
       },

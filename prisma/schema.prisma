@@ -50,30 +50,47 @@ model User {
 }
 
 model Category {
-  id             Int        @id @default(autoincrement())
+  id             Int                @id @default(autoincrement())
   name           String
   description    String?
   imageUrl       String?
   iconName       String?
   color          String?
   hoverColor     String?
-  slug           String     @unique
+  slug           String             @unique
   parentId       Int?
-  parent         Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
-  children       Category[] @relation("CategoryChildren")
-  isActive       Boolean    @default(true)
-  sortOrder      Int        @default(0)
+  parent         Category?          @relation("CategoryChildren", fields: [parentId], references: [id])
+  children       Category[]         @relation("CategoryChildren")
+  isActive       Boolean            @default(true)
+  sortOrder      Int                @default(0)
   seoTitle       String?
   seoDescription String?
   canonicalUrl   String?
   h1             String?
-  robotsMeta     String?    @default("index, follow")
+  robotsMeta     String?            @default("index, follow")
   schemaMarkup   String?
-  contentTop     String?    // HTML контент для отображения вверху страницы категории
-  contentBottom  String?    // HTML контент для отображения внизу страницы категории
-  products       Product[]
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  contentTop     String?            // HTML контент для отображения вверху страницы категории (с поддержкой шорткодов)
+  contentBottom  String?            // HTML контент для отображения внизу страницы категории (с поддержкой шорткодов)
+  products       Product[]         @relation("ProductMainCategory")
+  productCategories ProductCategory[] // Many-to-many связь с товарами
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+// Many-to-many связь между Product и Category
+model ProductCategory {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  categoryId Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  isPrimary  Boolean  @default(false) // Основная категория для товара
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@unique([productId, categoryId])
+  @@index([productId])
+  @@index([categoryId])
 }
 
 model Product {
@@ -83,11 +100,13 @@ model Product {
   description      String?
   shortDescription String?
   mainImageUrl     String?
-  categoryId       Int
-  category         Category               @relation(fields: [categoryId], references: [id])
+  categoryId       Int                    // Основная категория (для обратной совместимости)
+  category         Category               @relation("ProductMainCategory", fields: [categoryId], references: [id])
+  categories       ProductCategory[]      // Many-to-many связь с категориями
   slug             String                 @unique
   sku              String?                @unique
   price            Decimal
+  minPrice         Decimal?               // Минимальная цена "от XXXX"
   oldPrice         Decimal?
   currency         String                 @default("RUB")
   inStock          Boolean                @default(true)
@@ -99,7 +118,7 @@ model Product {
   reviewsCount     Int                    @default(0)
   seoTitle         String?
   seoDescription   String?
-  canonicalUrl     String?
+  canonicalUrl     String?                // Canonical URL для товара (один основной URL)
   h1               String?
   robotsMeta       String?                @default("index, follow")
   schemaMarkup     String?
@@ -244,6 +263,7 @@ model Region {
   mapIframe               String?
   officeName              String?
   schemaMarkup            String?  // JSON-LD микроразметка для главной страницы региона
+  homeContent             String?  // Региональный контент для главной страницы (с поддержкой шорткодов)
   isActive                Boolean  @default(true)
   sortOrder               Int      @default(0)
   createdAt               DateTime @default(now())

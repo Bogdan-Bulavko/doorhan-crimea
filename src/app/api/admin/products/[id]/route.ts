@@ -8,7 +8,18 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
   const id = Number(idStr);
   const product = await db.product.findUnique({
     where: { id },
-    include: { category: true, images: true, specifications: true, colors: true },
+    include: { 
+      category: true,
+      categories: {
+        include: {
+          category: true,
+        },
+        orderBy: { isPrimary: 'desc' },
+      },
+      images: true, 
+      specifications: true, 
+      colors: true 
+    },
   });
   return NextResponse.json({ success: true, data: product });
 }
@@ -39,9 +50,11 @@ const productUpdateSchema = z.object({
   shortDescription: z.string().optional(),
   mainImageUrl: z.string().url().optional().or(z.literal('')),
   categoryId: z.number().optional(),
+  categoryIds: z.array(z.number().int().positive()).optional(), // Many-to-many категории
   slug: z.string().min(1).optional(),
   sku: z.string().optional(),
   price: z.coerce.number().optional(),
+  minPrice: z.coerce.number().optional().nullable(), // Минимальная цена "от XXXX"
   oldPrice: z.coerce.number().optional(),
   currency: z.string().optional(),
   inStock: z.boolean().optional(),
@@ -51,7 +64,7 @@ const productUpdateSchema = z.object({
   isFeatured: z.boolean().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
-  canonicalUrl: z.string().optional(),
+  canonicalUrl: z.string().optional().nullable(), // Canonical URL для товара
   h1: z.string().optional(),
   robotsMeta: z.string().optional(),
   schemaMarkup: z.string().optional(),
@@ -66,8 +79,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const body = await req.json();
     const data = productUpdateSchema.parse(body);
     
-    // Извлекаем характеристики и изображения из данных
-    const { specifications, images, ...productData } = data;
+    // Извлекаем характеристики, изображения и категории из данных
+    const { specifications, images, categoryIds, ...productData } = data;
     
     // Определяем основное изображение
     const mainImage = images?.find(img => img.isMain);
@@ -76,6 +89,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     // Преобразуем пустые строки в null для SEO полей (для автоматической генерации)
     const cleanedProductData = {
       ...productData,
+      minPrice: productData.minPrice !== undefined ? (productData.minPrice || null) : undefined,
       seoTitle: productData.seoTitle?.trim() || null,
       seoDescription: productData.seoDescription?.trim() || null,
       canonicalUrl: productData.canonicalUrl?.trim() || null,
@@ -84,7 +98,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       schemaMarkup: productData.schemaMarkup?.trim() || null,
     };
     
-    // Обновляем товар с характеристиками и изображениями
+    // Обновляем товар с характеристиками, изображениями и категориями
     const product = await db.product.update({
       where: { id },
       data: {
@@ -108,9 +122,23 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
             isMain: img.isMain || false,
           }))
         } : undefined,
+        // Обновляем связи с категориями (many-to-many)
+        categories: categoryIds !== undefined ? {
+          deleteMany: {}, // Удаляем все существующие связи
+          create: categoryIds.map((categoryId, index) => ({
+            categoryId,
+            isPrimary: index === 0 && categoryId === productData.categoryId, // Первая категория = основная
+            sortOrder: index,
+          })),
+        } : undefined,
       },
       include: {
         category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
         images: true,
         specifications: true,
         colors: true,

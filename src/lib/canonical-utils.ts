@@ -83,8 +83,9 @@ export function generateCategoryCanonical(
     return customCanonical.startsWith('/') ? customCanonical : `/${customCanonical}`;
   }
   
-  // Генерируем автоматически на основе slug
-  const path = `/${categorySlug}`;
+  // Генерируем автоматически на основе slug (поддерживает вложенные категории)
+  // categorySlug может быть строкой с путём типа "parent/child"
+  const path = categorySlug.startsWith('/') ? categorySlug : `/${categorySlug}`;
   
   if (useFullUrl) {
     return getFullUrlForRegion(region, path);
@@ -124,8 +125,10 @@ export function generateProductCanonical(
     return customCanonical.startsWith('/') ? customCanonical : `/${customCanonical}`;
   }
   
-  // Генерируем автоматически на основе slug
-  const path = `/${categorySlug}/${productSlug}`;
+  // Генерируем автоматически на основе slug (поддерживает вложенные категории)
+  // categorySlug может быть строкой с путём типа "parent/child"
+  const categoryPath = categorySlug.startsWith('/') ? categorySlug : `/${categorySlug}`;
+  const path = `${categoryPath}/${productSlug}`;
   
   if (useFullUrl) {
     return getFullUrlForRegion(region, path);

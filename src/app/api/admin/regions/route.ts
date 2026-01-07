@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 
 const regionSchema = z.object({
   code: z.string().min(1),
@@ -15,6 +15,8 @@ const regionSchema = z.object({
   workingHoursDescription: z.string().optional(),
   mapIframe: z.string().optional(),
   officeName: z.string().optional(),
+  schemaMarkup: z.string().optional(),
+  homeContent: z.string().optional().nullable(), // Региональный контент для главной страницы
   isActive: z.boolean().optional(),
   sortOrder: z.number().optional(),
 });
@@ -66,8 +68,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Инвалидируем кэш регионов
-    revalidateTag('regions');
+    // Инвалидируем кэш регионов и главной страницы
+    revalidatePath('/api/regions', 'page');
+    revalidatePath('/', 'page');
 
     return NextResponse.json({
       success: true,
