@@ -74,3 +74,41 @@ migrate.log
 migrate-error.log
 MIGRATE_README.md
 migrate.config.example.js
+
+# deployment scripts (не коммитить)
+deploy-full.js
+update-db-on-server.js
+deploy-to-server.sh
+deploy-remote.sh
+deploy.sh
+simple-deploy.sh
+MANUAL-DEPLOY.txt
+
+# archives and backups
+*.tar.gz
+*.zip
+*.db.backup
+prisma/dev_backup_*.db
+prisma/old_dev.db
+
+# logs
+*.log
+deploy-*.log
+deploy-full-*.log
+deploy-final-*.log
+deploy-run-*.log
+
+# database exports (большие файлы)
+database-export.json
+database-dump.sql
+
+# temporary restore scripts (можно удалить после использования)
+prisma/restore-from-old-db.js
+prisma/restore-from-json.js
+prisma/restore-clean-from-json.js
+prisma/restore-product-categories.js
+prisma/audit-images.js
+prisma/fix-image-paths.js
+
+# utility scripts (можно оставить, но лучше в .gitignore)
+# prisma/create-admin.js - полезный скрипт, можно оставить
