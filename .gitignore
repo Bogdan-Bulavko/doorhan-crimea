@@ -55,6 +55,7 @@ prisma/old_dev.db
 *.md
 !README.md
 !DEPLOY-INSTRUCTIONS.md
+!QUICK-DEPLOY.md
 
 # local development files
 hosts-entries.txt
