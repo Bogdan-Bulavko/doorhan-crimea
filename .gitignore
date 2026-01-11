@@ -54,8 +54,8 @@ prisma/old_dev.db
 # documentation and reports (excluded from git)
 *.md
 !README.md
-!DEPLOY-INSTRUCTIONS.md
-!QUICK-DEPLOY.md
+# DEPLOY-INSTRUCTIONS.md и QUICK-DEPLOY.md содержат чувствительные данные (IP, пароли)
+# Они не должны попадать в Git
 
 # local development files
 hosts-entries.txt
@@ -102,8 +102,7 @@ deploy-run-*.log
 artifacts/
 *.md
 !README.md
-!DEPLOY-INSTRUCTIONS.md
-!QUICK-DEPLOY.md
+# DEPLOY-INSTRUCTIONS.md и QUICK-DEPLOY.md содержат чувствительные данные (IP, пароли)
 
 # database exports (большие файлы)
 database-export.json
