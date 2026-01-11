@@ -1,8 +1,45 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 const VideoSection = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!video || !container) return;
+
+    // Intersection Observer для запуска видео только при видимости
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Видео видно - можно запустить (но не автоматически на мобильных)
+            // На мобильных видео будет запускаться только по нажатию пользователя
+            // playsInline предотвращает автоматический полноэкранный режим
+          } else {
+            // Видео не видно - паузим, чтобы экономить трафик
+            if (!video.paused) {
+              video.pause();
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.3, // Видео должно быть видно минимум на 30%
+      }
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -52,14 +89,15 @@ const VideoSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           className="relative max-w-5xl mx-auto"
         >
-          <div className="relative aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl">
+          <div ref={containerRef} className="relative aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl">
             <video
+              ref={videoRef}
               className="w-full h-full object-cover"
               controls
               loop
-              autoPlay
               muted
-              preload="auto"
+              preload="metadata"
+              playsInline
             >
               <source src="/video.mp4" type="video/mp4" />
               Ваш браузер не поддерживает видео.

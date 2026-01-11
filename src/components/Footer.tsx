@@ -222,7 +222,7 @@ const Footer = () => {
                 Политика обработки персональных данных
               </Link>
               <Link
-                href="/pages/politika-cookie-i-servisa-yandex-metrika"
+                href="/pages/cookies"
                 target="_blank"
                 rel="nofollow noopener"
                 data-noindex="true"
@@ -231,7 +231,7 @@ const Footer = () => {
                 Политика cookie
               </Link>
               <Link
-                href="/pages/polzovatelskoe-soglashenie"
+                href="/pages/terms-of-use"
                 target="_blank"
                 rel="nofollow noopener"
                 data-noindex="true"
