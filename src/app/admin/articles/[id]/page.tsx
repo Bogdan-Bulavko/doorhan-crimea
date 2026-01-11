@@ -303,7 +303,7 @@ export default function EditArticlePage() {
             className="w-full border rounded-lg px-3 py-2"
             value={canonicalUrl}
             onChange={(e) => setCanonicalUrl(e.target.value)}
-            placeholder="Авто: https://doorhan-crimea.ru/articles/[slug]"
+            placeholder="Авто: https://zavod-doorhan.ru/articles/[slug]"
           />
           <p className="mt-1 text-xs text-gray-500">
             Можно указать относительный (/articles/slug) или полный URL

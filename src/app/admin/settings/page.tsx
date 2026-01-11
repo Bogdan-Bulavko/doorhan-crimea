@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAlert } from '@/contexts/AlertContext';
 import { getAvailableVariables } from '@/lib/template-variables';
 import { Info } from 'lucide-react';
+import ProductSelector from './_components/ProductSelector';
 
 interface SettingsData {
   // Основные контакты
@@ -49,6 +50,9 @@ interface SettingsData {
   
   // Карта
   mapIframe: string;
+  
+  // Товары на главной странице
+  featuredProductIds: string; // JSON массив ID товаров
 }
 
 export default function SettingsPage() {
@@ -96,6 +100,9 @@ export default function SettingsPage() {
     
     // Карта
     mapIframe: '',
+    
+    // Товары на главной странице
+    featuredProductIds: '[]',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -179,6 +186,23 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-6">
+        {/* Основные */}
+        <div className="rounded-xl border bg-white p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Основные</h2>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Товары на главной странице
+            </label>
+            <p className="text-xs text-gray-500 mb-4">
+              Выберите товары, которые будут отображаться на главной странице
+            </p>
+            <ProductSelector
+              selectedIds={JSON.parse(settings.featuredProductIds || '[]')}
+              onChange={(ids) => handleChange('featuredProductIds', JSON.stringify(ids))}
+            />
+          </div>
+        </div>
+
         {/* Основные контакты */}
         <div className="rounded-xl border bg-white p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Основные контакты</h2>

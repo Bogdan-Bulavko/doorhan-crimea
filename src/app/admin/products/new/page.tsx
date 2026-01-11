@@ -73,6 +73,7 @@ export default function NewProductPage() {
     }
   }, [name, slug]);
   const [categoryId, setCategoryId] = useState<number | ''>('');
+  const [categoryIds, setCategoryIds] = useState<number[]>([]); // Множественный выбор категорий
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState('RUB');
   const [title, setTitle] = useState('');
@@ -109,7 +110,8 @@ export default function NewProductPage() {
     const body = {
       name,
       slug,
-      categoryId: Number(categoryId),
+      categoryId: categoryIds.length > 0 ? categoryIds[0] : Number(categoryId), // Основная категория - первая из выбранных
+      categoryIds: categoryIds.length > 0 ? categoryIds : (categoryId ? [Number(categoryId)] : []), // Массив всех категорий
       price: Number(price),
       currency,
       title: title || undefined,
@@ -178,24 +180,47 @@ export default function NewProductPage() {
             </div>
           </FormField>
           <FormField
-            label="Категория"
+            label="Категории (можно выбрать несколько)"
             error={getFieldError('categoryId')}
             required
           >
-            <select
-              className={`mt-1 w-full border rounded-lg px-3 py-2 ${
-                getFieldError('categoryId') ? 'border-red-500' : ''
-              }`}
-              value={categoryId}
-              onChange={(e) => setCategoryId(Number(e.target.value))}
-            >
-              <option value="">—</option>
+            <div className={`mt-1 border rounded-lg p-3 max-h-60 overflow-y-auto ${
+              getFieldError('categoryId') ? 'border-red-500' : ''
+            }`}>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
+                <label key={c.id} className="flex items-center space-x-2 py-2 cursor-pointer hover:bg-gray-50 rounded px-2">
+                  <input
+                    type="checkbox"
+                    checked={categoryIds.includes(c.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        const newIds = [...categoryIds, c.id];
+                        setCategoryIds(newIds);
+                        // Первая выбранная категория становится основной
+                        if (categoryIds.length === 0) {
+                          setCategoryId(c.id);
+                        }
+                      } else {
+                        const newIds = categoryIds.filter(id => id !== c.id);
+                        setCategoryIds(newIds);
+                        // Если удалили основную категорию, устанавливаем первую из оставшихся
+                        if (categoryId === c.id && newIds.length > 0) {
+                          setCategoryId(newIds[0]);
+                        } else if (newIds.length === 0) {
+                          setCategoryId('');
+                        }
+                      }
+                    }}
+                    className="w-4 h-4 text-[#F6A800] border-gray-300 rounded focus:ring-[#F6A800]"
+                  />
+                  <span className="text-sm text-gray-700">{c.name}</span>
+                  {categoryIds.includes(c.id) && categoryIds[0] === c.id && (
+                    <span className="text-xs text-[#F6A800] font-medium">(основная)</span>
+                  )}
+                </label>
               ))}
-            </select>
+            </div>
+            <p className="mt-1 text-xs text-gray-500">Товар будет отображаться во всех выбранных категориях. Первая выбранная категория является основной.</p>
           </FormField>
         </div>
       )}

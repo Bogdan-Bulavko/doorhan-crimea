@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   const title = article.seoTitle || article.title;
   const description = article.seoDescription || article.excerpt || article.content.substring(0, 160);
-  const canonicalUrl = article.canonicalUrl || `https://doorhan-crimea.ru/articles/${slug}`;
+  const canonicalUrl = article.canonicalUrl || `https://zavod-doorhan.ru/articles/${slug}`;
 
   return {
     title: `${title} | DoorHan Крым`,

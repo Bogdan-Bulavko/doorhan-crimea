@@ -47,6 +47,9 @@ const settingsSchema = z.object({
   
   // Карта
   mapIframe: z.string().optional(),
+  
+  // Товары на главной странице
+  featuredProductIds: z.string().optional(), // JSON массив ID товаров
 });
 
 export async function GET() {
@@ -127,6 +130,9 @@ export async function PUT(req: NextRequest) {
       
       // Карта
       { key: 'mapIframe', value: data.mapIframe || '' },
+      
+      // Товары на главной странице
+      { key: 'featuredProductIds', value: data.featuredProductIds || '[]' },
     ];
 
     // Используем транзакцию для обновления всех настроек

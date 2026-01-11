@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 const regionSchema = z.object({
   code: z.string().min(1),
@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Инвалидируем кэш регионов и главной страницы
+    revalidateTag('regions'); // Инвалидируем кэш с тегом 'regions'
     revalidatePath('/api/regions', 'page');
     revalidatePath('/', 'page');
 

@@ -1,0 +1,100 @@
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           2  0.0  0.0      0     0 ?        S    Jan07   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [rcu_gp]
+root           4  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [rcu_par_gp]
+root           5  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [slub_flushwq]
+root           6  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [netns]
+root           8  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [kworker/0:0H-events_highpri]
+root          10  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [mm_percpu_wq]
+root          11  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [rcu_tasks_rude_]
+root          12  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [rcu_tasks_trace]
+root          13  0.1  0.0      0     0 ?        S    Jan07   5:58  \_ [ksoftirqd/0]
+root          14  0.0  0.0      0     0 ?        I    Jan07   1:11  \_ [rcu_sched]
+root          15  0.0  0.0      0     0 ?        S    Jan07   0:02  \_ [migration/0]
+root          16  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [idle_inject/0]
+root          17  0.0  0.0      0     0 ?        I    Jan07   0:00  \_ [kworker/0:1-cgroup_destroy]
+root          18  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [cpuhp/0]
+root          19  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [kdevtmpfs]
+root          20  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [inet_frag_wq]
+root          21  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [kauditd]
+root          22  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [khungtaskd]
+root          23  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [oom_reaper]
+root          24  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [writeback]
+root          25  0.0  0.0      0     0 ?        S    Jan07   0:26  \_ [kcompactd0]
+root          26  0.0  0.0      0     0 ?        SN   Jan07   0:00  \_ [ksmd]
+root          27  0.0  0.0      0     0 ?        SN   Jan07   0:00  \_ [khugepaged]
+root          73  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [kintegrityd]
+root          74  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [kblockd]
+root          75  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [blkcg_punt_bio]
+root          76  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [tpm_dev_wq]
+root          77  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [ata_sff]
+root          78  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [md]
+root          79  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [edac-poller]
+root          80  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [devfreq_wq]
+root          81  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [watchdogd]
+root          83  0.0  0.0      0     0 ?        I<   Jan07   0:10  \_ [kworker/0:1H-kblockd]
+root          85  0.0  0.0      0     0 ?        S    Jan07   0:56  \_ [kswapd0]
+root          86  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [ecryptfs-kthrea]
+root          88  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [kthrotld]
+root          89  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [acpi_thermal_pm]
+root          91  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [scsi_eh_0]
+root          92  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [scsi_tmf_0]
+root          93  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [scsi_eh_1]
+root          94  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [scsi_tmf_1]
+root          96  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [vfio-irqfd-clea]
+root          97  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [mld]
+root          98  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [ipv6_addrconf]
+root         107  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [kstrp]
+root         110  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [zswap-shrink]
+root         111  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [kworker/u481:0]
+root         118  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [charger_manager]
+root         120  0.0  0.0      0     0 ?        S    Jan07   0:00  \_ [hwrng]
+root         246  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [cryptd]
+root         308  0.0  0.0      0     0 ?        S    Jan07   0:12  \_ [jbd2/vda3-8]
+root         309  0.0  0.0      0     0 ?        I<   Jan07   0:00  \_ [ext4-rsv-conver]
+root      394637  0.1  0.0      0     0 ?        I    14:58   0:06  \_ [kworker/0:0-cgroup_destroy]
+root      403114  0.0  0.0      0     0 ?        I    15:09   0:01  \_ [kworker/u480:1-events_power_efficient]
+root      446162  0.0  0.0      0     0 ?        I    16:05   0:00  \_ [kworker/u480:0-flush-252:0]
+root      454420  0.0  0.0      0     0 ?        I    16:16   0:00  \_ [kworker/u480:2-ext4-rsv-conversion]
+root      458454  0.0  0.0      0     0 ?        I    16:21   0:00  \_ [kworker/u480:3-events_unbound]
+root      461109  0.1  0.0      0     0 ?        I    16:24   0:00  \_ [kworker/0:2-events]
+root      461328  0.0  0.0      0     0 ?        I    16:25   0:00  \_ [kworker/u480:4-flush-252:0]
+root      461593  0.0  0.0      0     0 ?        I    16:25   0:00  \_ [kworker/u480:5-flush-252:0]
+root      462739  0.0  0.0      0     0 ?        I    16:26   0:00  \_ [kworker/u480:6-events_unbound]
+root           1  0.0  0.4 167212  8020 ?        Ss   Jan07   2:36 /lib/systemd/systemd --switched-root --system --deserialize 30
+root         370  0.0  2.4 314092 45536 ?        S<s  Jan07   2:01 /lib/systemd/systemd-journald
+root         395  0.0  0.0  24988   224 ?        Ss   Jan07   0:00 /lib/systemd/systemd-udevd
+systemd+     461  0.0  0.0  26860  1752 ?        Ss   Jan07   2:51 /lib/systemd/systemd-resolved
+systemd+     462  0.0  0.0  89364    76 ?        Ssl  Jan07   0:00 /lib/systemd/systemd-timesyncd
+message+     483  0.0  0.0   8348   712 ?        Ss   Jan07   0:21 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+root         488  0.0  0.0 234504   532 ?        Ssl  Jan07   0:00 /usr/libexec/polkitd --no-debug
+root         489  0.0  0.0  80176  1004 ?        Ssl  Jan07   0:24 /usr/sbin/qemu-ga
+root         490  0.0  0.1  15208  2936 ?        Ss   Jan07   0:07 /lib/systemd/systemd-logind
+daemon       496  0.0  0.0   3864   100 ?        Ss   Jan07   0:00 /usr/sbin/atd -f
+root         700  0.0  0.0   3168    32 ?        Ss   Jan07   0:24 [ksmd]
+root         706  0.0  0.1 264332  2516 ?        Ssl  Jan07   1:14 /usr/bin/python3 -Es /usr/sbin/tuned -l -P
+root         707  0.0  0.0 112736     0 ?        Ssl  Jan07   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+root         709  0.0  0.0   8776    48 tty1     Ss+  Jan07   0:00 /sbin/agetty -o -p -- \u --noclear tty1 linux
+root         710  0.1  0.6 1719204 12032 ?       Ssl  Jan07   6:14 /usr/bin/containerd
+root         711  0.0  0.1  15436  1900 ?        Ss   Jan07   0:21 sshd: /usr/sbin/sshd -D [listener] 2 of 10-100 startups
+root      464744  0.0  0.5  16424  9884 ?        Ss   16:27   0:00  \_ sshd: unknown [priv]
+sshd      464745  0.0  0.2  15436  5536 ?        S    16:27   0:00  |   \_ sshd: unknown [net]
+root      464823  0.0  0.5  16424 10140 ?        Ss   16:28   0:00  \_ sshd: unknown [priv]
+sshd      464824  0.0  0.3  15436  5700 ?        S    16:28   0:00  |   \_ sshd: unknown [net]
+root      464825  3.0  0.5  16684 10776 ?        Ss   16:28   0:00  \_ sshd: root@notty
+root      464836  0.0  0.1   4364  3180 ?        Ss   16:28   0:00      \_ bash -c ps auxf 2>/dev/null | head -100
+root      464837  0.0  0.1   7208  3152 ?        R    16:28   0:00          \_ ps auxf
+root      464838  0.0  0.0   2804   992 ?        S    16:28   0:00          \_ head -100
+root         722  0.0  0.0  77936   484 ?        Ss   Jan07   0:00 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+www-data  133608  0.1  0.4  81572  8984 ?        S    Jan07   6:28  \_ nginx: worker process
+root         729  0.0  0.7 1833916 14344 ?       Ssl  Jan07   1:11 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+root         851  0.1  1.3 1255296 25916 ?       Ssl  Jan07   8:06 PM2 v6.0.14: God Daemon (/root/.pm2)
+root       14034  0.1  1.0 1124308 18888 ?       Sl   Jan07   8:02  \_ npm run start
+root       14048  0.0  0.0   2896     0 ?        S    Jan07   0:00  |   \_ sh -c next start -p 3332
+root       14049  0.1  7.0 13094016 131632 ?     Sl   Jan07   9:35  |       \_ next-server (v16.0.1)
+root       14077  0.8  2.8 1266284 52716 ?       Ssl  Jan07  50:51  \_ node /root/miner-defender/miner-defender.js
+root       14104  0.1  1.0 1124212 18660 ?       Ssl  Jan07   8:15  \_ npm run start:prod
+root       14118  0.0  0.0   2892     0 ?        S    Jan07   0:00  |   \_ sh -c next start -p 2231
+root       14119  0.0 12.8 23640700 238412 ?     Sl   Jan07   3:10  |       \_ next-server (v15.5.9)
+root      133555  0.1  0.5 1123724 10780 ?       Ssl  Jan07   8:12  \_ npm start
+root      133566  0.0  0.0   2892     0 ?        S    Jan07   0:00      \_ sh -c next start

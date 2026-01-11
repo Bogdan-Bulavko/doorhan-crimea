@@ -44,6 +44,7 @@ export default function EditProductPage() {
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
   const [categoryId, setCategoryId] = useState<number | ''>('');
+  const [categoryIds, setCategoryIds] = useState<number[]>([]); // Множественный выбор категорий
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState('RUB');
   const [title, setTitle] = useState('');
@@ -76,10 +77,22 @@ export default function EditProductPage() {
             title?: string; description?: string; shortDescription?: string; seoTitle?: string; seoDescription?: string; canonicalUrl?: string; h1?: string; robotsMeta?: string; schemaMarkup?: string;
             specifications?: Specification[];
             images?: Array<{ id: string; url: string; fileName: string; isMain: boolean; altText?: string; sortOrder?: number }>;
+            categories?: Array<{ categoryId: number; isPrimary: boolean }>;
           };
           setName(p.name);
           setSlug(p.slug);
-          setCategoryId(p.categoryId);
+          // Загружаем все категории товара (many-to-many)
+          if (p.categories && p.categories.length > 0) {
+            const allCategoryIds = p.categories.map(c => c.categoryId);
+            setCategoryIds(allCategoryIds);
+            // Основная категория - первая из списка или та, что помечена как isPrimary
+            const primaryCategory = p.categories.find(c => c.isPrimary) || p.categories[0];
+            setCategoryId(primaryCategory.categoryId);
+          } else if (p.categoryId) {
+            // Если нет many-to-many связей, используем старую categoryId
+            setCategoryIds([p.categoryId]);
+            setCategoryId(p.categoryId);
+          }
           setPrice(String(p.price));
           setCurrency(p.currency);
           setTitle(p.title ?? '');
@@ -124,7 +137,8 @@ export default function EditProductPage() {
     const body = {
       name,
       slug,
-      categoryId: Number(categoryId),
+      categoryId: categoryIds.length > 0 ? categoryIds[0] : Number(categoryId), // Основная категория - первая из выбранных
+      categoryIds: categoryIds.length > 0 ? categoryIds : (categoryId ? [Number(categoryId)] : []), // Массив всех категорий
       price: Number(price),
       currency,
       title: title || undefined,
@@ -167,13 +181,39 @@ export default function EditProductPage() {
           <input className="mt-1 w-full border rounded-lg px-3 py-2" value={slug} onChange={(e) => setSlug(e.target.value)} />
         </div>
         <div>
-          <label className="block text-sm text-gray-600">Категория</label>
-          <select className="mt-1 w-full border rounded-lg px-3 py-2" value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))}>
-            <option value="">—</option>
+          <label className="block text-sm text-gray-600 mb-2">Категории (можно выбрать несколько)</label>
+          <div className="mt-1 border rounded-lg p-3 max-h-60 overflow-y-auto">
             {categories.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <label key={c.id} className="flex items-center space-x-2 py-2 cursor-pointer hover:bg-gray-50 rounded px-2">
+                <input
+                  type="checkbox"
+                  checked={categoryIds.includes(c.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setCategoryIds([...categoryIds, c.id]);
+                      // Первая выбранная категория становится основной
+                      if (categoryIds.length === 0) {
+                        setCategoryId(c.id);
+                      }
+                    } else {
+                      setCategoryIds(categoryIds.filter(id => id !== c.id));
+                      // Если удалили основную категорию, устанавливаем первую из оставшихся
+                      if (categoryId === c.id && categoryIds.length > 1) {
+                        const remaining = categoryIds.filter(id => id !== c.id);
+                        setCategoryId(remaining[0] || '');
+                      }
+                    }
+                  }}
+                  className="w-4 h-4 text-[#F6A800] border-gray-300 rounded focus:ring-[#F6A800]"
+                />
+                <span className="text-sm text-gray-700">{c.name}</span>
+                {categoryIds.includes(c.id) && categoryIds[0] === c.id && (
+                  <span className="text-xs text-[#F6A800] font-medium">(основная)</span>
+                )}
+              </label>
             ))}
-          </select>
+          </div>
+          <p className="mt-1 text-xs text-gray-500">Товар будет отображаться во всех выбранных категориях. Первая выбранная категория является основной.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
@@ -227,7 +267,7 @@ export default function EditProductPage() {
             className="mt-1 w-full border rounded-lg px-3 py-2" 
             value={canonicalUrl} 
             onChange={(e) => setCanonicalUrl(e.target.value)} 
-            placeholder="Авто: https://doorhan-crimea.ru/[category-slug]/[product-slug]"
+            placeholder="Авто: https://zavod-doorhan.ru/[category-slug]/[product-slug]"
           />
           <p className="mt-1 text-xs text-gray-500">Можно указать относительный (/category/product) или полный URL (https://example.com/product)</p>
         </div>

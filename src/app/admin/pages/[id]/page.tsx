@@ -200,7 +200,7 @@ export default function EditPagePage() {
             className="w-full border rounded-lg px-3 py-2" 
             value={canonicalUrl} 
             onChange={(e) => setCanonicalUrl(e.target.value)} 
-            placeholder={`Авто: https://doorhan-crimea.ru/pages/${slug}`}
+            placeholder={`Авто: https://zavod-doorhan.ru/pages/${slug}`}
           />
           <p className="mt-1 text-xs text-gray-500">Можно указать относительный (/pages/slug) или полный URL (https://example.com/page)</p>
         </div>

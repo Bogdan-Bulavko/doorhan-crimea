@@ -127,7 +127,7 @@ export default function NewCategoryPage() {
             className="mt-1 w-full border rounded-lg px-3 py-2" 
             value={canonicalUrl} 
             onChange={(e) => setCanonicalUrl(e.target.value)} 
-            placeholder={`Авто: https://doorhan-crimea.ru/${slug}`}
+            placeholder={`Авто: https://zavod-doorhan.ru/${slug}`}
           />
           <p className="mt-1 text-xs text-gray-500">Можно указать относительный (/category) или полный URL (https://example.com/category)</p>
         </div>

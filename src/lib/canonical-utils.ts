@@ -8,7 +8,7 @@
  */
 
 // Базовый домен (без www)
-const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'doorhan-crimea.ru';
+const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'zavod-doorhan.ru';
 
 // Протокол для production
 const PROTOCOL = process.env.NODE_ENV === 'production' ? 'https' : 'http';
@@ -27,7 +27,7 @@ const REGION_SUBDOMAIN_MAP: Record<string, string | null> = {
 /**
  * Получает полный домен для региона
  * @param region - код региона ('default', 'simferopol', и т.д.)
- * @returns полный домен (например: 'doorhan-crimea.ru' или 'simferopol.doorhan-crimea.ru')
+ * @returns полный домен (например: 'zavod-doorhan.ru' или 'simferopol.zavod-doorhan.ru')
  */
 export function getDomainForRegion(region: string): string {
   const subdomain = REGION_SUBDOMAIN_MAP[region];
@@ -43,7 +43,7 @@ export function getDomainForRegion(region: string): string {
  * Получает полный URL с протоколом для региона
  * @param region - код региона
  * @param path - путь (например: '/garage-vorota' или '/garage-vorota/dhs-2')
- * @returns полный URL (например: 'https://simferopol.doorhan-crimea.ru/garage-vorota')
+ * @returns полный URL (например: 'https://simferopol.zavod-doorhan.ru/garage-vorota')
  */
 export function getFullUrlForRegion(region: string, path: string): string {
   const domain = getDomainForRegion(region);

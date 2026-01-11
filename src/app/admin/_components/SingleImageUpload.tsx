@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { Upload, X, Loader2, AlertCircle } from 'lucide-react';
 
 interface SingleImageUploadProps {
@@ -130,9 +131,11 @@ export default function SingleImageUpload({
       {value ? (
         <div className="relative group">
           <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-            <img
+            <Image
               src={value}
               alt="Изображение статьи"
+              width={800}
+              height={400}
               className="w-full h-full object-cover"
             />
             {!disabled && (

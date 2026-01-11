@@ -31,6 +31,9 @@ const eslintConfig = [
       "*.tsbuildinfo",
       ".DS_Store",
       "Thumbs.db",
+      "deploy-full.js",
+      "update-db-on-server.js",
+      "prisma/create-admin.js",
     ],
   },
 ];

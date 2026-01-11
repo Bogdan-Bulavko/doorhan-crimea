@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'DoorHan Крым | Ворота и автоматика',
     description:
       'Официальный представитель DoorHan в Крыму. Ворота, роллеты, автоматические системы.',
-    url: 'https://doorhan-crimea.ru',
+    url: 'https://zavod-doorhan.ru',
     siteName: 'DoorHan Крым',
     images: [
       {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     images: ['/doorhan-crimea/og-image.jpg'],
   },
   alternates: {
-    canonical: 'https://doorhan-crimea.ru',
+    canonical: 'https://zavod-doorhan.ru',
   },
 };
 
@@ -66,12 +66,98 @@ export default async function Home() {
     processedHomeContent = processShortcodes(region.homeContent, shortcodeContext);
   }
 
+  // Получаем выбранные товары для главной страницы из настроек
+  const featuredProductIdsSetting = await db.siteSetting.findUnique({
+    where: { key: 'featuredProductIds' },
+  });
+  
+  let featuredProductIds: number[] = [];
+  if (featuredProductIdsSetting?.value) {
+    try {
+      featuredProductIds = JSON.parse(featuredProductIdsSetting.value);
+    } catch (e) {
+      console.error('Error parsing featuredProductIds:', e);
+    }
+  }
+
+  // Если есть выбранные товары, загружаем их
+  let featuredProducts = null;
+  if (featuredProductIds.length > 0) {
+    const products = await db.product.findMany({
+      where: {
+        id: { in: featuredProductIds },
+        inStock: true,
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        images: {
+          orderBy: { sortOrder: 'asc' },
+          take: 1,
+        },
+      },
+    });
+    
+    // Сортируем по порядку в featuredProductIds
+    products.sort((a, b) => {
+      const indexA = featuredProductIds.indexOf(a.id);
+      const indexB = featuredProductIds.indexOf(b.id);
+      return indexA - indexB;
+    });
+    
+    // Преобразуем данные Prisma в формат для ProductGrid (null -> undefined)
+    featuredProducts = products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      title: p.title || undefined,
+      description: p.description || undefined,
+      shortDescription: p.shortDescription || undefined,
+      mainImageUrl: p.mainImageUrl || undefined,
+      categoryId: p.categoryId,
+      category: p.category ? {
+        id: p.category.id,
+        name: p.category.name,
+        slug: p.category.slug,
+      } : undefined,
+      slug: p.slug,
+      sku: p.sku || undefined,
+      price: Number(p.price),
+      oldPrice: p.oldPrice ? Number(p.oldPrice) : undefined,
+      currency: p.currency,
+      inStock: p.inStock,
+      stockQuantity: p.stockQuantity,
+      isNew: p.isNew,
+      isPopular: p.isPopular,
+      isFeatured: p.isFeatured,
+      rating: Number(p.rating),
+      reviewsCount: p.reviewsCount,
+      seoTitle: p.seoTitle || undefined,
+      seoDescription: p.seoDescription || undefined,
+      images: p.images.map((img) => ({
+        id: img.id,
+        imageUrl: img.imageUrl,
+        altText: img.altText || undefined,
+        sortOrder: img.sortOrder,
+        isMain: img.isMain,
+      })),
+      specifications: [],
+      colors: [],
+      createdAt: p.createdAt.toISOString(),
+      updatedAt: p.updatedAt.toISOString(),
+    }));
+  }
+
   return (
     <main className="min-h-screen">
       <HeroSection />
       <VideoSection />
       <StatsSection />
-      <ProductGrid />
+      <ProductGrid products={featuredProducts || undefined} />
       {processedHomeContent && <RegionalContent content={processedHomeContent} />}
       <AboutSection />
       <ContactsSection />

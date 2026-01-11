@@ -22,6 +22,16 @@ export function RegionProvider({ children }: { children: ReactNode }) {
     const region = getRegionFromClient();
     setCurrentRegion(region);
     loadRegionalData(region);
+    
+    // Обновляем региональные данные при фокусе окна (когда пользователь возвращается на вкладку)
+    const handleFocus = () => {
+      loadRegionalData(region);
+    };
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const loadRegionalData = async (region: string) => {

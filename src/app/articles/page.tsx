@@ -14,13 +14,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Статьи | DoorHan Крым',
     description: 'Полезные статьи о воротах и автоматике от DoorHan Крым',
-    url: 'https://doorhan-crimea.ru/articles',
+    url: 'https://zavod-doorhan.ru/articles',
     siteName: 'DoorHan Крым',
     locale: 'ru_RU',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://doorhan-crimea.ru/articles',
+    canonical: 'https://zavod-doorhan.ru/articles',
   },
 };
 
