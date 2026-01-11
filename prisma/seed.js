@@ -21,10 +21,13 @@ async function clearDatabase() {
 }
 
 async function seedUsers() {
-  const passwordHash = await bcrypt.hash('admin123', 10);
+  // Пароль должен быть установлен через переменные окружения или скрипт create-admin.js
+  // Дефолтный пароль не используется в seed для безопасности
+  const defaultPassword = process.env.ADMIN_PASSWORD || 'ChangeMe123!';
+  const passwordHash = await bcrypt.hash(defaultPassword, 10);
   const admin = await prisma.user.create({
     data: {
-      email: 'admin@doorhan-crimea.ru',
+      email: process.env.ADMIN_EMAIL || 'admin@example.com',
       passwordHash,
       firstName: 'Админ',
       lastName: 'DoorHan',
@@ -34,8 +37,8 @@ async function seedUsers() {
   });
 
   console.log('✅ Создан админ пользователь:');
-  console.log('📧 Email: admin@doorhan-crimea.ru');
-  console.log('🔑 Пароль: admin123');
+  console.log(`📧 Email: ${admin.email}`);
+  console.log('⚠️  ВНИМАНИЕ: Используйте скрипт create-admin.js для установки пароля!');
 
   return { admin };
 }
