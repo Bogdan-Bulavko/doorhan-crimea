@@ -117,5 +117,5 @@ prisma/restore-product-categories.js
 prisma/audit-images.js
 prisma/fix-image-paths.js
 
-# utility scripts (можно оставить, но лучше в .gitignore)
-# prisma/create-admin.js - полезный скрипт, можно оставить
+# utility scripts с паролями (не коммитить)
+prisma/create-admin.js
