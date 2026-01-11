@@ -98,6 +98,13 @@ deploy-full-*.log
 deploy-final-*.log
 deploy-run-*.log
 
+# artifacts and analysis files (excluded from git)
+artifacts/
+*.md
+!README.md
+!DEPLOY-INSTRUCTIONS.md
+!QUICK-DEPLOY.md
+
 # database exports (большие файлы)
 database-export.json
 database-dump.sql
