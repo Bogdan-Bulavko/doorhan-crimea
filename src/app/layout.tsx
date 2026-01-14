@@ -95,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: metadataTitle,
     description: metadataDescription,
-    keywords: regionData.keywords,
+    // keywords удален - считается спамом в 2026 году
     authors: [{ name: 'DoorHan Крым' }],
     creator: 'DoorHan Крым',
     publisher: 'DoorHan Крым',

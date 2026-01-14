@@ -38,7 +38,7 @@ export async function generateMetadata({
   return {
     title: `${title} | DoorHan Крым`,
     description,
-    keywords: article.tags || `${article.title}, DoorHan, Крым`,
+    // keywords удален - считается спамом в 2026 году
     openGraph: {
       title,
       description,

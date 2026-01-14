@@ -15,13 +15,40 @@ const PROTOCOL = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
 /**
  * Маппинг регионов на поддомены
+ * Включает все поддерживаемые регионы из middleware
  */
 const REGION_SUBDOMAIN_MAP: Record<string, string | null> = {
   default: null, // Основной домен без поддомена
   simferopol: 'simferopol',
+  kerch: 'kerch',
+  evpatoria: 'evpatoria',
   yalta: 'yalta',
-  alushta: 'alushta',
+  feodosia: 'feodosia',
   sevastopol: 'sevastopol',
+  alushta: 'alushta',
+  dzhankoy: 'dzhankoy',
+  bakhchisaray: 'bakhchisaray',
+  krasnoperekopsk: 'krasnoperekopsk',
+  saki: 'saki',
+  armyansk: 'armyansk',
+  sudak: 'sudak',
+  belogorsk: 'belogorsk',
+  inkerman: 'inkerman',
+  balaklava: 'balaklava',
+  'shchelkino': 'shchelkino',
+  'stary-krym': 'stary-krym',
+  alupka: 'alupka',
+  gurzuf: 'gurzuf',
+  simeiz: 'simeiz',
+  foros: 'foros',
+  koktebel: 'koktebel',
+  livadia: 'livadia',
+  massandra: 'massandra',
+  nikita: 'nikita',
+  gaspra: 'gaspra',
+  miskhor: 'miskhor',
+  partenit: 'partenit',
+  kacha: 'kacha',
 };
 
 /**

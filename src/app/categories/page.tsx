@@ -5,7 +5,7 @@ import CategoriesSEO from '@/components/CategoriesSEO';
 export const metadata: Metadata = {
   title: 'Категории товаров | DoorHan Крым',
   description: 'Выберите категорию товаров DoorHan: ворота, автоматика, рольставни. Доставка и установка по Крыму.',
-  keywords: 'категории, DoorHan, ворота, автоматика, рольставни, Крым',
+  // keywords удален - считается спамом в 2026 году
   openGraph: {
     title: 'Категории товаров | DoorHan Крым',
     description: 'Выберите категорию товаров DoorHan: ворота, автоматика, рольставни.',

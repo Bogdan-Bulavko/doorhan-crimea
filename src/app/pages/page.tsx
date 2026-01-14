@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Страницы | DoorHan Крым',
   description: 'Информационные страницы DoorHan Крым. Политика конфиденциальности, условия использования, контакты и другая полезная информация.',
-  keywords: 'DoorHan Крым, страницы, информация, политика конфиденциальности, контакты',
+  // keywords удален - считается спамом в 2026 году
   openGraph: {
     title: 'Страницы | DoorHan Крым',
     description: 'Информационные страницы DoorHan Крым',

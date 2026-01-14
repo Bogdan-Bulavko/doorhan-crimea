@@ -62,14 +62,20 @@ interface ParentCategory {
   slug: string;
 }
 
+interface CategoryPathItem {
+  slug: string;
+  name: string;
+}
+
 interface CategoryProductsProps {
   category: Category;
   products: Product[];
   subcategories?: Subcategory[];
   parentCategory?: ParentCategory | null;
+  categoryPath?: CategoryPathItem[]; // Полный путь категории с названиями для хлебных крошек
 }
 
-const CategoryProducts = ({ category, products, subcategories = [], parentCategory }: CategoryProductsProps) => {
+const CategoryProducts = ({ category, products, subcategories = [], parentCategory, categoryPath }: CategoryProductsProps) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'createdAt'>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -153,10 +159,20 @@ const CategoryProducts = ({ category, products, subcategories = [], parentCatego
             items={[
               { label: 'Главная', href: '/' },
               { label: 'Категории', href: '/categories' },
-              ...(parentCategory ? [
-                { label: parentCategory.name, href: `/${parentCategory.slug}` }
-              ] : []),
-              { label: category.name, href: `/${category.slug}` }
+              // Если есть полный путь с названиями, используем его
+              ...(categoryPath && categoryPath.length > 0 
+                ? categoryPath.map((item, index) => ({
+                    label: item.name,
+                    href: `/${categoryPath.slice(0, index + 1).map(c => c.slug).join('/')}`
+                  }))
+                : // Fallback на старую логику
+                [
+                  ...(parentCategory ? [
+                    { label: parentCategory.name, href: `/${parentCategory.slug}` }
+                  ] : []),
+                  { label: category.name, href: `/${category.slug}` }
+                ]
+              )
             ]}
           />
         </div>

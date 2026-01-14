@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ShortcodesInfo from '../../_components/ShortcodesInfo';
 import RegionsList from '../../_components/RegionsList';
+import CategoryRegionalDataEditor from '../_components/CategoryRegionalDataEditor';
 
 export default function EditCategoryPage() {
   const router = useRouter();
@@ -228,6 +229,9 @@ export default function EditCategoryPage() {
           <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} /> Активна
         </label>
       </div>
+      {/* Региональная уникализация */}
+      <CategoryRegionalDataEditor categoryId={categoryId} />
+
       <div className="flex gap-2">
         <button className="px-4 py-2 border rounded-lg" onClick={() => router.push('/admin/categories')}>Назад</button>
         <button className="px-4 py-2 bg-[#00205B] text-white rounded-lg" onClick={save}>Сохранить</button>

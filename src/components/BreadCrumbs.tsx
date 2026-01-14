@@ -65,41 +65,30 @@ export default function BreadCrumbs({ items = [] }: BreadCrumbsProps) {
     >
       <nav 
         className="flex items-center space-x-1 text-sm text-gray-600 overflow-x-auto pb-2"
-        vocab="https://schema.org/" 
-        typeof="BreadcrumbList"
+        aria-label="Хлебные крошки"
       >
         {items.map((item, index) => (
           <div 
             key={index} 
             className="flex items-center flex-shrink-0"
-            property="itemListElement" 
-            typeof="ListItem"
           >
             {index > 0 && <span className="mx-2 text-gray-400">/</span>}
             {index === items.length - 1 ? (
-              <>
-                <span 
-                  className="text-[#00205B] font-medium max-w-[200px] truncate" 
-                  title={item.label}
-                  property="name"
-                >
-                  {item.label}
-                </span>
-                <meta property="position" content={String(index + 1)} />
-              </>
+              <span 
+                className="text-[#00205B] font-medium max-w-[200px] truncate" 
+                title={item.label}
+                aria-current="page"
+              >
+                {item.label}
+              </span>
             ) : (
-              <>
-                <Link 
-                  href={item.href} 
-                  className="hover:text-[#F6A800] transition-colors max-w-[150px] truncate block"
-                  title={item.label}
-                  property="item"
-                  typeof="Thing"
-                >
-                  <span property="name">{item.label}</span>
-                </Link>
-                <meta property="position" content={String(index + 1)} />
-              </>
+              <Link 
+                href={item.href} 
+                className="hover:text-[#F6A800] transition-colors max-w-[150px] truncate block"
+                title={item.label}
+              >
+                {item.label}
+              </Link>
             )}
           </div>
         ))}

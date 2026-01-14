@@ -13,6 +13,7 @@ import {
 } from '@/lib/metadata-generator';
 import { generateCanonical } from '@/lib/canonical-utils';
 import { processShortcodes, getRegionData, type ShortcodeContext } from '@/lib/shortcodes';
+import { getCategoryRegionalDataWithFallback } from '@/lib/category-regional-data';
 
 interface PageProps {
   params: Promise<{ categorySlug: string[] }>;
@@ -222,7 +223,7 @@ export async function generateMetadata({
         title,
         description,
         robots,
-        keywords: `${product.name}, ${category.name}, DoorHan, ворота, автоматика, Крым`,
+        // keywords удален - считается спамом в 2026 году
         openGraph: {
           title,
           description,
@@ -272,8 +273,14 @@ export async function generateMetadata({
     price: p.price ? Number(p.price) : null,
   }));
 
+  // Получаем региональные данные для категории
+  const categoryRegionalData = await getCategoryRegionalDataWithFallback(category.id, region);
+  
   // Получаем региональные данные для шорткодов
   const regionData = await getRegionData(region);
+  
+  // regionCode используется ниже для canonical
+  const regionCodeForCanonical = region;
   const shortcodeContext: ShortcodeContext = {
     region: regionData || undefined,
     category: {
@@ -282,37 +289,48 @@ export async function generateMetadata({
     },
   };
 
-  // Генерируем метатеги по шаблону
+  // Генерируем метатеги по шаблону (используется если нет региональных данных)
   const generatedMeta = generateCategoryMetadata(
     category.name,
     productsWithPrices,
     region
   );
   
-  // Обрабатываем шорткоды в SEO полях
-  const rawTitle = category.seoTitle?.trim() || generatedMeta.title;
-  const rawDescription = category.seoDescription?.trim() || generatedMeta.description;
+  // Используем региональные данные если есть, иначе базовые данные категории, иначе автогенерация
+  const rawTitle = categoryRegionalData?.seoTitle?.trim() 
+    || category.seoTitle?.trim() 
+    || generatedMeta.title;
+  const rawDescription = categoryRegionalData?.seoDescription?.trim()
+    || category.seoDescription?.trim()
+    || generatedMeta.description;
   const title = processShortcodes(rawTitle, shortcodeContext);
   const description = processShortcodes(rawDescription, shortcodeContext);
   const robots = category.robotsMeta?.trim() || 'index, follow';
+  
+  // Используем региональный schemaMarkup если есть, иначе базовый (для метаданных, не используется в generateMetadata)
+  // const schemaMarkup = categoryRegionalData?.schemaMarkup?.trim() || category.schemaMarkup?.trim() || null;
 
   // Строим полный путь для canonical
   const categoryPathArray = buildCategoryPath(category as { slug: string; parent: { slug: string; parent: unknown } | null } | null);
   const categoryPathString = categoryPathArray.join('/');
 
-  // Генерируем canonical URL с учетом поддомена
-  const canonicalUrl = generateCanonical('category', region, {
+  // Если есть региональные данные, canonical должен быть уникальным для региона
+  // Иначе используем основной домен (forceMainDomain)
+  const hasRegionalData = !!categoryRegionalData;
+  const canonicalUrl = generateCanonical('category', regionCodeForCanonical, {
     categorySlug: categoryPathString,
     customCanonical: category.canonicalUrl,
     useFullUrl: true,
-    forceMainDomain: true,
+    // Если есть региональные данные, не форсируем основной домен (canonical будет уникальным для региона)
+    // Если нет региональных данных, форсируем основной домен (чтобы избежать дублей)
+    forceMainDomain: !hasRegionalData,
   });
 
   return {
     title,
     description,
     robots,
-    keywords: `${category.name}, DoorHan, ворота, автоматика, Крым`,
+    // keywords удален - считается спамом в 2026 году
     openGraph: {
       title,
       description,
@@ -519,6 +537,9 @@ export default async function DynamicPage({ params }: PageProps) {
     });
   }
 
+  // Получаем региональные данные для категории
+  const categoryRegionalData = await getCategoryRegionalDataWithFallback(category.id, regionCode);
+  
   // Обрабатываем шорткоды в контенте
   const shortcodeContext: ShortcodeContext = {
     region: regionData || undefined,
@@ -528,12 +549,39 @@ export default async function DynamicPage({ params }: PageProps) {
     },
   };
 
+  // Используем региональные данные если есть, иначе базовые данные категории
   // Обрабатываем шорткоды во всех полях
-  const processedContentTop = processShortcodes(category.contentTop, shortcodeContext);
-  const processedContentBottom = processShortcodes(category.contentBottom, shortcodeContext);
-  const processedH1 = processShortcodes(category.h1 || category.name, shortcodeContext);
-  const processedDescription = processShortcodes(category.description, shortcodeContext);
+  const contentTop = categoryRegionalData?.contentTop?.trim() || category.contentTop?.trim() || null;
+  const contentBottom = categoryRegionalData?.contentBottom?.trim() || category.contentBottom?.trim() || null;
+  const h1 = categoryRegionalData?.h1?.trim() || category.h1?.trim() || category.name;
+  const description = categoryRegionalData?.description?.trim() || category.description?.trim() || null;
+  
+  const processedContentTop = contentTop ? processShortcodes(contentTop, shortcodeContext) : null;
+  const processedContentBottom = contentBottom ? processShortcodes(contentBottom, shortcodeContext) : null;
+  const processedH1 = processShortcodes(h1, shortcodeContext);
+  const processedDescription = description ? processShortcodes(description, shortcodeContext) : null;
+  
+  // Используем региональный schemaMarkup если есть, иначе базовый
+  const schemaMarkupForPage = categoryRegionalData?.schemaMarkup?.trim() || category.schemaMarkup?.trim() || null;
 
+  // Строим полный путь категории для хлебных крошек с названиями
+  const buildCategoryPathWithNames = (cat: typeof category): Array<{ slug: string; name: string }> => {
+    const path: Array<{ slug: string; name: string }> = [];
+    // Используем type assertion для обхода рекурсивной структуры
+    type CategoryWithParent = { slug: string; name: string; parent: CategoryWithParent | null };
+    let current: CategoryWithParent | null = cat as CategoryWithParent;
+    
+    while (current) {
+      path.unshift({ slug: current.slug, name: current.name });
+      current = current.parent;
+    }
+    
+    return path;
+  };
+  
+  const categoryPathWithNames = buildCategoryPathWithNames(category);
+  const categoryPathArray = categoryPathWithNames.map(c => c.slug);
+  
   // Сериализуем данные для передачи в Client Components
   const serializedProducts = serializeProducts(products);
   const serializedCategory = serializeCategory({
@@ -547,7 +595,7 @@ export default async function DynamicPage({ params }: PageProps) {
     h1: processedH1,
     contentTop: processedContentTop,
     contentBottom: processedContentBottom,
-    slug: category.slug,
+    slug: categoryPathArray.join('/'), // Полный путь категории
     isActive: category.isActive,
   });
 
@@ -568,11 +616,12 @@ export default async function DynamicPage({ params }: PageProps) {
           name: category.parent.name,
           slug: category.parent.slug,
         } : null}
+        categoryPath={categoryPathWithNames} // Передаем полный путь с названиями для хлебных крошек
       />
-      {category.schemaMarkup && (
+      {schemaMarkupForPage && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: category.schemaMarkup }}
+          dangerouslySetInnerHTML={{ __html: schemaMarkupForPage }}
         />
       )}
     </main>
