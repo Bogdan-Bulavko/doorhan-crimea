@@ -1,0 +1,1502 @@
+{
+  "timestamp": "2026-01-16T09:01:52.631Z",
+  "totalFindings": 92,
+  "bySeverity": {
+    "critical": 6,
+    "high": 79,
+    "medium": 7,
+    "low": 0
+  },
+  "byCategory": {
+    "Dynamic Script": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/REPORT.md",
+        "line": 131,
+        "content": "- Scripts injected via `document.createElement('script')`",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/REPORT.md",
+        "line": 256,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/REPORT.md",
+        "line": 258,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_MITIGATION.md",
+        "line": 173,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_MITIGATION.md",
+        "line": 175,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/CustomAssets_server.tsx",
+        "line": 32,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/CustomAssets_server.tsx",
+        "line": 34,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_plan.md",
+        "line": 85,
+        "content": "- document.createElement('script')",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 31,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 33,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 36,
+        "content": "⚠️ **РИСК**: Динамическая инжекция JavaScript через `createElement('script')`",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 132,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 134,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 141,
+        "content": "const script = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 144,
+        "content": "document.head.appendChild(script);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 196,
+        "content": "1. `src/components/CustomAssets.tsx` - createElement('script')",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 246,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 248,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/BreadCrumbs.tsx",
+        "line": 40,
+        "content": "const script = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/BreadCrumbs.tsx",
+        "line": 44,
+        "content": "document.head.appendChild(script);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/CustomAssets.tsx",
+        "line": 32,
+        "content": "scriptElement = document.createElement('script');",
+        "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/CustomAssets.tsx",
+        "line": 34,
+        "content": "document.body.appendChild(scriptElement);",
+        "pattern": "/appendChild\\s*\\(.*script/gi",
+        "severity": "high",
+        "category": "Dynamic Script"
+      }
+    ],
+    "Malicious Domain": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 1,
+        "content": "# 🔒 ОТЧЕТ ПО БЕЗОПАСНОСТИ: Проверка на вирус falsh.org",
+        "pattern": "/falsh\\.org/gi",
+        "severity": "critical",
+        "category": "Malicious Domain"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 4,
+        "content": "**Проверяемый домен:** falsh.org",
+        "pattern": "/falsh\\.org/gi",
+        "severity": "critical",
+        "category": "Malicious Domain"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 79,
+        "content": "### ✅ 16. Поиск всех упоминаний falsh.org в коде",
+        "pattern": "/falsh\\.org/gi",
+        "severity": "critical",
+        "category": "Malicious Domain"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 81,
+        "content": "**Результат:** Упоминаний falsh.org в коде не найдено.",
+        "pattern": "/falsh\\.org/gi",
+        "severity": "critical",
+        "category": "Malicious Domain"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 220,
+        "content": "UPDATE SiteSetting SET value = '' WHERE key = 'customJs' AND value LIKE '%falsh.org%';",
+        "pattern": "/falsh\\.org/gi",
+        "severity": "critical",
+        "category": "Malicious Domain"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 222,
+        "content": "UPDATE SiteSetting SET value = '' WHERE key = 'globalSchemaMarkup' AND value LIKE '%falsh.org%';",
+        "pattern": "/falsh\\.org/gi",
+        "severity": "critical",
+        "category": "Malicious Domain"
+      }
+    ],
+    "XSS Risk": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 25,
+        "content": "**Результат:** Обнаружено использование `dangerouslySetInnerHTML` для `globalSchemaMarkup` из базы данных.",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 35,
+        "content": "- **RegionalContent.tsx** - использует `dangerouslySetInnerHTML` без санитизации",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 37,
+        "content": "- **CategoryProducts.tsx** - использует `dangerouslySetInnerHTML` для контента категорий",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 39,
+        "content": "- **SimpleMarkdownRenderer.tsx** - использует `dangerouslySetInnerHTML`",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 118,
+        "content": "### 3. Использование dangerouslySetInnerHTML без санитизации",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 129,
+        "content": "**Проблема:** Все эти компоненты используют `dangerouslySetInnerHTML` для вставки HTML из базы данных без санитизации.",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+        "line": 160,
+        "content": "5. **Добавить санитизацию для всех dangerouslySetInnerHTML**",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 62,
+        "content": "## 🔧 ИСПРАВЛЕНИЕ 3: Добавление санитизации для dangerouslySetInnerHTML",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 129,
+        "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 129,
+        "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 138,
+        "content": "dangerouslySetInnerHTML={{ __html: sanitizeIframe(regionalData.mapIframe) }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 138,
+        "content": "dangerouslySetInnerHTML={{ __html: sanitizeIframe(regionalData.mapIframe) }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 147,
+        "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(globalSchemaMarkup) }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 147,
+        "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(globalSchemaMarkup) }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 150,
+        "content": "И так далее для всех компонентов, использующих `dangerouslySetInnerHTML`.",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+        "line": 246,
+        "content": "- [ ] Добавлена санитизация для всех dangerouslySetInnerHTML",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_SUMMARY.md",
+        "line": 15,
+        "content": "- 🟠 **Использование dangerouslySetInnerHTML без санитизации** - ТРЕБУЕТСЯ ИСПРАВЛЕНИЕ",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/SECURITY_SUMMARY.md",
+        "line": 55,
+        "content": "5. **Добавить санитизацию для всех dangerouslySetInnerHTML**",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/html_head_prod.txt",
+        "line": 1,
+        "content": "<!DOCTYPE html><html lang=\"ru\" class=\"scroll-smooth\" data-scroll-behavior=\"smooth\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><meta name=\"viewpor",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/scripts/security-audit.ts",
+        "line": 52,
+        "content": "{ pattern: /dangerouslySetInnerHTML/gi, severity: 'high' as const, category: 'XSS Risk' },",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+        "line": 473,
+        "content": "dangerouslySetInnerHTML={{ __html: product.schemaMarkup }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+        "line": 473,
+        "content": "dangerouslySetInnerHTML={{ __html: product.schemaMarkup }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+        "line": 624,
+        "content": "dangerouslySetInnerHTML={{ __html: schemaMarkupForPage }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+        "line": 624,
+        "content": "dangerouslySetInnerHTML={{ __html: schemaMarkupForPage }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/articles/[slug]/page.tsx",
+        "line": 180,
+        "content": "dangerouslySetInnerHTML={{ __html: article.schemaMarkup }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/articles/[slug]/page.tsx",
+        "line": 180,
+        "content": "dangerouslySetInnerHTML={{ __html: article.schemaMarkup }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/layout.tsx",
+        "line": 159,
+        "content": "dangerouslySetInnerHTML={{ __html: globalSchemaMarkup }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/layout.tsx",
+        "line": 159,
+        "content": "dangerouslySetInnerHTML={{ __html: globalSchemaMarkup }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/pages/[slug]/page.tsx",
+        "line": 131,
+        "content": "dangerouslySetInnerHTML={{ __html: processedSchemaMarkup }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/pages/[slug]/page.tsx",
+        "line": 131,
+        "content": "dangerouslySetInnerHTML={{ __html: processedSchemaMarkup }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+        "line": 229,
+        "content": "dangerouslySetInnerHTML={{ __html: category.contentTop }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+        "line": 229,
+        "content": "dangerouslySetInnerHTML={{ __html: category.contentTop }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+        "line": 514,
+        "content": "dangerouslySetInnerHTML={{ __html: category.contentBottom }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+        "line": 514,
+        "content": "dangerouslySetInnerHTML={{ __html: category.contentBottom }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/ContactsSection.tsx",
+        "line": 434,
+        "content": "dangerouslySetInnerHTML={{ __html: regionalData.mapIframe }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/ContactsSection.tsx",
+        "line": 434,
+        "content": "dangerouslySetInnerHTML={{ __html: regionalData.mapIframe }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+        "line": 255,
+        "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentTop }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+        "line": 255,
+        "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentTop }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+        "line": 341,
+        "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentBottom }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+        "line": 341,
+        "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentBottom }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionalContent.tsx",
+        "line": 27,
+        "content": "dangerouslySetInnerHTML={{ __html: content }}",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionalContent.tsx",
+        "line": 27,
+        "content": "dangerouslySetInnerHTML={{ __html: content }}",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/SEOOptimizer.tsx",
+        "line": 39,
+        "content": "h2.innerHTML = h1.innerHTML;",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/SEOOptimizer.tsx",
+        "line": 53,
+        "content": "h3.innerHTML = h2Element.innerHTML;",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/SimpleMarkdownRenderer.tsx",
+        "line": 24,
+        "content": "return <span dangerouslySetInnerHTML={{ __html: formatted }} />;",
+        "pattern": "/innerHTML\\s*=/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/SimpleMarkdownRenderer.tsx",
+        "line": 24,
+        "content": "return <span dangerouslySetInnerHTML={{ __html: formatted }} />;",
+        "pattern": "/dangerouslySetInnerHTML/gi",
+        "severity": "high",
+        "category": "XSS Risk"
+      }
+    ],
+    "Client Redirect": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/RegionSelector_server.tsx",
+        "line": 74,
+        "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/RegionSelector_server.tsx",
+        "line": 78,
+        "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 22,
+        "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 24,
+        "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 227,
+        "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+        "line": 229,
+        "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/detailed_analysis.md",
+        "line": 26,
+        "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/artifacts/detailed_analysis.md",
+        "line": 28,
+        "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/admin/_components/ProductCard.tsx",
+        "line": 124,
+        "content": "<div className=\"relative aspect-[4/3] bg-gray-100 block cursor-pointer\" onClick={() => window.location.href = `/admin/products/${product.id}`}>",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionSelector.tsx",
+        "line": 74,
+        "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionSelector.tsx",
+        "line": 78,
+        "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+        "pattern": "/location\\.href\\s*=/gi",
+        "severity": "high",
+        "category": "Client Redirect"
+      }
+    ],
+    "Suspicious File": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/package-lock.json",
+        "line": 8103,
+        "content": "\"download-msgpackr-prebuilds\": \"bin/download-prebuilds.js\"",
+        "pattern": "/download.*\\.js/gi",
+        "severity": "medium",
+        "category": "Suspicious File"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/scripts/security-audit.ts",
+        "line": 26,
+        "content": "{ pattern: /download.*\\.js/gi, severity: 'medium' as const, category: 'Suspicious File' },",
+        "pattern": "/download.*\\.js/gi",
+        "severity": "medium",
+        "category": "Suspicious File"
+      }
+    ],
+    "Encoding": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/scripts/check-malware.ts",
+        "line": 43,
+        "content": "/decodeURIComponent/i,",
+        "pattern": "/decodeURIComponent/gi",
+        "severity": "medium",
+        "category": "Encoding"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/scripts/security-audit.ts",
+        "line": 47,
+        "content": "{ pattern: /decodeURIComponent/gi, severity: 'medium' as const, category: 'Encoding' },",
+        "pattern": "/decodeURIComponent/gi",
+        "severity": "medium",
+        "category": "Encoding"
+      }
+    ],
+    "Redirect Function": [
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/admin/layout.tsx",
+        "line": 14,
+        "content": "redirect('/signin');",
+        "pattern": "/redirect\\s*\\(/gi",
+        "severity": "medium",
+        "category": "Redirect Function"
+      },
+      {
+        "file": "/Users/maksim/doorhan-crimea-1/src/app/admin/page.tsx",
+        "line": 5,
+        "content": "redirect('/admin/dashboard');",
+        "pattern": "/redirect\\s*\\(/gi",
+        "severity": "medium",
+        "category": "Redirect Function"
+      }
+    ],
+    "Next.js Config": [
+      {
+        "file": "next.config.ts",
+        "line": 0,
+        "content": "Contains redirects/rewrites configuration",
+        "pattern": "redirects/rewrites",
+        "severity": "medium",
+        "category": "Next.js Config"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/REPORT.md",
+      "line": 131,
+      "content": "- Scripts injected via `document.createElement('script')`",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/REPORT.md",
+      "line": 256,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/REPORT.md",
+      "line": 258,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 1,
+      "content": "# 🔒 ОТЧЕТ ПО БЕЗОПАСНОСТИ: Проверка на вирус falsh.org",
+      "pattern": "/falsh\\.org/gi",
+      "severity": "critical",
+      "category": "Malicious Domain"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 4,
+      "content": "**Проверяемый домен:** falsh.org",
+      "pattern": "/falsh\\.org/gi",
+      "severity": "critical",
+      "category": "Malicious Domain"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 25,
+      "content": "**Результат:** Обнаружено использование `dangerouslySetInnerHTML` для `globalSchemaMarkup` из базы данных.",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 35,
+      "content": "- **RegionalContent.tsx** - использует `dangerouslySetInnerHTML` без санитизации",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 37,
+      "content": "- **CategoryProducts.tsx** - использует `dangerouslySetInnerHTML` для контента категорий",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 39,
+      "content": "- **SimpleMarkdownRenderer.tsx** - использует `dangerouslySetInnerHTML`",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 79,
+      "content": "### ✅ 16. Поиск всех упоминаний falsh.org в коде",
+      "pattern": "/falsh\\.org/gi",
+      "severity": "critical",
+      "category": "Malicious Domain"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 81,
+      "content": "**Результат:** Упоминаний falsh.org в коде не найдено.",
+      "pattern": "/falsh\\.org/gi",
+      "severity": "critical",
+      "category": "Malicious Domain"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 118,
+      "content": "### 3. Использование dangerouslySetInnerHTML без санитизации",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 129,
+      "content": "**Проблема:** Все эти компоненты используют `dangerouslySetInnerHTML` для вставки HTML из базы данных без санитизации.",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 160,
+      "content": "5. **Добавить санитизацию для всех dangerouslySetInnerHTML**",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 220,
+      "content": "UPDATE SiteSetting SET value = '' WHERE key = 'customJs' AND value LIKE '%falsh.org%';",
+      "pattern": "/falsh\\.org/gi",
+      "severity": "critical",
+      "category": "Malicious Domain"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_AUDIT_REPORT.md",
+      "line": 222,
+      "content": "UPDATE SiteSetting SET value = '' WHERE key = 'globalSchemaMarkup' AND value LIKE '%falsh.org%';",
+      "pattern": "/falsh\\.org/gi",
+      "severity": "critical",
+      "category": "Malicious Domain"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 62,
+      "content": "## 🔧 ИСПРАВЛЕНИЕ 3: Добавление санитизации для dangerouslySetInnerHTML",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 129,
+      "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 129,
+      "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 138,
+      "content": "dangerouslySetInnerHTML={{ __html: sanitizeIframe(regionalData.mapIframe) }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 138,
+      "content": "dangerouslySetInnerHTML={{ __html: sanitizeIframe(regionalData.mapIframe) }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 147,
+      "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(globalSchemaMarkup) }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 147,
+      "content": "dangerouslySetInnerHTML={{ __html: sanitizeHtml(globalSchemaMarkup) }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 150,
+      "content": "И так далее для всех компонентов, использующих `dangerouslySetInnerHTML`.",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_FIXES.md",
+      "line": 246,
+      "content": "- [ ] Добавлена санитизация для всех dangerouslySetInnerHTML",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_MITIGATION.md",
+      "line": 173,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_MITIGATION.md",
+      "line": 175,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_SUMMARY.md",
+      "line": 15,
+      "content": "- 🟠 **Использование dangerouslySetInnerHTML без санитизации** - ТРЕБУЕТСЯ ИСПРАВЛЕНИЕ",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/SECURITY_SUMMARY.md",
+      "line": 55,
+      "content": "5. **Добавить санитизацию для всех dangerouslySetInnerHTML**",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/CustomAssets_server.tsx",
+      "line": 32,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/CustomAssets_server.tsx",
+      "line": 34,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/RegionSelector_server.tsx",
+      "line": 74,
+      "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/RegionSelector_server.tsx",
+      "line": 78,
+      "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_plan.md",
+      "line": 85,
+      "content": "- document.createElement('script')",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 22,
+      "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 24,
+      "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 31,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 33,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 36,
+      "content": "⚠️ **РИСК**: Динамическая инжекция JavaScript через `createElement('script')`",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 132,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 134,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 141,
+      "content": "const script = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 144,
+      "content": "document.head.appendChild(script);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 196,
+      "content": "1. `src/components/CustomAssets.tsx` - createElement('script')",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 227,
+      "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 229,
+      "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 246,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/analysis_results.md",
+      "line": 248,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/detailed_analysis.md",
+      "line": 26,
+      "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/detailed_analysis.md",
+      "line": 28,
+      "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/artifacts/html_head_prod.txt",
+      "line": 1,
+      "content": "<!DOCTYPE html><html lang=\"ru\" class=\"scroll-smooth\" data-scroll-behavior=\"smooth\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><meta name=\"viewpor",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/package-lock.json",
+      "line": 8103,
+      "content": "\"download-msgpackr-prebuilds\": \"bin/download-prebuilds.js\"",
+      "pattern": "/download.*\\.js/gi",
+      "severity": "medium",
+      "category": "Suspicious File"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/scripts/check-malware.ts",
+      "line": 43,
+      "content": "/decodeURIComponent/i,",
+      "pattern": "/decodeURIComponent/gi",
+      "severity": "medium",
+      "category": "Encoding"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/scripts/security-audit.ts",
+      "line": 26,
+      "content": "{ pattern: /download.*\\.js/gi, severity: 'medium' as const, category: 'Suspicious File' },",
+      "pattern": "/download.*\\.js/gi",
+      "severity": "medium",
+      "category": "Suspicious File"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/scripts/security-audit.ts",
+      "line": 47,
+      "content": "{ pattern: /decodeURIComponent/gi, severity: 'medium' as const, category: 'Encoding' },",
+      "pattern": "/decodeURIComponent/gi",
+      "severity": "medium",
+      "category": "Encoding"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/scripts/security-audit.ts",
+      "line": 52,
+      "content": "{ pattern: /dangerouslySetInnerHTML/gi, severity: 'high' as const, category: 'XSS Risk' },",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+      "line": 473,
+      "content": "dangerouslySetInnerHTML={{ __html: product.schemaMarkup }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+      "line": 473,
+      "content": "dangerouslySetInnerHTML={{ __html: product.schemaMarkup }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+      "line": 624,
+      "content": "dangerouslySetInnerHTML={{ __html: schemaMarkupForPage }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/[...categorySlug]/page.tsx",
+      "line": 624,
+      "content": "dangerouslySetInnerHTML={{ __html: schemaMarkupForPage }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/admin/_components/ProductCard.tsx",
+      "line": 124,
+      "content": "<div className=\"relative aspect-[4/3] bg-gray-100 block cursor-pointer\" onClick={() => window.location.href = `/admin/products/${product.id}`}>",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/admin/layout.tsx",
+      "line": 14,
+      "content": "redirect('/signin');",
+      "pattern": "/redirect\\s*\\(/gi",
+      "severity": "medium",
+      "category": "Redirect Function"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/admin/page.tsx",
+      "line": 5,
+      "content": "redirect('/admin/dashboard');",
+      "pattern": "/redirect\\s*\\(/gi",
+      "severity": "medium",
+      "category": "Redirect Function"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/articles/[slug]/page.tsx",
+      "line": 180,
+      "content": "dangerouslySetInnerHTML={{ __html: article.schemaMarkup }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/articles/[slug]/page.tsx",
+      "line": 180,
+      "content": "dangerouslySetInnerHTML={{ __html: article.schemaMarkup }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/layout.tsx",
+      "line": 159,
+      "content": "dangerouslySetInnerHTML={{ __html: globalSchemaMarkup }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/layout.tsx",
+      "line": 159,
+      "content": "dangerouslySetInnerHTML={{ __html: globalSchemaMarkup }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/pages/[slug]/page.tsx",
+      "line": 131,
+      "content": "dangerouslySetInnerHTML={{ __html: processedSchemaMarkup }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/app/pages/[slug]/page.tsx",
+      "line": 131,
+      "content": "dangerouslySetInnerHTML={{ __html: processedSchemaMarkup }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/BreadCrumbs.tsx",
+      "line": 40,
+      "content": "const script = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/BreadCrumbs.tsx",
+      "line": 44,
+      "content": "document.head.appendChild(script);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+      "line": 229,
+      "content": "dangerouslySetInnerHTML={{ __html: category.contentTop }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+      "line": 229,
+      "content": "dangerouslySetInnerHTML={{ __html: category.contentTop }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+      "line": 514,
+      "content": "dangerouslySetInnerHTML={{ __html: category.contentBottom }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/CategoryProducts.tsx",
+      "line": 514,
+      "content": "dangerouslySetInnerHTML={{ __html: category.contentBottom }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/ContactsSection.tsx",
+      "line": 434,
+      "content": "dangerouslySetInnerHTML={{ __html: regionalData.mapIframe }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/ContactsSection.tsx",
+      "line": 434,
+      "content": "dangerouslySetInnerHTML={{ __html: regionalData.mapIframe }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/CustomAssets.tsx",
+      "line": 32,
+      "content": "scriptElement = document.createElement('script');",
+      "pattern": "/createElement\\s*\\(\\s*['\"]script['\"]/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/CustomAssets.tsx",
+      "line": 34,
+      "content": "document.body.appendChild(scriptElement);",
+      "pattern": "/appendChild\\s*\\(.*script/gi",
+      "severity": "high",
+      "category": "Dynamic Script"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+      "line": 255,
+      "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentTop }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+      "line": 255,
+      "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentTop }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+      "line": 341,
+      "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentBottom }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/ProductsList.tsx",
+      "line": 341,
+      "content": "dangerouslySetInnerHTML={{ __html: selectedCategoryData.contentBottom }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionSelector.tsx",
+      "line": 74,
+      "content": "window.location.href = `http://${selectedCode}.localhost:3000${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionSelector.tsx",
+      "line": 78,
+      "content": "window.location.href = `https://${selectedCode}.${domain}${currentPath}`;",
+      "pattern": "/location\\.href\\s*=/gi",
+      "severity": "high",
+      "category": "Client Redirect"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionalContent.tsx",
+      "line": 27,
+      "content": "dangerouslySetInnerHTML={{ __html: content }}",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/RegionalContent.tsx",
+      "line": 27,
+      "content": "dangerouslySetInnerHTML={{ __html: content }}",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/SEOOptimizer.tsx",
+      "line": 39,
+      "content": "h2.innerHTML = h1.innerHTML;",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/SEOOptimizer.tsx",
+      "line": 53,
+      "content": "h3.innerHTML = h2Element.innerHTML;",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/SimpleMarkdownRenderer.tsx",
+      "line": 24,
+      "content": "return <span dangerouslySetInnerHTML={{ __html: formatted }} />;",
+      "pattern": "/innerHTML\\s*=/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "/Users/maksim/doorhan-crimea-1/src/components/SimpleMarkdownRenderer.tsx",
+      "line": 24,
+      "content": "return <span dangerouslySetInnerHTML={{ __html: formatted }} />;",
+      "pattern": "/dangerouslySetInnerHTML/gi",
+      "severity": "high",
+      "category": "XSS Risk"
+    },
+    {
+      "file": "next.config.ts",
+      "line": 0,
+      "content": "Contains redirects/rewrites configuration",
+      "pattern": "redirects/rewrites",
+      "severity": "medium",
+      "category": "Next.js Config"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
 import { revalidateTag, revalidatePath } from 'next/cache';
+import { requireAuth } from '@/lib/require-auth';
 
 const settingsSchema = z.object({
   // Основные контакты
@@ -81,6 +82,12 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
+  // Проверка авторизации
+  const authResult = await requireAuth(req);
+  if (!authResult.success) {
+    return authResult.response;
+  }
+
   try {
     const body = await req.json();
     const data = settingsSchema.parse(body);
